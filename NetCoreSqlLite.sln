@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.App", "NetCoreSqlLite\NameSearch.App.csproj", "{B46E391C-A974-4C0C-9343-DAB0D7043870}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.Models", "NameSearch.Models\NameSearch.Models.csproj", "{E58E0043-CA67-45F8-94C4-F4680EEA3D7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.Repository", "NameSearch.Repository\NameSearch.Repository.csproj", "{8CD3F7D4-4C97-4203-8028-89A1D2FF6D18}"
@@ -19,9 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.Api.Tests", "Nam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClient.Factory", "HttpClient.Factory\HttpClient.Factory.csproj", "{6A7BD8AE-A1C4-4561-B297-C7B575745E24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameSearch.Utility", "NameSearch.Utility\NameSearch.Utility.csproj", "{65F97F3B-E13D-49A2-AC3D-E056E824F9FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.Utility", "NameSearch.Utility\NameSearch.Utility.csproj", "{65F97F3B-E13D-49A2-AC3D-E056E824F9FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameSearch.App.Tests", "NameSearch.App.Tests\NameSearch.App.Tests.csproj", "{835592C8-BA16-4E6A-8472-86C3CCCFAF5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.App.Tests", "NameSearch.App.Tests\NameSearch.App.Tests.csproj", "{835592C8-BA16-4E6A-8472-86C3CCCFAF5E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{71F2E30C-2494-4AE3-8CC2-2D6F5E0A7DE6}"
 EndProject
@@ -33,16 +31,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{909F8A8B-D2B7-440B-A223-CB5C761CBD37}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.App", "NameSearch.App\NameSearch.App.csproj", "{04C273E4-D379-4801-B3A4-7FC3E3E8D336}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B46E391C-A974-4C0C-9343-DAB0D7043870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B46E391C-A974-4C0C-9343-DAB0D7043870}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B46E391C-A974-4C0C-9343-DAB0D7043870}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B46E391C-A974-4C0C-9343-DAB0D7043870}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E58E0043-CA67-45F8-94C4-F4680EEA3D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E58E0043-CA67-45F8-94C4-F4680EEA3D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E58E0043-CA67-45F8-94C4-F4680EEA3D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -79,12 +75,15 @@ Global
 		{835592C8-BA16-4E6A-8472-86C3CCCFAF5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{835592C8-BA16-4E6A-8472-86C3CCCFAF5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{835592C8-BA16-4E6A-8472-86C3CCCFAF5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04C273E4-D379-4801-B3A4-7FC3E3E8D336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04C273E4-D379-4801-B3A4-7FC3E3E8D336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04C273E4-D379-4801-B3A4-7FC3E3E8D336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04C273E4-D379-4801-B3A4-7FC3E3E8D336}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{B46E391C-A974-4C0C-9343-DAB0D7043870} = {909F8A8B-D2B7-440B-A223-CB5C761CBD37}
 		{E58E0043-CA67-45F8-94C4-F4680EEA3D7B} = {539433BF-F793-4CB4-BF94-2B81E88EA6E2}
 		{8CD3F7D4-4C97-4203-8028-89A1D2FF6D18} = {539433BF-F793-4CB4-BF94-2B81E88EA6E2}
 		{8ABF6966-335A-4F83-8BF7-BEE0941D9816} = {AE49AD19-3E5E-4E2F-804B-25CAE747E286}
@@ -94,6 +93,7 @@ Global
 		{6A7BD8AE-A1C4-4561-B297-C7B575745E24} = {6466F19D-D528-433B-AFB8-E5808022DABA}
 		{65F97F3B-E13D-49A2-AC3D-E056E824F9FB} = {6466F19D-D528-433B-AFB8-E5808022DABA}
 		{835592C8-BA16-4E6A-8472-86C3CCCFAF5E} = {71F2E30C-2494-4AE3-8CC2-2D6F5E0A7DE6}
+		{04C273E4-D379-4801-B3A4-7FC3E3E8D336} = {909F8A8B-D2B7-440B-A223-CB5C761CBD37}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9AE966E6-DFC3-4290-B25E-6CEA7DCB8EDB}

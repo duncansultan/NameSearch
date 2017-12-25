@@ -50,13 +50,13 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The lattitue.
         /// </value>
-        public float? Lattitue { get; set; }
+        public double? Lattitue { get; set; }
         /// <summary>
         /// Gets or sets the longitude.
         /// </summary>
         /// <value>
         /// The longitude.
         /// </value>
-        public float? Longitude { get; set; }
+        public double? Longitude { get; set; }
     }
 }

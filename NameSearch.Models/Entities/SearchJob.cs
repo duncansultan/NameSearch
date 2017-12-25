@@ -11,7 +11,7 @@ namespace NameSearch.Models.Entities
     /// <summary>
     /// </summary>
     /// <seealso cref="T:NameSearch.Models.Entities.Interfaces.IEntity" />
-    public class SearchJob : AuditableEntity, IEntity
+    public class SearchJob : AuditableEntityBase, IEntity
     {
         /// <summary>
         /// Gets or sets the identifier.

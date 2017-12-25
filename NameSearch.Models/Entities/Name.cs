@@ -11,7 +11,7 @@ namespace NameSearch.Models.Entities
     /// 
     /// </summary>
     /// <seealso cref="IEntity" />
-    public class Name : AuditableEntity, IEntity
+    public class Name : AuditableEntityBase, IEntity
     {
         /// <summary>
         /// Gets or sets the identifier.

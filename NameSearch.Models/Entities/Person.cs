@@ -11,7 +11,7 @@ namespace NameSearch.Models.Entities
     /// <summary>
     /// </summary>
     /// <seealso cref="T:NetCoreSqlLite.Models.Entities.IEntity" />
-    public class Person : AuditableEntity, IEntity
+    public class Person : AuditableEntityBase, IEntity
     {
         /// <summary>
         /// Gets or sets the identifier.

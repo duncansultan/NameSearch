@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NameSearch.Models.Entities.Abstracts
 {
-    public abstract class AddressBase
+    public abstract class AddressBase : AuditableEntityBase
     {
         /// <summary>
         /// Gets or sets the address1.

@@ -27,7 +27,7 @@ namespace NameSearch.Models.Entities.Interfaces
         /// <value>
         /// The created date time.
         /// </value>
-        DateTime? CreatedDateTime { get; set; }
+        DateTime CreatedDateTime { get; set; }
         /// <summary>
         /// Gets or sets the modified date time.
         /// </summary>

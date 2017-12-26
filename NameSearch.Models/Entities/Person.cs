@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using NameSearch.Models.Entities.Abstracts;
 using NameSearch.Models.Entities.Interfaces;
@@ -55,7 +53,6 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <value>
         /// The addresses.
-        /// </value>
-        public List<Address> Addresses { get; set; }
+        public List<Address> Addresses { get; set; } = new List<Address>();
     }
 }

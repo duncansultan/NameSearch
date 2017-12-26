@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
@@ -30,13 +29,21 @@ namespace NameSearch.Models.Entities
         [ForeignKey("PersonForeignKey")]
         public long PersonId { get; set; }
         /// <summary>
+        /// Gets or sets the person object.
+        /// </summary>
+        /// <value>
+        /// The person object.
+        /// </value>
+        [InverseProperty("Addresses")]
+        public Person Person { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether this instance is current.
         /// </summary>
         /// <value>
         ///   <c>true</c> if this instance is current; otherwise, <c>false</c>.
         /// </value>
         [DefaultValue(false)]
-        public bool IsCurrent { get; set; } 
+        public bool IsCurrent { get; set; }
         /// <summary>
         /// Gets or sets the plus4.
         /// </summary>

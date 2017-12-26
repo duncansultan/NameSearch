@@ -36,7 +36,10 @@ namespace NameSearch.Repository.Tests
             var person = Repository.GetFirst<Person>(includeProperties: "Addresses");
             var id = person.Id;
             Repository.Delete(person);
-            Repository.Save();
+            foreach (var address in person.Addresses)
+            {
+                Repository.Delete(address);
+            }
             Repository.Save();
 
             var exists = Repository.GetExists<Person>(x => x.Id == id);

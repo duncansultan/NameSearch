@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using NameSearch.Models.Entities;
 using System;
 using NameSearch.Models.Entities.Abstracts;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -44,11 +43,21 @@ namespace NameSearch.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Address>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<Name>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<Person>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<SearchJob>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<SearchTransaction>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<Address>()
+                .HasQueryFilter(p => p.IsActive);            
+            modelBuilder.Entity<Name>()
+                .HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<Person>()
+                .HasQueryFilter(p => p.IsActive)
+                .HasMany(a => a.Addresses)
+                .WithOne(p => p.Person)
+                //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
+                //.OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
+            modelBuilder.Entity<SearchJob>()
+                .HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<SearchTransaction>()
+                .HasQueryFilter(p => p.IsActive);
         }
 
         public override int SaveChanges()
@@ -61,6 +70,12 @@ namespace NameSearch.Context
         {
             OnBeforeSaving();
             return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            OnBeforeSaving();
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
@@ -76,8 +91,8 @@ namespace NameSearch.Context
         private void OnBeforeSaving()
         {
             var now = DateTime.Now;
-
-            foreach (var entry in ChangeTracker.Entries())
+            var entires = ChangeTracker.Entries();
+            foreach (var entry in entires)
             {
                 var entity = entry.Entity as AuditableEntityBase;
 
@@ -90,7 +105,6 @@ namespace NameSearch.Context
 
                     case EntityState.Modified:
                         entity.ModifiedDateTime = now;
-                        entity.IsActive = true;
                         break;
 
                     case EntityState.Deleted:

@@ -35,7 +35,7 @@ namespace NameSearch.Repository
             string includeProperties = null,
             int? skip = null,
             int? take = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get All Entities by Filter asynchronous
@@ -51,7 +51,7 @@ namespace NameSearch.Repository
             string includeProperties = null,
             int? skip = null,
             int? take = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get a single Entity by Filter
@@ -69,7 +69,7 @@ namespace NameSearch.Repository
             string includeProperties = null,
             int? skip = null,
             int? take = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get Entities by Filter asynchronous
@@ -87,7 +87,7 @@ namespace NameSearch.Repository
             string includeProperties = null,
             int? skip = null,
             int? take = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get a single Entity by Filter
@@ -99,7 +99,7 @@ namespace NameSearch.Repository
         TEntity GetOne<TEntity>(
             Expression<Func<TEntity, bool>> filter = null,
             string includeProperties = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get a single Entity by Filter asynchronous
@@ -111,7 +111,7 @@ namespace NameSearch.Repository
         Task<TEntity> GetOneAsync<TEntity>(
             Expression<Func<TEntity, bool>> filter = null,
             string includeProperties = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get the first Entity in the order list by Filter
@@ -125,7 +125,7 @@ namespace NameSearch.Repository
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get the first Entity in the order list by Filter asynchronous
@@ -139,7 +139,7 @@ namespace NameSearch.Repository
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get an Entity by Id
@@ -148,7 +148,7 @@ namespace NameSearch.Repository
         /// <param name="id"></param>
         /// <returns>The entity for the given id.</returns>
         TEntity GetById<TEntity>(object id)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get an Entity by Id asynchronous
@@ -157,7 +157,7 @@ namespace NameSearch.Repository
         /// <param name="id"></param>
         /// <returns>An async task of the entity for the given id.</returns>
         Task<TEntity> GetByIdAsync<TEntity>(object id)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get a count of Entities by filter
@@ -166,7 +166,7 @@ namespace NameSearch.Repository
         /// <param name="filter"></param>
         /// <returns>A count of entitites.</returns>
         int GetCount<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Get a count of Entities by filter asynchronous
@@ -175,7 +175,7 @@ namespace NameSearch.Repository
         /// <param name="filter"></param>
         /// <returns>An async task of a count of entitites.</returns>
         Task<int> GetCountAsync<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Check if an Entity exists by filter
@@ -184,7 +184,7 @@ namespace NameSearch.Repository
         /// <param name="filter"></param>
         /// <returns><c>true</c> if the entity could be found; otherwise, <c>false</c>.</returns>
         bool GetExists<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Check if an Entity exists by filter asynchronous
@@ -193,7 +193,7 @@ namespace NameSearch.Repository
         /// <param name="filter"></param>
         /// <returns>An async task for <c>true</c> if the entity could be found; otherwise, <c>false</c>.</returns>
         Task<bool> GetExistsAsync<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Persist New Entity
@@ -201,7 +201,7 @@ namespace NameSearch.Repository
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         object Create<TEntity>(TEntity entity)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Update Existing Entity
@@ -209,7 +209,7 @@ namespace NameSearch.Repository
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         void Update<TEntity>(TEntity entity)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Delete Existing Entity by Id
@@ -217,7 +217,7 @@ namespace NameSearch.Repository
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="id"></param>
         void Delete<TEntity>(object id)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Delete Existing Entity by Entity
@@ -225,7 +225,7 @@ namespace NameSearch.Repository
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
         void Delete<TEntity>(TEntity entity)
-            where TEntity : class, IEntity;
+            where TEntity : class, IEntity<TEntity>;
 
         /// <summary>
         ///     Persist In-Memory Changes

@@ -53,7 +53,7 @@ namespace NameSearch.Repository
             string includeProperties = null,
             int? skip = null,
             int? take = null)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             includeProperties = includeProperties ?? string.Empty;
             IQueryable<TEntity> query = Context.Set<TEntity>();
@@ -93,7 +93,7 @@ namespace NameSearch.Repository
             string includeProperties = null,
             int? skip = null,
             int? take = null)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(null, orderBy, includeProperties, skip, take).ToList();
         }
@@ -104,7 +104,7 @@ namespace NameSearch.Repository
         string includeProperties = null,
         int? skip = null,
         int? take = null)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TEntity>
         {
             return await GetQueryable<TEntity>(null, orderBy, includeProperties, skip, take).ToListAsync();
         }
@@ -116,7 +116,7 @@ namespace NameSearch.Repository
             string includeProperties = null,
             int? skip = null,
             int? take = null)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(filter, orderBy, includeProperties, skip, take).ToList();
         }
@@ -128,7 +128,7 @@ namespace NameSearch.Repository
         string includeProperties = null,
         int? skip = null,
         int? take = null)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TEntity>
         {
             return await GetQueryable<TEntity>(filter, orderBy, includeProperties, skip, take).ToListAsync();
         }
@@ -137,7 +137,7 @@ namespace NameSearch.Repository
         public virtual TEntity GetOne<TEntity>(
             Expression<Func<TEntity, bool>> filter = null,
             string includeProperties = "")
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(filter, null, includeProperties).SingleOrDefault();
         }
@@ -146,7 +146,7 @@ namespace NameSearch.Repository
         public virtual async Task<TEntity> GetOneAsync<TEntity>(
         Expression<Func<TEntity, bool>> filter = null,
         string includeProperties = null)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TEntity>
         {
             return await GetQueryable<TEntity>(filter, null, includeProperties).SingleOrDefaultAsync();
         }
@@ -156,7 +156,7 @@ namespace NameSearch.Repository
            Expression<Func<TEntity, bool>> filter = null,
            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
            string includeProperties = "")
-           where TEntity : class, IEntity
+           where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(filter, orderBy, includeProperties).FirstOrDefault();
         }
@@ -166,49 +166,49 @@ namespace NameSearch.Repository
         Expression<Func<TEntity, bool>> filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
         string includeProperties = null)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TEntity>
         {
             return await GetQueryable<TEntity>(filter, orderBy, includeProperties).FirstOrDefaultAsync();
         }
 
         /// <inheritdoc />
         public virtual TEntity GetById<TEntity>(object id)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             return Context.Set<TEntity>().Find(id);
         }
 
         /// <inheritdoc />
         public virtual Task<TEntity> GetByIdAsync<TEntity>(object id)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TEntity>
         {
             return Context.Set<TEntity>().FindAsync(id);
         }
 
         /// <inheritdoc />
         public virtual int GetCount<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(filter).Count();
         }
 
         /// <inheritdoc />
         public virtual Task<int> GetCountAsync<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(filter).CountAsync();
         }
 
         /// <inheritdoc />
         public virtual bool GetExists<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(filter).Any();
         }
 
         /// <inheritdoc />
         public virtual Task<bool> GetExistsAsync<TEntity>(Expression<Func<TEntity, bool>> filter = null)
-        where TEntity : class, IEntity
+        where TEntity : class, IEntity<TEntity>
         {
             return GetQueryable<TEntity>(filter).AnyAsync();
         }
@@ -221,7 +221,7 @@ namespace NameSearch.Repository
 
         /// <inheritdoc />
         public virtual object Create<TEntity>(TEntity entity)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
 
             entity.CreatedDateTime = DateTime.UtcNow;
@@ -231,7 +231,7 @@ namespace NameSearch.Repository
 
         /// <inheritdoc />
         public virtual void Update<TEntity>(TEntity entity)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             entity.ModifiedDateTime = DateTime.UtcNow;
             Context.Set<TEntity>().Attach(entity);
@@ -240,7 +240,7 @@ namespace NameSearch.Repository
 
         /// <inheritdoc />
         public virtual void Delete<TEntity>(object id)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             var entity = Context.Set<TEntity>().Find(id);
             Delete(entity);
@@ -248,7 +248,7 @@ namespace NameSearch.Repository
 
         /// <inheritdoc />
         public virtual void Delete<TEntity>(TEntity entity)
-            where TEntity : class, IEntity
+            where TEntity : class, IEntity<TEntity>
         {
             var dbSet = Context.Set<TEntity>();
             if (Context.Entry(entity).State == EntityState.Detached)

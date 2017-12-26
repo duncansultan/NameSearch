@@ -1,24 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using NameSearch.Models.Entities.Abstracts;
-using NameSearch.Models.Entities.Interfaces;
 
 namespace NameSearch.Models.Entities
 {
     /// <inheritdoc />
-    /// <summary>
-    /// </summary>
-    /// <seealso cref="T:NetCoreSqlLite.Models.Entities.IEntity" />
-    public class Person : AuditableEntityBase, IEntity
+    public class Person : EntityBase<Person>
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        [Key]
-        public long Id { get; set; }
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
@@ -54,5 +42,36 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The addresses.
         public List<Address> Addresses { get; set; } = new List<Address>();
+
+        #region Equality
+
+        public override bool Equals(Person other)
+        {
+            if (other == null) return false;
+            return string.Equals(FirstName, other.FirstName) &&
+                string.Equals(LastName, other.LastName) &&
+                string.Equals(Alias, other.Alias) &&
+                Age == other.Age &&
+                Addresses.Equals(other.Addresses);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (this is null) return false;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as Person);
+        }
+
+        /// <summary>
+        /// Return Base Implementation.
+        /// "You should only override GetHashCode if your objects are immutable."
+        /// See also http://www.aaronstannard.com/overriding-equality-in-dotnet/
+        /// See also https://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode/263416#263416
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode() => base.GetHashCode();
+
+        #endregion
     }
 }

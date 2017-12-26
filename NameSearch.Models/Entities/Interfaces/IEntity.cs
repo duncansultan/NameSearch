@@ -5,15 +5,8 @@ namespace NameSearch.Models.Entities.Interfaces
     /// <summary>
     /// 
     /// </summary>
-    public interface IEntity
+    public interface IEntity<TEntity> : IEquatable<TEntity>
     {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        long Id { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance is active.
         /// </summary>
@@ -41,7 +34,7 @@ namespace NameSearch.Models.Entities.Interfaces
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IEntity<T> : IEntity
+    public interface IEntity<TEntity, TIdentifier> : IEntity<TEntity>
     {
         /// <summary>
         /// Gets or sets the identifier.
@@ -49,6 +42,6 @@ namespace NameSearch.Models.Entities.Interfaces
         /// <value>
         /// The identifier.
         /// </value>
-        new T Id { get; set; }
+        TIdentifier Id { get; set; }
     }
 }

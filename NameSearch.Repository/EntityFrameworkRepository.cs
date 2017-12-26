@@ -296,7 +296,7 @@ namespace NameSearch.Repository
             }
             catch (DbUpdateException e)
             {
-                //ToDo: Add Logging
+                Log.Logger.Fatal(e, "Save failed with DbUpdateException.");
             }
         }
 
@@ -309,7 +309,7 @@ namespace NameSearch.Repository
             }
             catch (DbUpdateException e)
             {
-                //ToDo: Add Logging
+                Log.Logger.Fatal(e, "SaveAsync failed with DbUpdateException.");
             }
             var result = Task.FromResult(0);
             Log.Information("SaveAsync Result: {@0}", result);

@@ -20,29 +20,27 @@ namespace NameSearch.Repository.Tests
         [Fact]
         public void UpdateName()
         {
-            //var name = new Name();
-            //name.Value = "Duncan";
-            //name.Description = null;
-            //name.SearchPriorityLevel = 1;
-            //var contextObj = Repository.Create(name);
-            //Repository.Save();
+            var name = Repository.GetFirst<Name>();
+            var id = name.Id;
+            name.Description = "Test";
+            Repository.Update(name);
+            Repository.Save();
 
-            //var exists = Repository.GetExists<Name>(x => x.Id == name.Id);
-            //Assert.True(exists);
+            var updatedName = Repository.GetFirst<Name>(x => x.Id == id);
+            Assert.Equal("Test", updatedName.Description);
         }
 
         [Fact]
         public void UpdatePersonWithAddresses()
         {
-            var person = new Person();
-            //name.Value = "Duncan";
-            //name.Description = null;
-            //name.SearchPriorityLevel = 1;
-            var contextObj = Repository.Create(person);
+            var person = Repository.GetFirst<Person>();
+            var id = person.Id;
+            person.Age = 66;
+            Repository.Update(person);
             Repository.Save();
 
-            var exists = Repository.GetExists<Name>(x => x.Id == person.Id);
-            Assert.True(exists);
+            var updatedPerson = Repository.GetFirst<Person>(x => x.Id == id);
+            Assert.Equal(66, updatedPerson.Age);
         }
     }
 }

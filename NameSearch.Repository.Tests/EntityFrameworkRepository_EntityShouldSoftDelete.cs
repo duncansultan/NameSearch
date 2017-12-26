@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using NameSearch.Context;
@@ -20,29 +21,31 @@ namespace NameSearch.Repository.Tests
         [Fact]
         public void DeleteName()
         {
-            //var name = new Name();
-            //name.Value = "Duncan";
-            //name.Description = null;
-            //name.SearchPriorityLevel = 1;
-            //var contextObj = Repository.Create(name);
-            //Repository.Save();
+            var name = Repository.GetFirst<Name>();
+            var id = name.Id;
+            Repository.Delete(name);
+            Repository.Save();
 
-            //var exists = Repository.GetExists<Name>(x => x.Id == name.Id);
-            //Assert.True(exists);
+            var exists = Repository.GetExists<Name>(x => x.Id == id);
+            Assert.False(exists);
         }
 
         [Fact]
         public void DeletePersonWithAddresses()
         {
-            var person = new Person();
-            //name.Value = "Duncan";
-            //name.Description = null;
-            //name.SearchPriorityLevel = 1;
-            var contextObj = Repository.Create(person);
+            var person = Repository.GetFirst<Person>(includeProperties: "Addresses");
+            var id = person.Id;
+            Repository.Delete(person);
+            Repository.Save();
             Repository.Save();
 
-            var exists = Repository.GetExists<Name>(x => x.Id == person.Id);
-            Assert.True(exists);
+            var exists = Repository.GetExists<Person>(x => x.Id == id);
+            Assert.False(exists);
+            var anyAddresses = Repository.Get<Address>(x => x.PersonId == id);
+
+            Assert.False(anyAddresses.Any());
+
+
         }
     }
 }

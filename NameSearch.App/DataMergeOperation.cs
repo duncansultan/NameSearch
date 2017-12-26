@@ -2,6 +2,9 @@
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using Newtonsoft.Json;
+using Serilog;
+using System;
+using System.Linq;
 
 namespace NameSearch.App
 {
@@ -18,21 +21,42 @@ namespace NameSearch.App
             this.SerializerSettings = serializerSettings;
         }
 
-        public void MergePeople(int searchJobId)
+        public void MergePeople(long searchJobId)
         {
             var searchJob = Repository.GetFirst<SearchJob>(x => x.Id == searchJobId, null, "Searches");
 
+            this.MergePeople(searchJob.Id);
+        }
+
+        public void MergePeople(SearchJob searchJob)
+        {
+            if (searchJob.IsFinished)
+            {
+                throw new ArgumentException($"SearchJob {searchJob.Id} is already processed.");
+            }
+
+            if (!searchJob.Searches.Any())
+            {
+                throw new ArgumentNullException("searchJob.Searches", $"SearchJob {searchJob.Id} has no Searches.");
+            }
+
+            int newRecords = 0;
             foreach (var search in searchJob.Searches)
             {
-                var person = JsonConvert.DeserializeObject<Models.Domain.Person>(search.Json);
-                var personEntity = Mapper.Map<Person>(person);
+                var personDomainModel = JsonConvert.DeserializeObject<Models.Domain.Person>(search.Json);
+                var personEntity = Mapper.Map<Person>(personDomainModel);
 
-                //ToDo: Figure out how to detect if record is new or changed.  Maybe add a merge function to the Repository?
-                //Repository.GetExists<Person>(x => x.LastName == )
-
-                Repository.Create(personEntity);
+                var exists = Repository.GetExists<Person>(x => x.Equals(personEntity));
+                if (!exists)
+                {
+                    Repository.Create(personEntity);
+                    newRecords++;
+                }
                 Repository.Save();
             }
+            searchJob.IsFinished = true;
+            Repository.Save();
+            Log.Information($"{newRecords} processed for {searchJob.Id}.");
         }
     }
 }

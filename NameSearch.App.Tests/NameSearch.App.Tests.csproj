@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\NameSearch.Api\NameSearch.Api.csproj" />
+    <ProjectReference Include="..\NameSearch.App\NameSearch.App.csproj" />
+    <ProjectReference Include="..\NameSearch.Context\NameSearch.Context.csproj" />
     <ProjectReference Include="..\NameSearch.Repository\NameSearch.Repository.csproj" />
   </ItemGroup>
 

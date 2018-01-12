@@ -4,20 +4,42 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.Api.Domain.Request;
 using Newtonsoft.Json;
 using Serilog;
 
 namespace NameSearch.Api.Controllers
 {
+    /// <summary>
+    /// Controller that Execute Requests to WhitePages Premium Find Person Api
+    /// </summary>
+    /// <seealso cref="NameSearch.Api.Controllers.Interfaces.IFindPersonController" />
     [Route("api/[controller]")]
     [Produces("application/json")]
     public class FindPersonController : IFindPersonController
     {
+        /// <summary>
+        /// The API key
+        /// </summary>
         private readonly string apiKey;
+        /// <summary>
+        /// The base URI
+        /// </summary>
         private readonly string baseUri;
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly IConfiguration Configuration;
+        /// <summary>
+        /// The serializer settings
+        /// </summary>
         private readonly JsonSerializerSettings SerializerSettings;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FindPersonController"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="serializerSettings">The serializer settings.</param>
         public FindPersonController(IConfiguration configuration, JsonSerializerSettings serializerSettings)
         {
             this.Configuration = configuration;
@@ -27,8 +49,17 @@ namespace NameSearch.Api.Controllers
             baseUri = configuration.GetValue<string>("WhitePages:api_url");
         }
 
+        /// <summary>
+        /// Gets the person.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// JSON Result
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">model</exception>
+        /// <exception cref="JsonReaderException">Empty JSON result.</exception>
         [HttpGet("[controller]/[action]/{model}.{format?}")]
-        public async Task<JsonResult> GetPerson(IPerson model)
+        public async Task<JsonResult> GetPerson(IPersonSearch model)
         {
             if (model == null)
             {
@@ -48,13 +79,19 @@ namespace NameSearch.Api.Controllers
             return new JsonResult(json, SerializerSettings);
         }
 
-        private string GetFindPersonUri(IPerson model)
+        /// <summary>
+        /// Gets the find person URI.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>
+        /// URI String
+        /// </returns>
+        private string GetFindPersonUri(IPersonSearch model)
         {
             // Use the QueryBuilder to add in new items in a safe way (handles multiples and empty values)
             var qb = new QueryBuilder
             {
                 { "api_key", apiKey },
-                { "payerId", "pyr_" },
                 { "name", model.Name },
                 { "address.street_line_1", model.Address1 },
                 { "address.street_line_2", model.Address2 },

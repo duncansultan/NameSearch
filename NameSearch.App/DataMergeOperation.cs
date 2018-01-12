@@ -43,7 +43,7 @@ namespace NameSearch.App
             int newRecords = 0;
             foreach (var search in searchJob.Searches)
             {
-                var personDomainModel = JsonConvert.DeserializeObject<Models.Domain.Person>(search.Json);
+                var personDomainModel = JsonConvert.DeserializeObject<Models.Domain.PersonSearch>(search.Json);
                 var personEntity = Mapper.Map<Person>(personDomainModel);
 
                 var exists = Repository.GetExists<Person>(x => x.Equals(personEntity));

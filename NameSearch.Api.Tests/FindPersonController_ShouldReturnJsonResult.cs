@@ -28,7 +28,7 @@ namespace NameSearch.Api.Tests
         public async Task GetPerson()
         {
             //Arrange
-            IPerson model = new Person
+            IPerson model = new PersonSearch
             {
                 Address1 = "",
                 Address2 = "",

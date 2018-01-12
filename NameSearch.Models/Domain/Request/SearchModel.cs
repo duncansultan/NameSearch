@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace NameSearch.Models.Domain
+namespace NameSearch.Models.Request.Domain
 {
     public class SearchModel
     {

@@ -28,9 +28,16 @@ namespace NameSearch.App.Tests
         [Fact]
         public void MergePeople()
         {
-            var searchJob = Repository.GetFirst<SearchJob>(x => !x.IsFinished);
+            //Arrange
+            //ToDo: Add a SearchJob with Several Transactions
 
+            //Act
+            var searchJob = Repository.GetFirst<SearchJob>(x => !x.IsFinished);
             DataMergeOperation.MergePeople(searchJob.Id);
+
+            //Assert
+            //ToDo: Get People and verify that they are in the Search Job Transactions
+            //ToDo: Verify that searchJob IsComplete flag
         }
     }
 }

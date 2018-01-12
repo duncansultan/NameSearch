@@ -9,7 +9,7 @@ using NameSearch.Models.Entities.Interfaces;
 namespace NameSearch.Repository
 {
     /// <summary>
-    /// 
+    /// Interface for Entity Framework Repository
     /// </summary>
     public interface IEntityFrameworkRepository
     {

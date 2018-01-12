@@ -3,7 +3,7 @@
 namespace NameSearch.Models.Entities.Interfaces
 {
     /// <summary>
-    /// 
+    /// Entity Interface
     /// </summary>
     public interface IEntity<TEntity> : IEquatable<TEntity>
     {

@@ -3,6 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NameSearch.Models.Entities.Abstracts
 {
+    /// <summary>
+    /// Entity Base Class
+    /// </summary>
+    /// <typeparam name="TEntity">The type of the entity.</typeparam>
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.AuditableEntityBase" />
+    /// <seealso cref="NameSearch.Models.Entities.Interfaces.IEntity{TEntity}" />
     public abstract class EntityBase<TEntity> : AuditableEntityBase, IEntity<TEntity>
     {
         /// <summary>

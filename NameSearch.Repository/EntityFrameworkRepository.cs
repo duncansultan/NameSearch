@@ -14,6 +14,7 @@ namespace NameSearch.Repository
 {
     /// <inheritdoc cref="IEntityFrameworkRepository" />
     /// <summary>
+    /// Entity Framework Repository
     /// </summary>
     /// <seealso cref="T:NetCoreSqlLite.Repository.IEntityFrameworkRepository" />
     /// <seealso cref="T:System.IDisposable" />

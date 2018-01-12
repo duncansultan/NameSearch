@@ -3,7 +3,9 @@ using System.ComponentModel;
 
 namespace NameSearch.Models.Entities.Abstracts
 {
-
+    /// <summary>
+    /// Auditable Entity Base Class
+    /// </summary>
     public abstract class AuditableEntityBase
     {
         /// <summary>

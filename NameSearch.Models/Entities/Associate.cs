@@ -1,66 +1,52 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using NameSearch.Models.Entities.Abstracts;
+﻿using NameSearch.Models.Entities.Abstracts;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NameSearch.Models.Entities
 {
     /// <summary>
-    /// Person Entity
+    /// Associate Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.Person}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.Associate}" />
     /// <inheritdoc />
-    public class Person : EntityBase<Person>
+    public class Associate : EntityBase<Associate>
     {
         /// <summary>
-        /// Gets or sets the first name.
+        /// Gets or sets the external identifier.
         /// </summary>
         /// <value>
-        /// The first name.
+        /// The external identifier.
         /// </value>
-        public string FirstName { get; set; }
+        public string ExternalId { get; set; }
         /// <summary>
-        /// Gets or sets the last name.
+        /// Gets or sets the Full name of the associated person.
         /// </summary>
         /// <value>
-        /// The last name.
+        /// The Full name of the associated person.
         /// </value>
-        [Required]
-        public string LastName { get; set; }
+        public string Name { get; set; }
         /// <summary>
-        /// Gets or sets the alias.
+        /// Gets or sets the Relation of the associated person to the found person.
         /// </summary>
         /// <value>
-        /// The alias.
+        /// The Relation of the associated person to the found person.
         /// </value>
-        public string Alias { get; set; }
+        public string Relation { get; set; }
         /// <summary>
-        /// Gets or sets the age.
+        /// Gets or sets the person identifier.
         /// </summary>
         /// <value>
-        /// The age.
+        /// The person identifier.
         /// </value>
-        public int Age { get; set; }
+        [ForeignKey("PersonForeignKey")]
+        public long PersonId { get; set; }
         /// <summary>
-        /// Gets or sets the addresses.
+        /// Gets or sets the person object.
         /// </summary>
         /// <value>
-        /// The addresses.
+        /// The person object.
         /// </value>
-        public List<Address> Addresses { get; set; } = new List<Address>();
-        /// <summary>
-        /// Gets or sets the phones.
-        /// </summary>
-        /// <value>
-        /// The phones.
-        /// </value>
-        public List<Phone> Phones { get; set; } = new List<Phone>();
-        /// <summary>
-        /// Gets or sets the associates.
-        /// </summary>
-        /// <value>
-        /// The associates.
-        /// </value>
-        public List<Associate> Associates { get; set; } = new List<Associate>();
+        [InverseProperty("Associates")]
+        public Person Person { get; set; }
 
         #region Equality
 
@@ -69,16 +55,14 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(Person other)
+        public override bool Equals(Associate other)
         {
             if (other == null) return false;
-            return string.Equals(FirstName, other.FirstName) &&
-                string.Equals(LastName, other.LastName) &&
-                string.Equals(Alias, other.Alias) &&
-                Age == other.Age &&
-                Addresses.Equals(other.Addresses) &&
-                Phones.Equals(other.Phones) &&
-                Associates.Equals(other.Associates);
+            return string.Equals(ExternalId, other.ExternalId) &&
+                string.Equals(Name, other.Name) &&
+                string.Equals(Relation, other.Relation) &&
+                PersonId == other.PersonId &&
+                Person.Equals(other.Person);
         }
 
         /// <summary>
@@ -93,7 +77,7 @@ namespace NameSearch.Models.Entities
             if (obj is null) return false;
             if (this is null) return false;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as Person);
+            return Equals(obj as Address);
         }
 
         /// <summary>

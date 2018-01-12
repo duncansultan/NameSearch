@@ -1,66 +1,45 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using NameSearch.Models.Entities.Abstracts;
+﻿using NameSearch.Models.Entities.Abstracts;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NameSearch.Models.Entities
 {
     /// <summary>
-    /// Person Entity
+    /// Phone Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.Person}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.Phone}" />
     /// <inheritdoc />
-    public class Person : EntityBase<Person>
+    public class Phone : EntityBase<Phone>
     {
         /// <summary>
-        /// Gets or sets the first name.
+        /// Gets or sets the identifier.
         /// </summary>
         /// <value>
-        /// The first name.
+        /// The identifier.
         /// </value>
-        public string FirstName { get; set; }
+        public string ExternalId { get; set; }
         /// <summary>
-        /// Gets or sets the last name.
+        /// Gets or sets the phone number.
         /// </summary>
         /// <value>
-        /// The last name.
+        /// The phone number.
         /// </value>
-        [Required]
-        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
         /// <summary>
-        /// Gets or sets the alias.
+        /// Gets or sets the person identifier.
         /// </summary>
         /// <value>
-        /// The alias.
+        /// The person identifier.
         /// </value>
-        public string Alias { get; set; }
+        [ForeignKey("PersonForeignKey")]
+        public long PersonId { get; set; }
         /// <summary>
-        /// Gets or sets the age.
+        /// Gets or sets the person object.
         /// </summary>
         /// <value>
-        /// The age.
+        /// The person object.
         /// </value>
-        public int Age { get; set; }
-        /// <summary>
-        /// Gets or sets the addresses.
-        /// </summary>
-        /// <value>
-        /// The addresses.
-        /// </value>
-        public List<Address> Addresses { get; set; } = new List<Address>();
-        /// <summary>
-        /// Gets or sets the phones.
-        /// </summary>
-        /// <value>
-        /// The phones.
-        /// </value>
-        public List<Phone> Phones { get; set; } = new List<Phone>();
-        /// <summary>
-        /// Gets or sets the associates.
-        /// </summary>
-        /// <value>
-        /// The associates.
-        /// </value>
-        public List<Associate> Associates { get; set; } = new List<Associate>();
+        [InverseProperty("Phones")]
+        public Person Person { get; set; }
 
         #region Equality
 
@@ -69,16 +48,13 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(Person other)
+        public override bool Equals(Phone other)
         {
             if (other == null) return false;
-            return string.Equals(FirstName, other.FirstName) &&
-                string.Equals(LastName, other.LastName) &&
-                string.Equals(Alias, other.Alias) &&
-                Age == other.Age &&
-                Addresses.Equals(other.Addresses) &&
-                Phones.Equals(other.Phones) &&
-                Associates.Equals(other.Associates);
+            return string.Equals(ExternalId, other.ExternalId) &&
+                string.Equals(PhoneNumber, other.PhoneNumber) &&
+                PersonId == other.PersonId &&
+                Person.Equals(other.Person);
         }
 
         /// <summary>

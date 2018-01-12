@@ -13,6 +13,20 @@ namespace NameSearch.Models.Entities
     public class Address : EntityBase<Address>
     {
         /// <summary>
+        /// Gets or sets the external identifier.
+        /// </summary>
+        /// <value>
+        /// The external identifier.
+        /// </value>
+        public string ExternalId { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the location.
+        /// </summary>
+        /// <value>
+        /// The type of the location.
+        /// </value>
+        public string LocationType { get; set; }
+        /// <summary>
         /// Gets or sets the address1.
         /// </summary>
         /// <value>
@@ -52,6 +66,13 @@ namespace NameSearch.Models.Entities
         [Required]
         public string Zip { get; set; }
         /// <summary>
+        /// Gets or sets the plus4.
+        /// </summary>
+        /// <value>
+        /// The plus4.
+        /// </value>
+        public string Plus4 { get; set; }
+        /// <summary>
         /// Gets or sets the country.
         /// </summary>
         /// <value>
@@ -59,7 +80,43 @@ namespace NameSearch.Models.Entities
         /// </value>
         [DefaultValue("US")]
         public string Country { get; set; } = "US";
-        /// < summary >
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is current.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is current; otherwise, <c>false</c>.
+        /// </value>
+        public double? Lattitue { get; set; }
+        /// <summary>
+        /// Gets or sets the longitude.
+        /// </summary>
+        /// <value>
+        /// The longitude.
+        /// </value>
+        public double? Longitude { get; set; }
+        /// <summary>
+        /// Gets or sets the accuracy.
+        /// </summary>
+        /// <value>
+        /// The accuracy.
+        /// </value>
+        public string Accuracy { get; set; }
+        //[DefaultValue(false)]
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is current.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is current; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCurrent { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is historical.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is historical; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsHistorical { get; set; }
+        /// <summary>
         /// Gets or sets the person identifier.
         /// </summary>
         /// <value>
@@ -75,35 +132,6 @@ namespace NameSearch.Models.Entities
         /// </value>
         [InverseProperty("Addresses")]
         public Person Person { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is current.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is current; otherwise, <c>false</c>.
-        /// </value>
-        //[DefaultValue(false)]
-        public bool IsCurrent { get; set; }
-        /// <summary>
-        /// Gets or sets the plus4.
-        /// </summary>
-        /// <value>
-        /// The plus4.
-        /// </value>
-        public string Plus4 { get; set; }
-        /// <summary>
-        /// Gets or sets the lattitue.
-        /// </summary>
-        /// <value>
-        /// The lattitue.
-        /// </value>
-        public double? Lattitue { get; set; }
-        /// <summary>
-        /// Gets or sets the longitude.
-        /// </summary>
-        /// <value>
-        /// The longitude.
-        /// </value>
-        public double? Longitude { get; set; }
 
         #region Equality
 
@@ -115,12 +143,22 @@ namespace NameSearch.Models.Entities
         public override bool Equals(Address other)
         {
             if (other == null) return false;
-            return PersonId == other.PersonId &&
-                Person.Equals(other.Person) &&
-                IsCurrent == other.IsCurrent &&
+            return string.Equals(ExternalId, other.ExternalId) &&
+                string.Equals(LocationType, other.LocationType) &&
+                string.Equals(Address1, other.Address1) &&
+                string.Equals(Address2, other.Address2) &&
+                string.Equals(City, other.City) &&
+                string.Equals(State, other.State) &&
+                string.Equals(Zip, other.Zip) &&
                 string.Equals(Plus4, other.Plus4) &&
+                string.Equals(Country, other.Country) &&
                 Lattitue == other.Lattitue &&
-                Longitude == other.Longitude;
+                Longitude == other.Longitude &&
+                Accuracy == other.Accuracy &&
+                IsCurrent == other.IsCurrent &&
+                IsHistorical == other.IsHistorical &&
+                PersonId == other.PersonId &&
+                Person.Equals(other.Person);
         }
 
         /// <summary>

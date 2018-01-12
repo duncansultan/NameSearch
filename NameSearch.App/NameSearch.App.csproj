@@ -30,6 +30,7 @@
     <ProjectReference Include="..\NameSearch.Context\NameSearch.Context.csproj" />
     <ProjectReference Include="..\NameSearch.Models\NameSearch.Models.csproj" />
     <ProjectReference Include="..\NameSearch.Repository\NameSearch.Repository.csproj" />
+    <ProjectReference Include="..\NameSearch.Utility\NameSearch.Utility.csproj" />
   </ItemGroup>
   
   <ItemGroup>

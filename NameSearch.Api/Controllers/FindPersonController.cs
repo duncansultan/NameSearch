@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NameSearch.Api.Controllers.Interfaces;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace NameSearch.Api.Controllers
 {
@@ -23,7 +24,7 @@ namespace NameSearch.Api.Controllers
             this.SerializerSettings = serializerSettings;
 
             apiKey = configuration.GetValue<string>("WhitePages:api_key");
-            baseUri =  configuration.GetValue<string>("WhitePages:api_url");
+            baseUri = configuration.GetValue<string>("WhitePages:api_url");
         }
 
         [HttpGet("[controller]/[action]/{model}.{format?}")]
@@ -33,7 +34,7 @@ namespace NameSearch.Api.Controllers
             {
                 throw new System.ArgumentNullException(nameof(model));
             }
-            
+
             var uri = GetFindPersonUri(model);
             var response = await HttpRequestFactory.Get(uri);
             var responseHeaders = response.Headers;
@@ -65,6 +66,7 @@ namespace NameSearch.Api.Controllers
 
             // Reconstruct the original URL with new query string
             var uri = baseUri + qb.ToQueryString();
+            Log.Information($"GetFindPersonUri: {uri}");
             return uri;
         }
     }

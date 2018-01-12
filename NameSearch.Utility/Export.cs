@@ -1,5 +1,8 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using NameSearch.Utility.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.IO;
 
@@ -8,7 +11,7 @@ namespace NameSearch.Utility
     /// <summary>
     /// Export Utility
     /// </summary>
-    public class Export
+    public class Export : IExport
     {
         /// <summary>
         /// The CSV helper configuration
@@ -20,7 +23,7 @@ namespace NameSearch.Utility
         private readonly string Directory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Export"/> class.
+        /// Initializes a new instance of the <see cref="Export" /> class.
         /// </summary>
         /// <param name="directory">The directory.</param>
         /// <param name="csvHelperConfiguration">The CSV helper configuration.</param>
@@ -31,7 +34,7 @@ namespace NameSearch.Utility
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Export"/> class.
+        /// Initializes a new instance of the <see cref="Export" /> class.
         /// </summary>
         /// <param name="directory">The directory.</param>
         public Export(string directory)
@@ -61,6 +64,45 @@ namespace NameSearch.Utility
             using (var csv = new CsvWriter(textWriter, CsvHelperConfiguration))
             {
                 csv.WriteRecords(records);
+            }
+        }
+
+        /// <summary>
+        /// To the json.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="fileName">Name of the file.</param>
+        public void ToJson(string json, string fileName)
+        {
+            if (!fileName.EndsWith(".json"))
+            {
+                fileName = $"{fileName}.json";
+            }
+            var absolutePath = Path.Combine(Directory, fileName);
+
+            using (var textWriter = new StreamWriter(absolutePath))
+            {
+                textWriter.Write(json);
+            }
+        }
+
+        /// <summary>
+        /// To the json.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="fileName">Name of the file.</param>
+        public void ToJson(JObject json, string fileName)
+        {
+            if (!fileName.EndsWith(".csv"))
+            {
+                fileName = $"{fileName}.csv";
+            }
+            var absolutePath = Path.Combine(Directory, fileName);
+
+            using (var file = File.CreateText(absolutePath))
+            using (var writer = new JsonTextWriter(file))
+            {
+                json.WriteTo(writer);
             }
         }
     }

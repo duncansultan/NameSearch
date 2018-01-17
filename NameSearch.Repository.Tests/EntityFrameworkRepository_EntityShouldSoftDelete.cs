@@ -21,12 +21,12 @@ namespace NameSearch.Repository.Tests
         [Fact]
         public void DeleteName()
         {
-            var name = Repository.GetFirst<Name>();
+            var name = Repository.GetFirst<SearchName>();
             var id = name.Id;
             Repository.Delete(name);
             Repository.Save();
 
-            var exists = Repository.GetExists<Name>(x => x.Id == id);
+            var exists = Repository.GetExists<SearchName>(x => x.Id == id);
             Assert.False(exists);
         }
 

@@ -21,14 +21,14 @@ namespace NameSearch.Repository.Tests
         [Fact]
         public void CreateName()
         {
-            var name = new Name();
+            var name = new SearchName();
             name.Value = "Duncan";
             name.Description = null;
             name.SearchPriorityLevel = (int)Models.Domain.SearchPriorityTypes.High;
             var contextObj = Repository.Create(name);
             Repository.Save();
 
-            var exists = Repository.GetExists<Name>(x => x.Id == name.Id);
+            var exists = Repository.GetExists<SearchName>(x => x.Id == name.Id);
             Assert.True(exists);
         }
 

@@ -5,11 +5,11 @@ using NameSearch.Models.Entities.Abstracts;
 namespace NameSearch.Models.Entities
 {
     /// <summary>
-    /// Name Entity
+    /// SearchName Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.Name}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.SearchName}" />
     /// <inheritdoc />
-    public class Name : EntityBase<Name>
+    public class SearchName : EntityBase<SearchName>
     {
         /// <summary>
         /// Gets or sets the value.
@@ -49,7 +49,7 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(Name other)
+        public override bool Equals(SearchName other)
         {
             if (other == null) return false;
             return string.Equals(Value, other.Value) &&
@@ -70,7 +70,7 @@ namespace NameSearch.Models.Entities
             if (obj is null) return false;
             if (this is null) return false;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as Name);
+            return Equals(obj as SearchName);
         }
 
         /// <summary>

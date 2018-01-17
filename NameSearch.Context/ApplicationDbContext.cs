@@ -75,13 +75,6 @@ namespace NameSearch.Context
         /// </value>
         public DbSet<Associate> Associates { get; set; }
         /// <summary>
-        /// Gets or sets the names.
-        /// </summary>
-        /// <value>
-        /// The names.
-        /// </value>
-        public DbSet<Name> Names { get; set; }
-        /// <summary>
         /// Gets or sets the people.
         /// </summary>
         /// <value>
@@ -95,6 +88,13 @@ namespace NameSearch.Context
         /// The phones.
         /// </value>
         public DbSet<Phone> Phones { get; set; }
+        /// <summary>
+        /// Gets or sets the search names.
+        /// </summary>
+        /// <value>
+        /// The search names.
+        /// </value>
+        public DbSet<SearchName> SearchNames { get; set; }
         /// <summary>
         /// Gets or sets the search jobs.
         /// </summary>
@@ -126,8 +126,6 @@ namespace NameSearch.Context
         {
             modelBuilder.Entity<Address>()
                 .HasQueryFilter(p => p.IsActive);            
-            modelBuilder.Entity<Name>()
-                .HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Phone>()
                 .HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Associate>()
@@ -152,6 +150,8 @@ namespace NameSearch.Context
                 //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
                 //.OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false);
+            modelBuilder.Entity<SearchName>()
+                .HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<SearchJob>()
                 .HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<SearchTransaction>()

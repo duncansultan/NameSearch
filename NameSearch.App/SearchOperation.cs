@@ -31,7 +31,7 @@ namespace NameSearch.App
 
         public async Task LoadPeople(SearchPriorityTypes searchPriority, string state, string city = null, string zip = null)
         {
-            var names = Repository.Get<Name>(x => x.IsActive && x.SearchPriorityLevel == (int)searchPriority);
+            var names = Repository.Get<SearchName>(x => x.IsActive && x.SearchPriorityLevel == (int)searchPriority);
 
             var searchJob = new SearchJob
             {
@@ -44,7 +44,7 @@ namespace NameSearch.App
             {
                 var model = new PersonSearch
                 {
-                    Name = name.Description,
+                    Name = name.Value,
                     City = city,
                     State = state,
                     Zip = zip

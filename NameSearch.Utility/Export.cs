@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NameSearch.Utility
 {
@@ -57,10 +59,14 @@ namespace NameSearch.Utility
             {
                 fileName = $"{fileName}.csv";
             }
-            var absolutePath = Path.Combine(Directory, fileName);
 
+            var fullPath = Path.Combine(Directory, fileName);
+            if (File.Exists(fullPath))
+            {
+                fullPath = GetAvailableFullPath(fullPath);
+            }
 
-            using (var textWriter = new StreamWriter(absolutePath, isAppend))
+            using (var textWriter = new StreamWriter(fullPath, isAppend))
             using (var csv = new CsvWriter(textWriter, CsvHelperConfiguration))
             {
                 csv.WriteRecords(records);
@@ -72,15 +78,21 @@ namespace NameSearch.Utility
         /// </summary>
         /// <param name="json">The json.</param>
         /// <param name="fileName">Name of the file.</param>
+        /// <exception cref=""></exception>
         public void ToJson(string json, string fileName)
         {
             if (!fileName.EndsWith(".json"))
             {
                 fileName = $"{fileName}.json";
             }
-            var absolutePath = Path.Combine(Directory, fileName);
 
-            using (var textWriter = new StreamWriter(absolutePath))
+            var fullPath = Path.Combine(Directory, fileName);
+            if (File.Exists(fullPath))
+            {
+                fullPath = GetAvailableFullPath(fullPath);
+            }
+
+            using (var textWriter = new StreamWriter(fullPath))
             {
                 textWriter.Write(json);
             }
@@ -104,6 +116,63 @@ namespace NameSearch.Utility
             {
                 json.WriteTo(writer);
             }
+        }
+
+        public async Task ToJsonAsync(string json, string fileName)
+        {
+            if (!fileName.EndsWith(".json"))
+            {
+                fileName = $"{fileName}.json";
+            }
+
+            var fullPath = Path.Combine(Directory, fileName);
+            if (File.Exists(fullPath))
+            {
+                fullPath = GetAvailableFullPath(fullPath);
+            }
+
+            using (var textWriter = new StreamWriter(fullPath))
+            {
+                await textWriter.WriteAsync(json);
+            }
+        }
+
+        public async Task ToJsonAsync(JObject json, string fileName, CancellationToken cancellationToken)
+        {
+            if (!fileName.EndsWith(".csv"))
+            {
+                fileName = $"{fileName}.csv";
+            }
+            var absolutePath = Path.Combine(Directory, fileName);
+
+            using (var file = File.CreateText(absolutePath))
+            using (var writer = new JsonTextWriter(file))
+            {
+                await json.WriteToAsync(writer, cancellationToken);
+            }
+        }
+        
+        /// <summary>
+        /// Gets the available full path.
+        /// </summary>
+        /// <param name="fullPath">The full path.</param>
+        /// <returns></returns>
+        private string GetAvailableFullPath(string fullPath)
+        {
+            int count = 1;
+
+            string fileNameOnly = Path.GetFileNameWithoutExtension(fullPath);
+            string extension = Path.GetExtension(fullPath);
+            string path = Path.GetDirectoryName(fullPath);
+            string newFullPath = fullPath;
+
+            while (File.Exists(newFullPath))
+            {
+                string tempFileName = string.Format("{0}({1})", fileNameOnly, count++);
+                newFullPath = Path.Combine(path, tempFileName + extension);
+            }
+
+            return newFullPath;
         }
     }
 }

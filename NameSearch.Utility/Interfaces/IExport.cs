@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NameSearch.Utility.Interfaces
 {
@@ -28,5 +30,21 @@ namespace NameSearch.Utility.Interfaces
         /// <param name="json">The json.</param>
         /// <param name="fileName">Name of the file.</param>
         void ToJson(JObject json, string fileName);
+        /// <summary>
+        /// To the json asynchronous.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        Task ToJsonAsync(string json, string fileName);
+        /// <summary>
+        /// To the json asynchronous.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        Task ToJsonAsync(JObject json, string fileName, CancellationToken cancellationToken);
     }
 }

@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NameSearch.Utility
 {
@@ -88,6 +90,31 @@ namespace NameSearch.Utility
             using (var reader = new JsonTextReader(file))
             {
                 JObject jObject = (JObject)JToken.ReadFrom(reader);
+                return jObject;
+            }
+        }
+
+        /// <summary>
+        /// Froms the json asynchronous.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException"></exception>
+        public async Task<JObject> FromJsonAsync(string fileName, CancellationToken cancellationToken)
+        {
+            var absolutePath = Path.Combine(Directory, fileName);
+
+            var fileExists = File.Exists(absolutePath);
+            if (!fileExists)
+            {
+                throw new FileNotFoundException($"File {fileName} does not exist.");
+            }
+
+            using (var file = File.OpenText(absolutePath))
+            using (var reader = new JsonTextReader(file))
+            {
+                JObject jObject = (JObject)await JToken.ReadFromAsync(reader, cancellationToken);
                 return jObject;
             }
         }

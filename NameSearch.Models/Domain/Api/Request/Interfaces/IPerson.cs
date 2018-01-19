@@ -1,9 +1,9 @@
-﻿namespace NameSearch.Api.Domain.Request
+﻿namespace NameSearch.Models.Domain.Api.Request
 {
     /// <summary>
     /// Interface for a Person Search Model
     /// </summary>
-    public class IPersonSearch
+    public class IPerson
     {
         /// <summary>
         /// Gets or sets the name.

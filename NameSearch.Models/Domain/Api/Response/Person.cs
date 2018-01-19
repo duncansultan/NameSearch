@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NameSearch.Models.Domain
+namespace NameSearch.Models.Domain.Api.Response
 {
     /// <summary>
     /// A Person

@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Configuration;
 using NameSearch.Context;
 using NameSearch.Models.Entities;
 using Xunit;
@@ -24,7 +21,6 @@ namespace NameSearch.Repository.Tests
             var name = new SearchName();
             name.Value = "Duncan";
             name.Description = null;
-            name.SearchPriorityLevel = (int)Models.Domain.SearchPriorityTypes.High;
             var contextObj = Repository.Create(name);
             Repository.Save();
 
@@ -90,7 +86,6 @@ namespace NameSearch.Repository.Tests
             var savedPerson = Repository.GetById<Person>(person.Id);
             var anyAddresses = savedPerson.Addresses.Any();
             Assert.True(anyAddresses, "Person has no Addresses.");
-            //Assert.Collection(savedPerson.Addresses, )
         }
     }
 }

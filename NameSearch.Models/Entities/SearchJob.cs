@@ -12,13 +12,6 @@ namespace NameSearch.Models.Entities
     public class SearchJob : EntityBase<SearchJob>
     {
         /// <summary>
-        /// Gets or sets the search priority level.
-        /// </summary>
-        /// <value>
-        /// The search priority level.
-        /// </value>
-        public int SearchPriorityLevel { get; set; }
-        /// <summary>
         /// Gets or sets a value indicating whether this instance is finished.
         /// </summary>
         /// <value>
@@ -26,6 +19,14 @@ namespace NameSearch.Models.Entities
         /// </value>
         [DefaultValue(false)]
         public bool IsFinished { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is successful.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is successful; otherwise, <c>false</c>.
+        /// </value>
+        [DefaultValue(true)]
+        public bool IsSuccessful { get; set; }
         /// <summary>
         /// Gets or sets the searches.
         /// </summary>
@@ -44,8 +45,8 @@ namespace NameSearch.Models.Entities
         public override bool Equals(SearchJob other)
         {
             if (other == null) return false;
-            return SearchPriorityLevel == other.SearchPriorityLevel &&
-                IsFinished == other.IsFinished &&
+            return IsFinished == other.IsFinished &&
+                IsSuccessful == other.IsSuccessful &&
                 Searches.Equals(other.Searches);
         }
 

@@ -19,20 +19,12 @@ namespace NameSearch.Models.Entities
         [ForeignKey("SearchJobForeignKey")]
         public long SearchJobId { get; set; }
         /// <summary>
-        /// Gets or sets the name identifier.
-        /// </summary>
-        /// <value>
-        /// The name identifier.
-        /// </value>
-        [ForeignKey("NameForeignKey")]
-        public long NameId { get; set; }
-        /// <summary>
         /// Gets or sets the HTTP response.
         /// </summary>
         /// <value>
         /// The HTTP response.
         /// </value>
-        public int? StatusCode { get; set; }
+        public int? HttpStatusCode { get; set; }
         /// <summary>
         /// Gets or sets the number of results.
         /// </summary>
@@ -41,12 +33,26 @@ namespace NameSearch.Models.Entities
         /// </value>
         public int NumberOfResults { get; set; }
         /// <summary>
-        /// Gets or sets the json.
+        /// Gets or sets the warnings.
         /// </summary>
         /// <value>
-        /// The json.
+        /// The warnings.
         /// </value>
-        public string Json { get; set; }
+        public string Warnings { get; set; }
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
+        /// <value>
+        /// The error.
+        /// </value>
+        public string Error { get; set; }
+        /// <summary>
+        /// Gets or sets the json data.
+        /// </summary>
+        /// <value>
+        /// The json data.
+        /// </value>
+        public string Data { get; set; }
 
         #region Equality
 
@@ -59,10 +65,11 @@ namespace NameSearch.Models.Entities
         {
             if (other == null) return false;
             return SearchJobId == other.SearchJobId &&
-                NameId == other.NameId &&
-                StatusCode == other.StatusCode &&
+                HttpStatusCode == other.HttpStatusCode &&
                 NumberOfResults == other.NumberOfResults &&
-                string.Equals(Json, other.Json);
+                string.Equals(Warnings, other.Warnings) &&
+                string.Equals(Error, other.Error) &&
+                string.Equals(Data, other.Data);
         }
 
         /// <summary>

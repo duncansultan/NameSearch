@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
 namespace NameSearch.Models.Entities
@@ -11,6 +11,14 @@ namespace NameSearch.Models.Entities
     /// <inheritdoc />
     public class SearchName : EntityBase<SearchName>
     {
+        /// <summary>
+        /// Gets or sets the search name Group identifier.
+        /// </summary>
+        /// <value>
+        /// The search name Group identifier.
+        /// </value>
+        [ForeignKey("SearchNameGroupForeignKey")]
+        public long SearchNameGroupId { get; set; }
         /// <summary>
         /// Gets or sets the value.
         /// </summary>
@@ -26,21 +34,6 @@ namespace NameSearch.Models.Entities
         /// The description.
         /// </value>
         public string Description { get; set; }
-        /// <summary>
-        /// Gets or sets the search priority level.
-        /// </summary>
-        /// <value>
-        /// The search priority level.
-        /// </value>
-        [Range(1, 3)]
-        public int SearchPriorityLevel { get; set; }
-        /// <summary>
-        /// Gets or sets the searches.
-        /// </summary>
-        /// <value>
-        /// The searches.
-        /// </value>
-        public List<SearchTransaction> Searches { get; set; }
 
         #region Equality
 
@@ -52,10 +45,9 @@ namespace NameSearch.Models.Entities
         public override bool Equals(SearchName other)
         {
             if (other == null) return false;
-            return string.Equals(Value, other.Value) &&
-                string.Equals(Description, other.Description) &&
-                SearchPriorityLevel == other.SearchPriorityLevel &&
-                Searches.Equals(other.Searches);
+            return SearchNameGroupId == other.SearchNameGroupId &&
+                string.Equals(Value, other.Value) &&
+                string.Equals(Description, other.Description);
         }
 
         /// <summary>

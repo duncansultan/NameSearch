@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System;
 using NameSearch.Models.Entities;
 using System.Linq;
+using System.Threading;
 
 namespace NameSearch.App.Tasks
 {
@@ -49,7 +50,7 @@ namespace NameSearch.App.Tasks
         /// </summary>
         /// <param name="people">The people.</param>
         /// <returns></returns>
-        public async Task<bool> Run(IEnumerable<Models.Domain.Api.Request.Person> people, IProgress<Models.Domain.Api.Request.Person> progress)
+        public async Task<bool> Run(IEnumerable<Models.Domain.Api.Request.Person> people, IProgress<Models.Domain.Api.Request.Person> progress, CancellationToken cancellationToken)
         {
             if (people == null || !people.Any())
             {
@@ -59,32 +60,33 @@ namespace NameSearch.App.Tasks
             //Start
             var searchJob = new SearchJob();
             Repository.Create(searchJob);
-            Repository.Save();
+            await Repository.SaveAsync();
 
             try
             {
                 foreach (var person in people)
                 {
                     var result = await FindPersonController.GetPerson(person);
-                    var json = result.Value.ToString();
-
-                    var exportToJsonFileTask = Task.Run(() =>
+                    var jObject = JObject.Parse(result.Value.ToString());
+                    
+                    var exportToJsonFileTask = Task.Run(async () =>
                     {
-                        this.Export.ToJson(json, $"SearchJob-{searchJob.Id}-{person.Name}");
+                        await this.Export.ToJsonAsync(jObject, $"SearchJob-{searchJob.Id}-{person.Name}", cancellationToken);
                     });
 
                     var parseAndSaveSearchTask = Task.Run(async () =>
                     {
-                        var jObject = JObject.Parse(json);
-                        var search = new SearchTransaction
-                        {
-                            SearchJobId = searchJob.Id,
-                            HttpStatusCode = result.StatusCode,
-                            NumberOfResults = (int)jObject["count_person"],
-                            Warnings = (string)jObject["warnings"],
-                            Error = (string)jObject["error"],
-                            Data = (string)jObject["person"]
-                        };
+                        
+                        var personObj = (JObject)jObject["person"];
+
+                        var search = new SearchTransaction();
+                        search.SearchJobId = searchJob.Id;
+                        search.HttpStatusCode = result.StatusCode;
+                        search.NumberOfResults = (int)jObject["count_person"];
+                        search.Warnings = (string)jObject["warnings"];
+                        search.Error = (string)jObject["error"];
+                        search.Data = personObj.ToString();
+                    
                         Repository.Create(search);
                         await Repository.SaveAsync();
 

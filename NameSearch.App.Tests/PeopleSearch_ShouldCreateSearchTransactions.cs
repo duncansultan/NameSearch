@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.App;
-using NameSearch.Models.Domain;
+using NameSearch.App.Tasks;
 using NameSearch.Repository;
+using NameSearch.Utility.Interfaces;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -18,30 +18,29 @@ namespace NameSearch.Api.Tests
 
         private readonly Mock<IFindPersonController> MockFindPersonController;
 
-        private readonly Mock<IMapper> MockMapper;
+        private readonly Mock<IExport> MockExport;
 
-        private readonly string OutputDirectory;
-
-        private readonly Mock<PeopleSearch> MockSearchOperation;
+        private readonly PeopleSearch PeopleSearch;
 
         public PeopleSearch_ShouldCreateSearchTransactions()
         {
             this.MockRepository = new Mock<IEntityFrameworkRepository>();
             this.MockFindPersonController = new Mock<IFindPersonController>();
-            this.MockMapper = new Mock<IMapper>();
-            this.OutputDirectory = "ToDo";
-            this.MockSearchOperation = new Mock<PeopleSearch>(MockRepository.Object, MockFindPersonController.Object, MockMapper.Object, OutputDirectory);
-            this.MockSearchOperation.Setup(x => x.Run(GetTestPeople())).Returns(new List<Person>());
+            this.MockExport = new Mock<IExport>();
+            this.PeopleSearch = new PeopleSearch(MockRepository.Object, MockFindPersonController.Object, MockExport.Object);
         }
 
         [Fact]
         public async Task LoadPeople()
         {
             // Arrange
+            //ToDo: Setup Mocks
+            //this.MockExport.Setup(x => x.ToJson())
             var people = GetTestPeople();
 
             // Act
-            var result = await MockSearchOperation.Object.Run(people);
+            IProgress<Models.Domain.Api.Request.Person> progress = new Progress<Models.Domain.Api.Request.Person>();
+            var result = await PeopleSearch.Run(people, progress);
 
             // Assert
             var viewResult = Assert.IsType<JsonResult>(result);
@@ -50,10 +49,10 @@ namespace NameSearch.Api.Tests
             //Assert.Equal(2, model.Count());
         }
 
-        private List<Person> GetTestPeople()
+        private List<Models.Domain.Api.Request.Person> GetTestPeople()
         {
-            var people = new List<Person>();
-            people.Add(new Person
+            var people = new List<Models.Domain.Api.Request.Person>();
+            people.Add(new Models.Domain.Api.Request.Person
             {
                 Address1 = "",
                 Address2 = "",

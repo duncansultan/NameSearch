@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using NameSearch.Api.Domain.Request;
+using NameSearch.Models.Domain.Api.Request;
 
 namespace NameSearch.Api.Controllers.Interfaces
 {
@@ -16,6 +16,6 @@ namespace NameSearch.Api.Controllers.Interfaces
         /// <returns>
         /// JSON Result
         /// </returns>
-        Task<JsonResult> GetPerson(IPersonSearch model);
+        Task<JsonResult> GetPerson(IPerson model);
     }
 }

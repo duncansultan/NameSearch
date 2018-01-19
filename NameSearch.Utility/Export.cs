@@ -118,6 +118,12 @@ namespace NameSearch.Utility
             }
         }
 
+        /// <summary>
+        /// To the json asynchronous.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
         public async Task ToJsonAsync(string json, string fileName)
         {
             if (!fileName.EndsWith(".json"))
@@ -137,6 +143,13 @@ namespace NameSearch.Utility
             }
         }
 
+        /// <summary>
+        /// To the json asynchronous.
+        /// </summary>
+        /// <param name="json">The json.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
         public async Task ToJsonAsync(JObject json, string fileName, CancellationToken cancellationToken)
         {
             if (!fileName.EndsWith(".csv"))

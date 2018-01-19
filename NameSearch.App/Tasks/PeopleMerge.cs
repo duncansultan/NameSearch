@@ -5,31 +5,30 @@ using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace NameSearch.App
+namespace NameSearch.App.Tasks
 {
-    public class DataMergeOperation
+    public class PeopleMerge
     {
         private readonly IEntityFrameworkRepository Repository;
         private readonly IMapper Mapper;
         private readonly JsonSerializerSettings SerializerSettings;
 
-        public DataMergeOperation(IEntityFrameworkRepository repository, IMapper mapper, JsonSerializerSettings serializerSettings)
+        public PeopleMerge(IEntityFrameworkRepository repository, IMapper mapper, JsonSerializerSettings serializerSettings)
         {
             this.Repository = repository;
             this.Mapper = mapper;
             this.SerializerSettings = serializerSettings;
         }
 
-        public void MergePeople(long searchJobId)
+        public async Task<bool> Run(SearchJob searchJob)
         {
-            var searchJob = Repository.GetFirst<SearchJob>(x => x.Id == searchJobId, null, "Searches");
+            if (searchJob == null)
+            {
+                throw new ArgumentNullException(nameof(searchJob));
+            }
 
-            this.MergePeople(searchJob.Id);
-        }
-
-        public void MergePeople(SearchJob searchJob)
-        {
             if (searchJob.IsFinished)
             {
                 throw new ArgumentException($"SearchJob {searchJob.Id} is already processed.");
@@ -43,20 +42,26 @@ namespace NameSearch.App
             int newRecords = 0;
             foreach (var search in searchJob.Searches)
             {
-                var personDomainModel = JsonConvert.DeserializeObject<Models.Domain.PersonSearch>(search.Json);
-                var personEntity = Mapper.Map<Person>(personDomainModel);
+                //ToDo: Fix the Deserializer
+                var personSearchResult = JsonConvert.DeserializeObject<Person>(search.Data);
+                var person = Mapper.Map<Person>(personSearchResult);
 
-                var exists = Repository.GetExists<Person>(x => x.Equals(personEntity));
+                var exists = Repository.GetExists<Person>(x => x.Equals(person));
                 if (!exists)
                 {
-                    Repository.Create(personEntity);
+                    Repository.Create(person);
                     newRecords++;
                 }
-                Repository.Save();
+                await Repository.SaveAsync();
             }
+
+
+
             searchJob.IsFinished = true;
-            Repository.Save();
+            await Repository.SaveAsync();
             Log.Information($"{newRecords} processed for {searchJob.Id}.");
+
+            return true;
         }
     }
 }

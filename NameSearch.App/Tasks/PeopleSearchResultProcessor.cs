@@ -2,13 +2,15 @@
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using Newtonsoft.Json;
-using Serilog;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NameSearch.App.Tasks
 {
+    /// <summary>
+    /// Process Search Results
+    /// </summary>
     public class PeopleSearchResultProcessor
     {
         /// <summary>
@@ -39,44 +41,46 @@ namespace NameSearch.App.Tasks
             this.SerializerSettings = serializerSettings;
         }
 
-        public async Task<bool> Run(PersonSearchJob searchJob)
+        /// <summary>
+        /// Runs the specified person search job.
+        /// </summary>
+        /// <param name="personSearchJob">The person search job.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">
+        /// personSearchJob
+        /// or
+        /// PersonSearchResults
+        /// </exception>
+        public async Task<bool> Run(PersonSearchJob personSearchJob)
         {
-            if (searchJob == null)
+            if (personSearchJob == null)
             {
-                throw new ArgumentNullException(nameof(searchJob));
-            }
-            if (!searchJob.PersonSearchResuts.Any())
-            {
-                throw new ArgumentNullException("searchJob.Searches", $"SearchJob {searchJob.Id} has no Searches.");
-            }
-            if (searchJob.IsFinished)
-            {
-                throw new ArgumentException($"SearchJob {searchJob.Id} is already processed.");
+                throw new ArgumentNullException(nameof(personSearchJob));
             }
 
-            int newRecords = 0;
-            foreach (var search in searchJob.PersonSearchResuts)
+            if (!personSearchJob.PersonSearchResults.Any())
             {
-                //ToDo: Fix the Deserializer
-                var personSearchResult = JsonConvert.DeserializeObject<Models.Domain.Api.Response.Person>(search.Data);
-                var person = Mapper.Map<Models.Entities.Person>(personSearchResult);
+                throw new ArgumentNullException(nameof(personSearchJob.PersonSearchResults));
+            }
+            
+            foreach (var personSearchResult in personSearchJob.PersonSearchResults)
+            {
+                var personResult = JsonConvert.DeserializeObject<Models.Domain.Api.Response.Person>(personSearchResult.Data);
 
-                var exists = Repository.GetExists<Models.Entities.Person>(x => x.Equals(person));
-                if (!exists)
-                {
-                    Repository.Create(person);
-                    newRecords++;
-                }
+                var personEntity = Mapper.Map<Models.Entities.Person>(personSearchResult);
+                personEntity.PersonSearchJobId = personSearchJob.Id;
+                personEntity.PersonSearchResultId = personSearchResult.Id;
+
+                Repository.Create(personEntity);
+
                 await Repository.SaveAsync();
             }
 
+            personSearchJob.IsProcessed = true;
 
-
-            searchJob.IsFinished = true;
             await Repository.SaveAsync();
-            Log.Information($"{newRecords} processed for {searchJob.Id}.");
 
-            return true;
+            return personSearchJob.IsProcessed;
         }
     }
 }

@@ -12,13 +12,13 @@ namespace NameSearch.Models.Entities
     public class PersonSearchJob : EntityBase<PersonSearchJob>
     {
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is finished.
+        /// Gets or sets a value indicating whether this instance is processed.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is finished; otherwise, <c>false</c>.
+        ///   <c>true</c> if this instance is processed; otherwise, <c>false</c>.
         /// </value>
         [DefaultValue(false)]
-        public bool IsFinished { get; set; }
+        public bool IsProcessed { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance is successful.
         /// </summary>
@@ -33,7 +33,14 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The searches.
         /// </value>
-        public List<PersonSearchResult> PersonSearchResuts { get; set; }
+        public List<PersonSearchResult> PersonSearchResults { get; set; }
+        /// <summary>
+        /// Gets or sets the people.
+        /// </summary>
+        /// <value>
+        /// The people.
+        /// </value>
+        public List<Person> People { get; set; }
 
         #region Equality
 
@@ -45,9 +52,10 @@ namespace NameSearch.Models.Entities
         public override bool Equals(PersonSearchJob other)
         {
             if (other == null) return false;
-            return IsFinished == other.IsFinished &&
+            return IsProcessed == other.IsProcessed &&
                 IsSuccessful == other.IsSuccessful &&
-                PersonSearchResuts.Equals(other.PersonSearchResuts);
+                PersonSearchResults.Equals(other.PersonSearchResults) &&
+                People.Equals(other.People);
         }
 
         /// <summary>

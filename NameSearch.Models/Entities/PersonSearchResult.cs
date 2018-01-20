@@ -53,6 +53,22 @@ namespace NameSearch.Models.Entities
         /// The json data.
         /// </value>
         public string Data { get; set; }
+        /// <summary>
+        /// Gets or sets the person search job.
+        /// </summary>
+        /// <value>
+        /// The person search job.
+        /// </value>
+        [InverseProperty("PersonSearchResults")]
+        public PersonSearchJob PersonSearchJob { get; set; }
+        /// <summary>
+        /// Gets or sets the person.
+        /// </summary>
+        /// <value>
+        /// The person.
+        /// </value>
+        [InverseProperty("PersonSearchResult")]
+        public Person Person { get; set; }
 
         #region Equality
 
@@ -69,7 +85,9 @@ namespace NameSearch.Models.Entities
                 NumberOfResults == other.NumberOfResults &&
                 string.Equals(Warnings, other.Warnings) &&
                 string.Equals(Error, other.Error) &&
-                string.Equals(Data, other.Data);
+                string.Equals(Data, other.Data) &&
+                PersonSearchJob.Equals(other.PersonSearchJob) &&
+                Person.Equals(other.Person);
         }
 
         /// <summary>

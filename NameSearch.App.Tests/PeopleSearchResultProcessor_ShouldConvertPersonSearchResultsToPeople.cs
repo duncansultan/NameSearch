@@ -31,7 +31,7 @@ namespace NameSearch.App.Tests
         {
             //Arrange
             //ToDo: Mock a SearchJob with Multiple Transactions
-            var searchJob = MockRepository.Object.GetFirst<PersonSearchJob>(x => !x.IsFinished);
+            var searchJob = MockRepository.Object.GetFirst<PersonSearchJob>(x => !x.IsProcessed);
 
             //Act
 

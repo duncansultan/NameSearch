@@ -96,6 +96,13 @@ namespace NameSearch.Context
         /// </value>
         public DbSet<Name> Names { get; set; }
         /// <summary>
+        /// Gets or sets the name imports.
+        /// </summary>
+        /// <value>
+        /// The name imports.
+        /// </value>
+        public DbSet<NameImport> NameImports { get; set; }
+        /// <summary>
         /// Gets or sets the person search jobs.
         /// </summary>
         /// <value>
@@ -124,38 +131,48 @@ namespace NameSearch.Context
         /// </remarks>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Address>()
-                .HasQueryFilter(p => p.IsActive);            
-            modelBuilder.Entity<Phone>()
-                .HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<Associate>()
-                .HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<Person>()
-                .HasQueryFilter(p => p.IsActive);
+            //Filter Inactive Records
+            modelBuilder.Entity<Address>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<Associate>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<Name>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<NameImport>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<Person>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<PersonSearchResult>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<PersonSearchJob>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<Phone>().HasQueryFilter(p => p.IsActive);
+
+            //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
+            //.OnDelete(DeleteBehavior.Cascade)
+
             modelBuilder.Entity<Person>()
                 .HasMany(a => a.Addresses)
                 .WithOne(p => p.Person)
-                //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
-                //.OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false);
+
             modelBuilder.Entity<Person>()
                 .HasMany(a => a.Phones)
                 .WithOne(p => p.Person)
-                //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
-                //.OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false);
+
             modelBuilder.Entity<Person>()
                 .HasMany(a => a.Associates)
                 .WithOne(p => p.Person)
-                //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
-                //.OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false);
-            modelBuilder.Entity<Name>()
-                .HasQueryFilter(p => p.IsActive);
+
+            modelBuilder.Entity<Person>()
+                .HasOne(a => a.PersonSearchResult)
+                .WithOne(p => p.Person)
+                .IsRequired(false);
+
+            modelBuilder.Entity<NameImport>()
+                .HasMany(a => a.Names)
+                .WithOne(p => p.NameImport)
+                .IsRequired(true);
+
             modelBuilder.Entity<PersonSearchJob>()
-                .HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<PersonSearchResult>()
-                .HasQueryFilter(p => p.IsActive);
+                .HasMany(a => a.PersonSearchResults)
+                .WithOne(p => p.PersonSearchJob)
+                .IsRequired(true);
         }
 
         /// <summary>

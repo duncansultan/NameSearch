@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
 namespace NameSearch.Models.Entities
@@ -11,6 +12,22 @@ namespace NameSearch.Models.Entities
     /// <inheritdoc />
     public class Person : EntityBase<Person>
     {
+        /// <summary>
+        /// Gets or sets the person search job identifier.
+        /// </summary>
+        /// <value>
+        /// The person search job identifier.
+        /// </value>
+        [ForeignKey("PersonSearchJobForeignKey")]
+        public long PersonSearchJobId { get; set; }
+        /// <summary>
+        /// Gets or sets the person search result identifier.
+        /// </summary>
+        /// <value>
+        /// The person search result identifier.
+        /// </value>
+        [ForeignKey("PersonSearchResultForeignKey")]
+        public long PersonSearchResultId { get; set; }
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
@@ -61,6 +78,22 @@ namespace NameSearch.Models.Entities
         /// The associates.
         /// </value>
         public List<Associate> Associates { get; set; } = new List<Associate>();
+        /// <summary>
+        /// Gets or sets the person search job.
+        /// </summary>
+        /// <value>
+        /// The person search job.
+        /// </value>
+        [InverseProperty("People")]
+        public PersonSearchJob PersonSearchJob { get; set; }
+        /// <summary>
+        /// Gets or sets the person search result.
+        /// </summary>
+        /// <value>
+        /// The person search result.
+        /// </value>
+        [InverseProperty("Person")]
+        public PersonSearchResult PersonSearchResult { get; set; }
 
         #region Equality
 
@@ -72,13 +105,18 @@ namespace NameSearch.Models.Entities
         public override bool Equals(Person other)
         {
             if (other == null) return false;
-            return string.Equals(FirstName, other.FirstName) &&
+            return
+                PersonSearchJobId == other.PersonSearchJobId &&
+                PersonSearchResultId == other.PersonSearchResultId &&
+                string.Equals(FirstName, other.FirstName) &&
                 string.Equals(LastName, other.LastName) &&
                 string.Equals(Alias, other.Alias) &&
                 Age == other.Age &&
                 Addresses.Equals(other.Addresses) &&
                 Phones.Equals(other.Phones) &&
-                Associates.Equals(other.Associates);
+                Associates.Equals(other.Associates) &&
+                PersonSearchJob.Equals(other.PersonSearchJob) &&
+                PersonSearchResult.Equals(other.PersonSearchResult);
         }
 
         /// <summary>

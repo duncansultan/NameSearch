@@ -119,7 +119,7 @@ namespace NameSearch.App.Tasks
             }
 
             //Finish
-            personSearchJob.IsFinished = true;
+            personSearchJob.IsProcessed = true;
             Repository.Update(personSearchJob);
             Repository.Save();
 

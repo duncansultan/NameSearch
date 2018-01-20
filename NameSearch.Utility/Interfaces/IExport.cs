@@ -19,11 +19,11 @@ namespace NameSearch.Utility.Interfaces
         /// <param name="isAppend">if set to <c>true</c> [is append].</param>
         void ToCsv<T>(T records, string fileName, bool isAppend) where T : IEnumerable;
         /// <summary>
-        /// To the json.
+        /// To the txt.
         /// </summary>
-        /// <param name="json">The json.</param>
+        /// <param name="text">The text.</param>
         /// <param name="fileName">Name of the file.</param>
-        void ToJson(string json, string fileName);
+        void ToTxt(string text, string fileName);
         /// <summary>
         /// To the json.
         /// </summary>
@@ -31,13 +31,12 @@ namespace NameSearch.Utility.Interfaces
         /// <param name="fileName">Name of the file.</param>
         void ToJson(JObject json, string fileName);
         /// <summary>
-        /// To the json asynchronous.
+        /// To the txt asynchronous.
         /// </summary>
-        /// <param name="json">The json.</param>
+        /// <param name="json">The text.</param>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        Task ToJsonAsync(string json, string fileName);
+        Task ToTxtAsync(string text, string fileName);
         /// <summary>
         /// To the json asynchronous.
         /// </summary>

@@ -74,16 +74,16 @@ namespace NameSearch.Utility
         }
 
         /// <summary>
-        /// To the json.
+        /// To the Txt.
         /// </summary>
-        /// <param name="json">The json.</param>
+        /// <param name="text">The text.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <exception cref=""></exception>
-        public void ToJson(string json, string fileName)
+        public void ToTxt(string text, string fileName)
         {
-            if (!fileName.EndsWith(".json"))
+            if (!fileName.EndsWith(".txt"))
             {
-                fileName = $"{fileName}.json";
+                fileName = $"{fileName}.txt";
             }
 
             var fullPath = Path.Combine(Directory, fileName);
@@ -94,7 +94,7 @@ namespace NameSearch.Utility
 
             using (var textWriter = new StreamWriter(fullPath))
             {
-                textWriter.Write(json);
+                textWriter.Write(text);
             }
         }
 
@@ -119,16 +119,16 @@ namespace NameSearch.Utility
         }
 
         /// <summary>
-        /// To the json asynchronous.
+        /// To the txt asynchronous.
         /// </summary>
-        /// <param name="json">The json.</param>
+        /// <param name="test">The test.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
-        public async Task ToJsonAsync(string json, string fileName)
+        public async Task ToTxtAsync(string test, string fileName)
         {
-            if (!fileName.EndsWith(".json"))
+            if (!fileName.EndsWith(".txt"))
             {
-                fileName = $"{fileName}.json";
+                fileName = $"{fileName}.txt";
             }
 
             var fullPath = Path.Combine(Directory, fileName);
@@ -139,7 +139,7 @@ namespace NameSearch.Utility
 
             using (var textWriter = new StreamWriter(fullPath))
             {
-                await textWriter.WriteAsync(json);
+                await textWriter.WriteAsync(test);
             }
         }
 

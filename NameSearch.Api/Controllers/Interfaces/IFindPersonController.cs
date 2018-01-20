@@ -16,6 +16,6 @@ namespace NameSearch.Api.Controllers.Interfaces
         /// <returns>
         /// JSON Result
         /// </returns>
-        Task<JsonResult> GetPerson(IPerson model);
+        Task<JsonResult> GetFindPerson(IPerson model);
     }
 }

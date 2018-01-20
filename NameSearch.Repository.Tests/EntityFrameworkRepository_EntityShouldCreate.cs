@@ -18,13 +18,13 @@ namespace NameSearch.Repository.Tests
         [Fact]
         public void CreateName()
         {
-            var name = new SearchName();
+            var name = new Name();
             name.Value = "Duncan";
             name.Description = null;
             var contextObj = Repository.Create(name);
             Repository.Save();
 
-            var exists = Repository.GetExists<SearchName>(x => x.Id == name.Id);
+            var exists = Repository.GetExists<Name>(x => x.Id == name.Id);
             Assert.True(exists);
         }
 

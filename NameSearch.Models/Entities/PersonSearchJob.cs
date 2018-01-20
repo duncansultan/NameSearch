@@ -7,9 +7,9 @@ namespace NameSearch.Models.Entities
     /// <summary>
     /// Search Job Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.SearchJob}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.PersonSearchJob}" />
     /// <inheritdoc />
-    public class SearchJob : EntityBase<SearchJob>
+    public class PersonSearchJob : EntityBase<PersonSearchJob>
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is finished.
@@ -33,7 +33,7 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The searches.
         /// </value>
-        public List<SearchTransaction> Searches { get; set; }
+        public List<PersonSearchResult> PersonSearchResuts { get; set; }
 
         #region Equality
 
@@ -42,12 +42,12 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(SearchJob other)
+        public override bool Equals(PersonSearchJob other)
         {
             if (other == null) return false;
             return IsFinished == other.IsFinished &&
                 IsSuccessful == other.IsSuccessful &&
-                Searches.Equals(other.Searches);
+                PersonSearchResuts.Equals(other.PersonSearchResuts);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace NameSearch.Models.Entities
             if (obj is null) return false;
             if (this is null) return false;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as SearchJob);
+            return Equals(obj as PersonSearchJob);
         }
 
         /// <summary>

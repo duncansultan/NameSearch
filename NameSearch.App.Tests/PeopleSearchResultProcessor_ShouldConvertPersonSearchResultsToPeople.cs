@@ -11,19 +11,19 @@ using Moq;
 
 namespace NameSearch.App.Tests
 {
-    public class PeopleMerge_ShouldMergeRecords
+    public class PeopleSearchResultProcessor_ShouldConvertPersonSearchResultsToPeople
     {
         private readonly Mock<IEntityFrameworkRepository> MockRepository;
         private readonly Mock<IMapper> MockMapper;
         private readonly JsonSerializerSettings SerializerSettings;
-        private readonly PeopleMerge PeopleMerge;
+        private readonly PeopleSearchResultProcessor PeopleMerge;
 
-        public PeopleMerge_ShouldMergeRecords()
+        public PeopleSearchResultProcessor_ShouldConvertPersonSearchResultsToPeople()
         {
             this.MockRepository = new Mock<IEntityFrameworkRepository>();
             this.MockMapper = new Mock<IMapper>();
             this.SerializerSettings = new JsonSerializerSettings(); 
-            this.PeopleMerge = new PeopleMerge(MockRepository.Object, MockMapper.Object, SerializerSettings);
+            this.PeopleMerge = new PeopleSearchResultProcessor(MockRepository.Object, MockMapper.Object, SerializerSettings);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace NameSearch.App.Tests
         {
             //Arrange
             //ToDo: Mock a SearchJob with Multiple Transactions
-            var searchJob = MockRepository.Object.GetFirst<SearchJob>(x => !x.IsFinished);
+            var searchJob = MockRepository.Object.GetFirst<PersonSearchJob>(x => !x.IsFinished);
 
             //Act
 

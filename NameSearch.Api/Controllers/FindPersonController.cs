@@ -59,7 +59,7 @@ namespace NameSearch.Api.Controllers
         /// <exception cref="System.ArgumentNullException">model</exception>
         /// <exception cref="JsonReaderException">Empty JSON result.</exception>
         [HttpGet("[controller]/[action]/{model}.{format?}")]
-        public async Task<JsonResult> GetPerson(IPerson model)
+        public async Task<JsonResult> GetFindPerson(IPerson model)
         {
             if (model == null)
             {
@@ -67,6 +67,7 @@ namespace NameSearch.Api.Controllers
             }
 
             var uri = GetFindPersonUri(model);
+            Log.Information($"GetPerson: {uri}");
             var response = await HttpRequestFactory.Get(uri);
             var responseHeaders = response.Headers;
             var json = await response.Content.ReadAsStringAsync();
@@ -102,8 +103,7 @@ namespace NameSearch.Api.Controllers
             };
 
             // Reconstruct the original URL with new query string
-            var uri = baseUri + qb.ToQueryString();
-            Log.Information($"GetFindPersonUri: {uri}");
+            var uri = baseUri + qb.ToQueryString();            
             return uri;
         }
     }

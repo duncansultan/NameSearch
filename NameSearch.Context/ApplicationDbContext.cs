@@ -89,26 +89,26 @@ namespace NameSearch.Context
         /// </value>
         public DbSet<Phone> Phones { get; set; }
         /// <summary>
-        /// Gets or sets the search names.
+        /// Gets or sets the names.
         /// </summary>
         /// <value>
-        /// The search names.
+        /// The names.
         /// </value>
-        public DbSet<SearchName> SearchNames { get; set; }
+        public DbSet<Name> Names { get; set; }
         /// <summary>
-        /// Gets or sets the search jobs.
+        /// Gets or sets the person search jobs.
         /// </summary>
         /// <value>
-        /// The search jobs.
+        /// The person search jobs.
         /// </value>
-        public DbSet<SearchJob> SearchJobs { get; set; }
+        public DbSet<PersonSearchJob> PersonSearchJobs { get; set; }
         /// <summary>
-        /// Gets or sets the search transactions.
+        /// Gets or sets the person search results.
         /// </summary>
         /// <value>
-        /// The search transactions.
+        /// The person search results.
         /// </value>
-        public DbSet<SearchTransaction> SearchTransactions { get; set; }
+        public DbSet<PersonSearchResult> PersonSearchResults { get; set; }
 
         /// <summary>
         /// Override this method to further configure the model that was discovered by convention from the entity types
@@ -150,11 +150,11 @@ namespace NameSearch.Context
                 //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
                 //.OnDelete(DeleteBehavior.Cascade)
                 .IsRequired(false);
-            modelBuilder.Entity<SearchName>()
+            modelBuilder.Entity<Name>()
                 .HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<SearchJob>()
+            modelBuilder.Entity<PersonSearchJob>()
                 .HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<SearchTransaction>()
+            modelBuilder.Entity<PersonSearchResult>()
                 .HasQueryFilter(p => p.IsActive);
         }
 

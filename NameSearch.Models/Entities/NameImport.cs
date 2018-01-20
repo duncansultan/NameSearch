@@ -7,9 +7,9 @@ namespace NameSearch.Models.Entities
     /// <summary>
     /// Search Name Group Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.SearchNameGroup}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.NameImport}" />
     /// <inheritdoc />
-    public class SearchNameGroup : EntityBase<SearchNameGroup>
+    public class NameImport : EntityBase<NameImport>
     {
         /// <summary>
         /// Gets or sets the name of the file.
@@ -24,7 +24,7 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The searches.
         /// </value>
-        public List<SearchName> SearchNames { get; set; }
+        public List<Name> Names { get; set; }
 
         #region Equality
 
@@ -33,11 +33,11 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(SearchNameGroup other)
+        public override bool Equals(NameImport other)
         {
             if (other == null) return false;
             return FileName == other.FileName &&
-                SearchNames.Equals(other.SearchNames);
+                Names.Equals(other.Names);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace NameSearch.Models.Entities
             if (obj is null) return false;
             if (this is null) return false;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as SearchJob);
+            return Equals(obj as PersonSearchJob);
         }
 
         /// <summary>

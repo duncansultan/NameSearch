@@ -20,13 +20,13 @@ namespace NameSearch.Repository.Tests
         [Fact]
         public void UpdateName()
         {
-            var name = Repository.GetFirst<SearchName>();
+            var name = Repository.GetFirst<Name>();
             var id = name.Id;
             name.Description = "Test";
             Repository.Update(name);
             Repository.Save();
 
-            var updatedName = Repository.GetFirst<SearchName>(x => x.Id == id);
+            var updatedName = Repository.GetFirst<Name>(x => x.Id == id);
             Assert.Equal("Test", updatedName.Description);
         }
 

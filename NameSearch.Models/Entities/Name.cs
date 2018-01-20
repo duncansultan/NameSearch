@@ -1,58 +1,39 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
 namespace NameSearch.Models.Entities
 {
     /// <summary>
-    /// Search Transaction Entity
+    /// SearchName Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.SearchTransaction}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.Name}" />
     /// <inheritdoc />
-    public class SearchTransaction : EntityBase<SearchTransaction>
+    public class Name : EntityBase<Name>
     {
         /// <summary>
-        /// Gets or sets the search job identifier.
+        /// Gets or sets the search name Group identifier.
         /// </summary>
         /// <value>
-        /// The search job identifier.
+        /// The search name Group identifier.
         /// </value>
-        [ForeignKey("SearchJobForeignKey")]
-        public long SearchJobId { get; set; }
+        [ForeignKey("NameImportForeignKey")]
+        public long NameImportId { get; set; }
         /// <summary>
-        /// Gets or sets the HTTP response.
+        /// Gets or sets the value.
         /// </summary>
         /// <value>
-        /// The HTTP response.
+        /// The value.
         /// </value>
-        public int? HttpStatusCode { get; set; }
+        [Required]
+        public string Value { get; set; }
         /// <summary>
-        /// Gets or sets the number of results.
+        /// Gets or sets the description.
         /// </summary>
         /// <value>
-        /// The number of results.
+        /// The description.
         /// </value>
-        public int NumberOfResults { get; set; }
-        /// <summary>
-        /// Gets or sets the warnings.
-        /// </summary>
-        /// <value>
-        /// The warnings.
-        /// </value>
-        public string Warnings { get; set; }
-        /// <summary>
-        /// Gets or sets the error.
-        /// </summary>
-        /// <value>
-        /// The error.
-        /// </value>
-        public string Error { get; set; }
-        /// <summary>
-        /// Gets or sets the json data.
-        /// </summary>
-        /// <value>
-        /// The json data.
-        /// </value>
-        public string Data { get; set; }
+        public string Description { get; set; }
 
         #region Equality
 
@@ -61,15 +42,12 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(SearchTransaction other)
+        public override bool Equals(Name other)
         {
             if (other == null) return false;
-            return SearchJobId == other.SearchJobId &&
-                HttpStatusCode == other.HttpStatusCode &&
-                NumberOfResults == other.NumberOfResults &&
-                string.Equals(Warnings, other.Warnings) &&
-                string.Equals(Error, other.Error) &&
-                string.Equals(Data, other.Data);
+            return NameImportId == other.NameImportId &&
+                string.Equals(Value, other.Value) &&
+                string.Equals(Description, other.Description);
         }
 
         /// <summary>
@@ -84,7 +62,7 @@ namespace NameSearch.Models.Entities
             if (obj is null) return false;
             if (this is null) return false;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as SearchTransaction);
+            return Equals(obj as Name);
         }
 
         /// <summary>

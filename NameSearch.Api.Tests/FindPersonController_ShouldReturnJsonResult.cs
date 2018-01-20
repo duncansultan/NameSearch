@@ -32,7 +32,7 @@ namespace NameSearch.Api.Tests
             var model = GetTestPerson();
 
             //Act
-            var response = await Controller.GetPerson(model);
+            var response = await Controller.GetFindPerson(model);
 
             //Assert
             Assert.NotNull(response);

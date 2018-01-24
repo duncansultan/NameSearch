@@ -19,10 +19,6 @@ namespace NameSearch.Models.Domain.Api.Response
         /// </value>
         public int? StatusCode { get; set; }
         /// <summary>
-        /// The response headers
-        /// </summary>
-        public HttpResponseHeaders Headers { get; set; }
-        /// <summary>
         /// The response object
         /// </summary>
         public string Content { get; set; }

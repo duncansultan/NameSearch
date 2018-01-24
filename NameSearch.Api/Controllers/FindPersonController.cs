@@ -73,7 +73,6 @@ namespace NameSearch.Api.Controllers
             {
                 RequestUri = requestUri,
                 StatusCode = (int?) httpResponse.StatusCode,
-                Headers = httpResponse.Headers,
                 Content = await httpResponse.Content.ReadAsStringAsync()
             };
 

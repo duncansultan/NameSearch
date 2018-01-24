@@ -67,7 +67,7 @@ namespace NameSearch.Utility
             {
                 logger.ForContext("fullPath", fullPath)
                     .ForContext("fileExists", fileExists)
-                    .Information("<{EventID:l}> - {Message}", "GetAvailableFullPath", "File not found.");
+                    .Error("<{EventID:l}> - {Message}", "FromCsv", "File not found.");
 
                 throw new FileNotFoundException("FromCsv - File not found.", fullPath);
             }
@@ -95,7 +95,7 @@ namespace NameSearch.Utility
             {
                 logger.ForContext("fullPath", fullPath)
                     .ForContext("fileExists", fileExists)
-                    .Information("<{EventID:l}> - {Message}", "FromJson", "File not found.");
+                    .Error("<{EventID:l}> - {Message}", "FromJson", "File not found.");
 
                 throw new FileNotFoundException("FromJson - File not found.", fullPath);
             }
@@ -124,7 +124,7 @@ namespace NameSearch.Utility
             {
                 logger.ForContext("fullPath", fullPath)
                     .ForContext("fileExists", fileExists)
-                    .Information("<{EventID:l}> - {Message}", "FromJsonAsync", "File not found.");
+                    .Error("<{EventID:l}> - {Message}", "FromJsonAsync", "File not found.");
 
                 throw new FileNotFoundException("FromJsonAsync - File not found.", fullPath);
             }

@@ -20,6 +20,11 @@ namespace NameSearch.Repository
     /// <seealso cref="T:System.IDisposable" />
     public class EntityFrameworkRepository : IEntityFrameworkRepository, IDisposable
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private ILogger logger = Log.Logger.ForContext<EntityFrameworkRepository>();
+
         /// <inheritdoc />
         /// <summary>
         /// Gets or sets the context.
@@ -275,12 +280,12 @@ namespace NameSearch.Repository
                         try
                         {
                             var result = Context.SaveChanges();
-                            Log.Information("Save Result {0}", result);
+                            logger.Information("<{EventID:l}> - {Message}", "Save", result);
                         }
                         catch (DbUpdateConcurrencyException ex)
                         {
                             saveFailed = true;
-                            Log.Warning("Optimistic Concurrency Fault, reloading entity and trying again.");
+                            logger.Warning("<{EventID:l}> - {Message}", "Save", "Optimistic Concurrency Fault, reloading entity and trying again.");
                             //TODO: custom optimistic concurrency resolution
                             ex.Entries.Single().Reload();
                         }
@@ -291,13 +296,13 @@ namespace NameSearch.Repository
                 }
                 else
                 {
-                    Log.Warning("No Changes to be saved");
+                    logger.Warning("<{EventID:l}> - {Message}", "Save", "No Changes to be saved");
                 }
 
             }
             catch (DbUpdateException e)
             {
-                Log.Logger.Fatal(e, "Save failed with DbUpdateException.");
+                logger.Fatal("<{EventID:l}> - {Message}", "Save", "Save failed with DbUpdateException.");
             }
         }
 
@@ -310,10 +315,10 @@ namespace NameSearch.Repository
             }
             catch (DbUpdateException e)
             {
-                Log.Logger.Fatal(e, "SaveAsync failed with DbUpdateException.");
+                logger.Fatal("<{EventID:l}> - {Message}", "SaveAsync", "Save failed with DbUpdateException.");
             }
             var result = Task.FromResult(0);
-            Log.Information("SaveAsync Result: {@0}", result);
+            logger.Fatal("<{EventID:l}> - {Message}", "SaveAsync", result);
             return result;
         }
     }

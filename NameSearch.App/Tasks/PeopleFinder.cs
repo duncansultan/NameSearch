@@ -67,7 +67,7 @@ namespace NameSearch.App.Tasks
                 foreach (var person in people)
                 {
                     var result = await FindPersonController.GetFindPerson(person);
-                    var jObject = JObject.Parse(result.Value.ToString());
+                    var jObject = JObject.Parse(result.Content);
 
                     var exportToJsonFileTask = Task.Run(async () => await this.Export.ToJsonAsync(jObject, $"SearchJob-{personSearchJob.Id}-{person.Name}", cancellationToken));
 

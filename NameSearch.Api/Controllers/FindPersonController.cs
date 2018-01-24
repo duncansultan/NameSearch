@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using HttpClient.Factory;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.Models.Domain.Api.Request;
-using Newtonsoft.Json;
+using NameSearch.Models.Domain.Api.Response;
 using Serilog;
 
 namespace NameSearch.Api.Controllers
@@ -30,20 +30,19 @@ namespace NameSearch.Api.Controllers
         /// The configuration
         /// </summary>
         private readonly IConfiguration Configuration;
+
         /// <summary>
-        /// The serializer settings
+        /// The logger
         /// </summary>
-        private readonly JsonSerializerSettings SerializerSettings;
+        private ILogger logger = Log.Logger.ForContext<FindPersonController>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindPersonController"/> class.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
-        /// <param name="serializerSettings">The serializer settings.</param>
-        public FindPersonController(IConfiguration configuration, JsonSerializerSettings serializerSettings)
+        public FindPersonController(IConfiguration configuration)
         {
             this.Configuration = configuration;
-            this.SerializerSettings = serializerSettings;
 
             apiKey = configuration.GetValue<string>("WhitePages:api_key");
             baseUri = configuration.GetValue<string>("WhitePages:api_url");
@@ -52,32 +51,40 @@ namespace NameSearch.Api.Controllers
         /// <summary>
         /// Gets the person.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="person">The model.</param>
         /// <returns>
         /// JSON Result
         /// </returns>
         /// <exception cref="System.ArgumentNullException">model</exception>
         /// <exception cref="JsonReaderException">Empty JSON result.</exception>
         [HttpGet("[controller]/[action]/{model}.{format?}")]
-        public async Task<JsonResult> GetFindPerson(IPerson model)
+        public async Task<ApiResponse> GetFindPerson(Models.Domain.Api.Request.Person person)
         {
-            if (model == null)
+            if (person == null)
             {
-                throw new System.ArgumentNullException(nameof(model));
+                throw new ArgumentNullException(nameof(person));
             }
 
-            var uri = GetFindPersonUri(model);
-            Log.Information($"GetPerson: {uri}");
-            var response = await HttpRequestFactory.Get(uri);
-            var responseHeaders = response.Headers;
-            var json = await response.Content.ReadAsStringAsync();
+            var requestUri = GetFindPersonUri(person);
 
-            if (string.IsNullOrWhiteSpace(json))
+            var httpResponse = await HttpRequestFactory.Get(requestUri);
+
+            var apiResponse = new ApiResponse
             {
-                throw new JsonReaderException("Empty JSON result.");
-            }
+                RequestUri = requestUri,
+                StatusCode = (int?) httpResponse.StatusCode,
+                Headers = httpResponse.Headers,
+                Content = await httpResponse.Content.ReadAsStringAsync()
+            };
 
-            return new JsonResult(json, SerializerSettings);
+            logger.ForContext("Person", person, true)
+                .ForContext("Uri", requestUri)
+                .ForContext("Headers", httpResponse.Headers)
+                .ForContext("StatusCode", httpResponse.StatusCode)
+                .ForContext("IsSuccessStatusCode", httpResponse.IsSuccessStatusCode)
+                .Information("<{EventID:l}> - Uri {uri}", "GetFindPerson", requestUri);
+
+            return apiResponse;
         }
 
         /// <summary>
@@ -87,7 +94,7 @@ namespace NameSearch.Api.Controllers
         /// <returns>
         /// URI String
         /// </returns>
-        private string GetFindPersonUri(IPerson model)
+        private string GetFindPersonUri(Models.Domain.Api.Request.Person model)
         {
             // Use the QueryBuilder to add in new items in a safe way (handles multiples and empty values)
             var qb = new QueryBuilder
@@ -103,7 +110,7 @@ namespace NameSearch.Api.Controllers
             };
 
             // Reconstruct the original URL with new query string
-            var uri = baseUri + qb.ToQueryString();            
+            var uri = baseUri + qb.ToQueryString();
             return uri;
         }
     }

@@ -144,35 +144,35 @@ namespace NameSearch.Context
             //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.
             //.OnDelete(DeleteBehavior.Cascade)
 
-            modelBuilder.Entity<Person>()
-                .HasMany(a => a.Addresses)
-                .WithOne(p => p.Person)
-                .IsRequired(false);
+            //modelBuilder.Entity<Person>()
+            //    .HasMany(a => a.Addresses)
+            //    .WithOne(p => p.Person)
+            //    .IsRequired(false);
 
-            modelBuilder.Entity<Person>()
-                .HasMany(a => a.Phones)
-                .WithOne(p => p.Person)
-                .IsRequired(false);
+            //modelBuilder.Entity<Person>()
+            //    .HasMany(a => a.Phones)
+            //    .WithOne(p => p.Person)
+            //    .IsRequired(false);
 
-            modelBuilder.Entity<Person>()
-                .HasMany(a => a.Associates)
-                .WithOne(p => p.Person)
-                .IsRequired(false);
+            //modelBuilder.Entity<Person>()
+            //    .HasMany(a => a.Associates)
+            //    .WithOne(p => p.Person)
+            //    .IsRequired(false);
 
-            modelBuilder.Entity<Person>()
-                .HasOne(a => a.PersonSearchResult)
-                .WithOne(p => p.Person)
-                .IsRequired(false);
+            //modelBuilder.Entity<Person>()
+            //    .HasOne(a => a.PersonSearchResult)
+            //    .WithOne(p => p.Person)
+            //    .IsRequired(false);
 
-            modelBuilder.Entity<NameImport>()
-                .HasMany(a => a.Names)
-                .WithOne(p => p.NameImport)
-                .IsRequired(true);
+            //modelBuilder.Entity<NameImport>()
+            //    .HasMany(a => a.Names)
+            //    .WithOne(p => p.NameImport)
+            //    .IsRequired(true);
 
-            modelBuilder.Entity<PersonSearchJob>()
-                .HasMany(a => a.PersonSearchResults)
-                .WithOne(p => p.PersonSearchJob)
-                .IsRequired(true);
+            //modelBuilder.Entity<PersonSearchJob>()
+            //    .HasMany(a => a.PersonSearchResults)
+            //    .WithOne(p => p.PersonSearchJob)
+            //    .IsRequired(true);
         }
 
         /// <summary>
@@ -270,8 +270,8 @@ namespace NameSearch.Context
         private void OnBeforeSaving()
         {
             var now = DateTime.Now;
-            var entires = ChangeTracker.Entries();
-            foreach (var entry in entires)
+            var entries = ChangeTracker.Entries();
+            foreach (var entry in entries)
             {
                 var entity = entry.Entity as AuditableEntityBase;
 

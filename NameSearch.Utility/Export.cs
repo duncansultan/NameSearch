@@ -3,6 +3,7 @@ using CsvHelper.Configuration;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Serilog;
 using System.Collections;
 using System.IO;
 using System.Threading;
@@ -15,6 +16,11 @@ namespace NameSearch.Utility
     /// </summary>
     public class Export : IExport
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private ILogger logger = Log.Logger.ForContext<Export>();
+
         /// <summary>
         /// The CSV helper configuration
         /// </summary>
@@ -109,9 +115,14 @@ namespace NameSearch.Utility
             {
                 fileName = $"{fileName}.csv";
             }
-            var absolutePath = Path.Combine(Directory, fileName);
 
-            using (var file = File.CreateText(absolutePath))
+            var fullPath = Path.Combine(Directory, fileName);
+            if (File.Exists(fullPath))
+            {
+                fullPath = GetAvailableFullPath(fullPath);
+            }
+
+            using (var file = File.CreateText(fullPath))
             using (var writer = new JsonTextWriter(file))
             {
                 json.WriteTo(writer);
@@ -156,15 +167,20 @@ namespace NameSearch.Utility
             {
                 fileName = $"{fileName}.csv";
             }
-            var absolutePath = Path.Combine(Directory, fileName);
 
-            using (var file = File.CreateText(absolutePath))
+            var fullPath = Path.Combine(Directory, fileName);
+            if (File.Exists(fullPath))
+            {
+                fullPath = GetAvailableFullPath(fullPath);
+            }
+
+            using (var file = File.CreateText(fullPath))
             using (var writer = new JsonTextWriter(file))
             {
                 await json.WriteToAsync(writer, cancellationToken);
             }
         }
-        
+
         /// <summary>
         /// Gets the available full path.
         /// </summary>
@@ -184,6 +200,10 @@ namespace NameSearch.Utility
                 string tempFileName = string.Format("{0}({1})", fileNameOnly, count++);
                 newFullPath = Path.Combine(path, tempFileName + extension);
             }
+
+            logger.ForContext("fullPath", fullPath)
+                .ForContext("newFullPath", newFullPath)
+                .Information("<{EventID:l}> - {Message}", "GetAvailableFullPath", "File Exists, path updated.");
 
             return newFullPath;
         }

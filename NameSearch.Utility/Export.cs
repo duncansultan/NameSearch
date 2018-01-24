@@ -77,6 +77,10 @@ namespace NameSearch.Utility
             {
                 csv.WriteRecords(records);
             }
+
+            logger.ForContext("fullPath", fullPath)
+                .ForContext("IEnumerable<T>", typeof(T))
+                .Information("<{EventID:l}> - {Message}", "ToCsv", "File saved successfully");
         }
 
         /// <summary>
@@ -102,6 +106,9 @@ namespace NameSearch.Utility
             {
                 textWriter.Write(text);
             }
+
+            logger.ForContext("fullPath", fullPath)
+                .Information("<{EventID:l}> - {Message}", "ToTxt", "File saved successfully");
         }
 
         /// <summary>
@@ -127,6 +134,9 @@ namespace NameSearch.Utility
             {
                 json.WriteTo(writer);
             }
+
+            logger.ForContext("fullPath", fullPath)
+                .Information("<{EventID:l}> - {Message}", "ToJson", "File saved successfully");
         }
 
         /// <summary>
@@ -152,6 +162,9 @@ namespace NameSearch.Utility
             {
                 await textWriter.WriteAsync(test);
             }
+
+            logger.ForContext("fullPath", fullPath)
+                .Information("<{EventID:l}> - {Message}", "ToTxtAsync", "File saved successfully");
         }
 
         /// <summary>
@@ -179,6 +192,9 @@ namespace NameSearch.Utility
             {
                 await json.WriteToAsync(writer, cancellationToken);
             }
+
+            logger.ForContext("fullPath", fullPath)
+                .Information("<{EventID:l}> - {Message}", "ToJsonAsync", "File saved successfully");
         }
 
         /// <summary>

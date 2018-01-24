@@ -76,8 +76,13 @@ namespace NameSearch.Utility
             using (var csv = new CsvReader(textReader, CsvHelperConfiguration))
             {
                 var records = csv.GetRecords<T>();
+
+                logger.ForContext("fullPath", fullPath)
+                    .ForContext("IEnumerable<T>", typeof(T))
+                    .Information("<{EventID:l}> - {Message}", "FromCsv", "File imported successfully");
+
                 return records;
-            }
+            }           
         }
 
         /// <summary>
@@ -104,6 +109,10 @@ namespace NameSearch.Utility
             using (var reader = new JsonTextReader(file))
             {
                 JObject jObject = (JObject)JToken.ReadFrom(reader);
+
+                logger.ForContext("fullPath", fullPath)
+                    .Information("<{EventID:l}> - {Message}", "FromJson", "File imported successfully");
+
                 return jObject;
             }
         }
@@ -133,6 +142,10 @@ namespace NameSearch.Utility
             using (var reader = new JsonTextReader(file))
             {
                 JObject jObject = (JObject)await JToken.ReadFromAsync(reader, cancellationToken);
+
+                logger.ForContext("fullPath", fullPath)
+    .Information("<{EventID:l}> - {Message}", "FromJsonAsync", "File imported successfully");
+
                 return jObject;
             }
         }

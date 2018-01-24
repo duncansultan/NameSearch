@@ -32,14 +32,6 @@ namespace NameSearch.Models.Entities
         /// </value>
         [ForeignKey("PersonForeignKey")]
         public long PersonId { get; set; }
-        /// <summary>
-        /// Gets or sets the person object.
-        /// </summary>
-        /// <value>
-        /// The person object.
-        /// </value>
-        [InverseProperty("Phones")]
-        public Person Person { get; set; }
 
         #region Equality
 
@@ -53,8 +45,7 @@ namespace NameSearch.Models.Entities
             if (other == null) return false;
             return string.Equals(ExternalId, other.ExternalId) &&
                 string.Equals(PhoneNumber, other.PhoneNumber) &&
-                PersonId == other.PersonId &&
-                Person.Equals(other.Person);
+                PersonId == other.PersonId;
         }
 
         /// <summary>

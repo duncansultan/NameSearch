@@ -37,7 +37,7 @@ namespace NameSearch.Models.Entities
         {
             if (other == null) return false;
             return FileName == other.FileName &&
-                Names.Equals(other.Names);
+                (Names ?? new List<Name>()).Equals(other.Names);
         }
 
         /// <summary>

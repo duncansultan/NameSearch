@@ -34,14 +34,6 @@ namespace NameSearch.Models.Entities
         /// The description.
         /// </value>
         public string Description { get; set; }
-        /// <summary>
-        /// Gets or sets the name import.
-        /// </summary>
-        /// <value>
-        /// The name import.
-        /// </value>
-        [InverseProperty("Names")]
-        public NameImport NameImport { get; set; }
 
         #region Equality
 
@@ -55,8 +47,7 @@ namespace NameSearch.Models.Entities
             if (other == null) return false;
             return NameImportId == other.NameImportId &&
                 string.Equals(Value, other.Value) &&
-                string.Equals(Description, other.Description) &&
-                NameImport.Equals(other.NameImport);
+                string.Equals(Description, other.Description);
         }
 
         /// <summary>

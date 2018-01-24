@@ -124,14 +124,6 @@ namespace NameSearch.Models.Entities
         /// </value>
         [ForeignKey("PersonForeignKey")]
         public long PersonId { get; set; }
-        /// <summary>
-        /// Gets or sets the person object.
-        /// </summary>
-        /// <value>
-        /// The person object.
-        /// </value>
-        [InverseProperty("Addresses")]
-        public Person Person { get; set; }
 
         #region Equality
 
@@ -157,8 +149,7 @@ namespace NameSearch.Models.Entities
                 Accuracy == other.Accuracy &&
                 IsCurrent == other.IsCurrent &&
                 IsHistorical == other.IsHistorical &&
-                PersonId == other.PersonId &&
-                Person.Equals(other.Person);
+                PersonId == other.PersonId;
         }
 
         /// <summary>

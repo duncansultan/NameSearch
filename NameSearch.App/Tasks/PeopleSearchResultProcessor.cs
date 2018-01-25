@@ -2,7 +2,9 @@
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using Newtonsoft.Json;
+using Serilog;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +15,10 @@ namespace NameSearch.App.Tasks
     /// </summary>
     public class PeopleSearchResultProcessor
     {
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private ILogger logger = Log.Logger.ForContext<PeopleSearchResultProcessor>();
         /// <summary>
         /// The repository
         /// </summary>
@@ -62,23 +68,49 @@ namespace NameSearch.App.Tasks
             {
                 throw new ArgumentNullException(nameof(personSearchJob.PersonSearchResults));
             }
-            
+
+            var stopwatch = new Stopwatch();
+
+            //Start
+            stopwatch.Start();
+
             foreach (var personSearchResult in personSearchJob.PersonSearchResults)
             {
-                var personResult = JsonConvert.DeserializeObject<Models.Domain.Api.Response.Person>(personSearchResult.Data);
+                Models.Domain.Api.Response.Person person;
 
-                var personEntity = Mapper.Map<Models.Entities.Person>(personSearchResult);
-                personEntity.PersonSearchJobId = personSearchJob.Id;
+                try
+                {
+                    //ToDo: Create Custom Deserializer setting
+                    person = JsonConvert.DeserializeObject<Models.Domain.Api.Response.Person>(personSearchResult.Data, SerializerSettings);
+                }
+                catch (JsonException ex)
+                {
+                    logger.ForContext("Data", personSearchResult.Data)
+                        .ForContext("PersonSearchJob.Id", personSearchJob.Id)
+                        .Warning(ex, "<{EventID:l}> - {message} - {ms} ms", "Run", "Json Data Deserialization Failed", stopwatch.ElapsedMilliseconds);
+
+                    continue;
+                }
+                
+                var personEntity = Mapper.Map<Models.Entities.Person>(person);
                 personEntity.PersonSearchResultId = personSearchResult.Id;
 
                 Repository.Create(personEntity);
-
                 await Repository.SaveAsync();
+
+                logger.ForContext("Person", person)
+                   .ForContext("PersonSearchJob.Id", personSearchJob.Id)
+                   .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Created Person Record", stopwatch.ElapsedMilliseconds);
             }
 
             personSearchJob.IsProcessed = true;
-
+            Repository.Update(personSearchJob);
             await Repository.SaveAsync();
+
+            stopwatch.Stop();
+
+            logger.ForContext("PersonSearchJob.Id", personSearchJob.Id)
+                .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Processing finished", stopwatch.ElapsedMilliseconds);
 
             return personSearchJob.IsProcessed;
         }

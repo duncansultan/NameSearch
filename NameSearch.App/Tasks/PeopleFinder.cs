@@ -55,7 +55,7 @@ namespace NameSearch.App.Tasks
         /// </summary>
         /// <param name="people">The people.</param>
         /// <returns></returns>
-        public async Task<bool> Run(IEnumerable<Models.Domain.Api.Request.Person> people, IProgress<Models.Domain.Api.Request.Person> progress, CancellationToken cancellationToken)
+        public async Task<bool> Run(IEnumerable<Models.Domain.Api.Request.IPerson> people, IProgress<Models.Domain.Api.Request.IPerson> progress, CancellationToken cancellationToken)
         {
             if (people == null || !people.Any())
             {

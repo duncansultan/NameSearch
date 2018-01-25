@@ -15,6 +15,6 @@ namespace NameSearch.Api.Controllers.Interfaces
         /// <returns>
         ///     Api Response
         /// </returns>
-        Task<ApiResponse> GetFindPerson(Models.Domain.Api.Request.Person model);
+        Task<IApiResponse> GetFindPerson(Models.Domain.Api.Request.IPerson model);
     }
 }

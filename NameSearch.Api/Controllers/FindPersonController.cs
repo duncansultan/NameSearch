@@ -58,7 +58,7 @@ namespace NameSearch.Api.Controllers
         /// <exception cref="System.ArgumentNullException">model</exception>
         /// <exception cref="JsonReaderException">Empty JSON result.</exception>
         [HttpGet("[controller]/[action]/{model}.{format?}")]
-        public async Task<ApiResponse> GetFindPerson(Models.Domain.Api.Request.Person person)
+        public async Task<IApiResponse> GetFindPerson(Models.Domain.Api.Request.IPerson person)
         {
             if (person == null)
             {
@@ -93,7 +93,7 @@ namespace NameSearch.Api.Controllers
         /// <returns>
         /// URI String
         /// </returns>
-        private string GetFindPersonUri(Models.Domain.Api.Request.Person model)
+        private string GetFindPersonUri(Models.Domain.Api.Request.IPerson model)
         {
             // Use the QueryBuilder to add in new items in a safe way (handles multiples and empty values)
             var qb = new QueryBuilder

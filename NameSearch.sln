@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{909F8A8B-D2B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NameSearch.App", "NameSearch.App\NameSearch.App.csproj", "{04C273E4-D379-4801-B3A4-7FC3E3E8D336}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NameSearch.Extensions", "NameSearch.Extensions\NameSearch.Extensions.csproj", "{7B4D542F-2995-48B8-AA53-D9CE4E553032}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{04C273E4-D379-4801-B3A4-7FC3E3E8D336}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04C273E4-D379-4801-B3A4-7FC3E3E8D336}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04C273E4-D379-4801-B3A4-7FC3E3E8D336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B4D542F-2995-48B8-AA53-D9CE4E553032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B4D542F-2995-48B8-AA53-D9CE4E553032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B4D542F-2995-48B8-AA53-D9CE4E553032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B4D542F-2995-48B8-AA53-D9CE4E553032}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{65F97F3B-E13D-49A2-AC3D-E056E824F9FB} = {6466F19D-D528-433B-AFB8-E5808022DABA}
 		{835592C8-BA16-4E6A-8472-86C3CCCFAF5E} = {71F2E30C-2494-4AE3-8CC2-2D6F5E0A7DE6}
 		{04C273E4-D379-4801-B3A4-7FC3E3E8D336} = {909F8A8B-D2B7-440B-A223-CB5C761CBD37}
+		{7B4D542F-2995-48B8-AA53-D9CE4E553032} = {6466F19D-D528-433B-AFB8-E5808022DABA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9AE966E6-DFC3-4290-B25E-6CEA7DCB8EDB}

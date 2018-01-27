@@ -1,7 +1,4 @@
-﻿using NameSearch.Repository;
-using System.Threading.Tasks;
-using NameSearch.Api.Controllers.Interfaces;
-using Newtonsoft.Json.Linq;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using System.Threading;

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace NameSearch.App.Tasks
 {
-    public class SearchNameImporter
+    public class SearchNameImporter : ISearchNameImporter
     {
-        Task<bool> Run()
+        public Task<bool> Run()
         {
             return Task.Run(() => true);
         }

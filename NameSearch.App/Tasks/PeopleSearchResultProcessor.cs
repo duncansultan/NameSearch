@@ -14,7 +14,7 @@ namespace NameSearch.App.Tasks
     /// <summary>
     /// Process Search Results
     /// </summary>
-    public class PeopleSearchResultProcessor
+    public class PeopleSearchResultProcessor : IPeopleSearchResultProcessor
     {
         /// <summary>
         /// The logger

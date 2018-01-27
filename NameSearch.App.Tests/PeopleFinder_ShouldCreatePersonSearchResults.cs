@@ -37,7 +37,7 @@ namespace NameSearch.App.Tests
         /// <summary>
         /// The people finder
         /// </summary>
-        private readonly PeopleFinder PeopleFinder;
+        private readonly IPeopleFinder PeopleFinder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeopleFinder_ShouldCreatePersonSearchResults"/> class.
@@ -57,7 +57,7 @@ namespace NameSearch.App.Tests
      
             MockFindPersonController = new Mock<IFindPersonController>();
             //Config Mock
-            MockFindPersonController.Setup(x => x.GetFindPerson(It.IsAny<Models.Domain.Api.Request.Person>())).Returns((Models.Domain.Api.Request.Person p) => Task.FromResult(MockData.GetApiResponse()));
+            MockFindPersonController.Setup(x => x.GetFindPerson(It.IsAny<Models.Domain.Api.Request.Person>())).Returns((Models.Domain.Api.Request.Person p) => Task.FromResult(MockData.GetApiResponse(p)));
 
             MockExport = new Mock<IExport>();
             //Config Mock
@@ -80,7 +80,7 @@ namespace NameSearch.App.Tests
             var people = MockData.GetTestPeople();
 
             // Act
-            var progress = new Progress<Models.Domain.Api.Request.Person>();
+            var progress = new Progress<Models.Utility.ProgressReport>();
             var cancellationToken = new CancellationToken();
             var result = await PeopleFinder.Run(people, progress, cancellationToken);
 

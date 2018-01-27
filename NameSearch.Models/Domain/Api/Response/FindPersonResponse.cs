@@ -17,7 +17,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The Total number of people found.
         /// </value>
         [JsonProperty("count_person")]
-        public int CountPerson { get; set; }
+        public int? CountPerson { get; set; }
         /// <summary>
         /// Gets or sets the person Array of objects.
         /// </summary>
@@ -25,7 +25,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The person Array of objects.
         /// </value>
         [JsonProperty("person")]
-        public IList<Person> Person { get; set; }
+        public IEnumerable<Person> Person { get; set; }
         /// <summary>
         /// Gets or sets the Array o warnings messages describing search and input address validation. Possible values are:
         /// </summary>
@@ -40,7 +40,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// Partial Address
         /// </example>
         [JsonProperty("warnings")]
-        public string Warnings { get; set; }
+        public IEnumerable<string> Warnings { get; set; }
         /// <summary>
         /// Gets or sets the error.
         /// </summary>
@@ -48,6 +48,6 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The error.
         /// </value>
         [JsonProperty("error")]
-        public string Error { get; set; }
+        public IEnumerable<string> Error { get; set; }
     }
 }

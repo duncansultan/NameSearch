@@ -74,34 +74,20 @@
         /// <value>
         /// The latitude.
         /// </value>
-        double? Latitude { get; set; }
+        LatLong LatLong { get; set; }
         /// <summary>
-        /// Gets or sets the longitude.
+        /// Gets or sets the is active.
         /// </summary>
         /// <value>
-        /// The longitude.
+        /// The is active.
         /// </value>
-        double? Longitude { get; set; }
-        /// <summary>
-        /// Gets or sets the accuracy.
-        /// </summary>
-        /// <value>
-        /// The accuracy.
-        /// </value>
-        string Accuracy { get; set; }
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is active.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
-        /// </value>
-        bool IsActive { get; set; }
+        bool? IsActive { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether [delivery point].
         /// </summary>
         /// <value>
         ///   <c>true</c> if [delivery point]; otherwise, <c>false</c>.
         /// </value>
-        bool DeliveryPoint { get; set; }
+        string DeliveryPoint { get; set; }
     }
 }

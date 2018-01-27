@@ -1,5 +1,4 @@
-﻿using NameSearch.Models.Converters;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace NameSearch.Models.Domain.Api.Response
@@ -76,7 +75,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The current addresses.
         /// </value>
         [JsonProperty("current_addresses")]
-        public IEnumerable<IAddress> CurrentAddresses { get; set; } = new List<Address>();
+        public IEnumerable<CurrentAddress> CurrentAddresses { get; set; } = new List<CurrentAddress>();
         /// <summary>
         /// Gets or sets the historical addresses.
         /// </summary>
@@ -84,7 +83,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The historical addresses.
         /// </value>
         [JsonProperty("historical_addresses")]
-        public IEnumerable<IAddress> HistoricalAddresses { get; set; } = new List<Address>();
+        public IEnumerable<HistoricalAddress> HistoricalAddresses { get; set; } = new List<HistoricalAddress>();
         /// <summary>
         /// Gets or sets the phones.
         /// </summary>
@@ -92,7 +91,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The phones.
         /// </value>
         [JsonProperty("phones")]
-        public IEnumerable<IPhone> Phones { get; set; } = new List<Phone>();
+        public IEnumerable<Phone> Phones { get; set; } = new List<Phone>();
         /// <summary>
         /// Gets or sets the associated people.
         /// </summary>
@@ -100,6 +99,6 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The associated people.
         /// </value>
         [JsonProperty("associated_people")]
-        public IEnumerable<IAssociate> AssociatedPeople { get; set; } = new List<Associate>();
+        public IEnumerable<Associate> AssociatedPeople { get; set; } = new List<Associate>();
     }
 }

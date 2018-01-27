@@ -1,5 +1,4 @@
-﻿using NameSearch.Models.Converters;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace NameSearch.Models.Domain.Api.Response
 {
@@ -9,8 +8,7 @@ namespace NameSearch.Models.Domain.Api.Response
     /// <remarks>
     /// See also https://pro.whitepages.com/developer/documentation/find-person-api/
     /// </remarks>
-    //[JsonConverter(typeof(AddressConverter))]
-    public class Address : IAddress
+    public abstract class Address : IAddress
     {
         /// <summary>
         /// Gets or sets the external identifier.
@@ -90,24 +88,8 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The latitude.
         /// </value>
-        [JsonProperty("lat_long.latitude")]
-        public double? Latitude { get; set; }
-        /// <summary>
-        /// Gets or sets the longitude.
-        /// </summary>
-        /// <value>
-        /// The longitude.
-        /// </value>
-        [JsonProperty("lat_long.longitude")]
-        public double? Longitude { get; set; }
-        /// <summary>
-        /// Gets or sets the accuracy.
-        /// </summary>
-        /// <value>
-        /// The accuracy.
-        /// </value>
-        [JsonProperty("lat_long.accuracy")]
-        public string Accuracy { get; set; }
+        [JsonProperty("lat_long")]
+        public LatLong LatLong { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether this instance is active.
         /// </summary>
@@ -115,7 +97,7 @@ namespace NameSearch.Models.Domain.Api.Response
         ///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
         /// </value>
         [JsonProperty("is_active")]
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether [delivery point].
         /// </summary>
@@ -123,6 +105,16 @@ namespace NameSearch.Models.Domain.Api.Response
         ///   <c>true</c> if [delivery point]; otherwise, <c>false</c>.
         /// </value>
         [JsonProperty("delivery_point")]
-        public bool DeliveryPoint { get; set; }
+        public string DeliveryPoint { get; set; }
+    }
+
+    [JsonObject("current_addresses")]
+    public class CurrentAddress : Address
+    {
+    }
+
+    [JsonObject("historical_addresses")]
+    public class HistoricalAddress : Address
+    {
     }
 }

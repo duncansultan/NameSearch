@@ -9,7 +9,7 @@ namespace NameSearch.Models.Domain.Api.Response
     /// <remarks>
     /// See also https://pro.whitepages.com/developer/documentation/find-person-api/
     /// </remarks>
-    //[JsonConverter(typeof(AssociateConverter))]
+    [JsonObject("associated_people")]
     public class Associate : IAssociate
     {
         /// <summary>

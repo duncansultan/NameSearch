@@ -8,8 +8,8 @@ namespace NameSearch.Models.Domain.Api.Response
     /// </summary>
     /// <remarks>
     /// See also https://pro.whitepages.com/developer/documentation/find-person-api/
-    /// </remarks>
-    //[JsonConverter(typeof(PhoneConverter))]
+    /// </remarks> 
+    [JsonObject("phones")]
     public class Phone : IPhone
     {
         /// <summary>

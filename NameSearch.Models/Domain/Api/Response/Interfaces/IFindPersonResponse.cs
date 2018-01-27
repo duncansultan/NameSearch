@@ -15,14 +15,14 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The Total number of people found.
         /// </value>
-        int CountPerson { get; set; }
+        int? CountPerson { get; set; }
         /// <summary>
         /// Gets or sets the person Array of objects.
         /// </summary>
         /// <value>
         /// The person Array of objects.
         /// </value>
-        IList<Person> Person { get; set; }
+        IEnumerable<Person> Person { get; set; }
         /// <summary>
         /// Gets or sets the Array o warnings messages describing search and input address validation. Possible values are:
         /// </summary>
@@ -36,13 +36,13 @@ namespace NameSearch.Models.Domain.Api.Response
         /// International Address
         /// Partial Address
         /// </example>
-        string Warnings { get; set; }
+        IEnumerable<string> Warnings { get; set; }
         /// <summary>
         /// Gets or sets the error.
         /// </summary>
         /// <value>
         /// The error.
         /// </value>
-        string Error { get; set; }
+        IEnumerable<string> Error { get; set; }
     }
 }

@@ -65,27 +65,27 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The current addresses.
         /// </value>
-        IEnumerable<IAddress> CurrentAddresses { get; set; }
+        IEnumerable<CurrentAddress> CurrentAddresses { get; set; }
         /// <summary>
         /// Gets or sets the historical addresses.
         /// </summary>
         /// <value>
         /// The historical addresses.
         /// </value>
-        IEnumerable<IAddress> HistoricalAddresses { get; set; }
+        IEnumerable<HistoricalAddress> HistoricalAddresses { get; set; }
         /// <summary>
         /// Gets or sets the phones.
         /// </summary>
         /// <value>
         /// The phones.
         /// </value>
-        IEnumerable<IPhone> Phones { get; set; }
+        IEnumerable<Phone> Phones { get; set; }
         /// <summary>
         /// Gets or sets the associated people.
         /// </summary>
         /// <value>
         /// The associated people.
         /// </value>
-        IEnumerable<IAssociate> AssociatedPeople { get; set; }
+        IEnumerable<Associate> AssociatedPeople { get; set; }
     }
 }

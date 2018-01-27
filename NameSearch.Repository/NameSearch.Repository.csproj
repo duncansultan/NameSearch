@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NameSearch.Context\NameSearch.Context.csproj" />
+    <ProjectReference Include="..\NameSearch.Extensions\NameSearch.Extensions.csproj" />
     <ProjectReference Include="..\NameSearch.Models\NameSearch.Models.csproj" />
   </ItemGroup>
 

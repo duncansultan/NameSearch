@@ -22,7 +22,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The person Array of objects.
         /// </value>
-        IList<IPerson> Person { get; set; }
+        IList<Person> Person { get; set; }
         /// <summary>
         /// Gets or sets the Array o warnings messages describing search and input address validation. Possible values are:
         /// </summary>

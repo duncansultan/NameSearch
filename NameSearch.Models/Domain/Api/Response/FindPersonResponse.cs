@@ -25,7 +25,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// The person Array of objects.
         /// </value>
         [JsonProperty("person")]
-        public IList<IPerson> Person { get; set; }
+        public IList<Person> Person { get; set; }
         /// <summary>
         /// Gets or sets the Array o warnings messages describing search and input address validation. Possible values are:
         /// </summary>

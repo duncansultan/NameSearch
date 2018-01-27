@@ -80,12 +80,12 @@ namespace NameSearch.App.Tasks
 
             foreach (var personSearchResult in personSearchJob.PersonSearchResults)
             {
-                Models.Domain.Api.Response.Person person;
+                Models.Domain.Api.Response.IFindPersonResponse findPersonResponse;
 
                 try
                 {
                     //ToDo: Create Custom Deserializer setting
-                    person = JsonConvert.DeserializeObject<Models.Domain.Api.Response.Person>(personSearchResult.Data, SerializerSettings);
+                    findPersonResponse = JsonConvert.DeserializeObject<Models.Domain.Api.Response.FindPersonResponse>(personSearchResult.Data, SerializerSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -95,7 +95,7 @@ namespace NameSearch.App.Tasks
                     continue;
                 }
 
-                var personEntity = Mapper.Map<Models.Entities.Person>(person);
+                var personEntity = Mapper.Map<Models.Entities.Person>(findPersonResponse);
                 personEntity.PersonSearchResultId = personSearchResult.Id;
 
                 log.With("Person", personEntity);

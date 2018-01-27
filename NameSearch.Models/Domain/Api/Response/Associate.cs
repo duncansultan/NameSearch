@@ -6,7 +6,10 @@ namespace NameSearch.Models.Domain.Api.Response
     /// <summary>
     /// An Associate to a person.
     /// </summary>
-    [JsonConverter(typeof(AssociateConverter))]
+    /// <remarks>
+    /// See also https://pro.whitepages.com/developer/documentation/find-person-api/
+    /// </remarks>
+    //[JsonConverter(typeof(AssociateConverter))]
     public class Associate : IAssociate
     {
         /// <summary>
@@ -15,6 +18,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The external identifier.
         /// </value>
+        [JsonProperty("id")]
         public string ExternalId { get; set; }
         /// <summary>
         /// Gets or sets the Full name of the associated person.
@@ -22,6 +26,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The Full name of the associated person.
         /// </value>
+        [JsonProperty("name")]
         public string Name { get; set; }
         /// <summary>
         /// Gets or sets the Relation of the associated person to the found person.
@@ -29,6 +34,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The Relation of the associated person to the found person.
         /// </value>
+        [JsonProperty("relation")]
         public string Relation { get; set; }
     }
 }

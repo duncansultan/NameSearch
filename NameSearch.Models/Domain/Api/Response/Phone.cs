@@ -6,7 +6,10 @@ namespace NameSearch.Models.Domain.Api.Response
     /// <summary>
     /// A Phone
     /// </summary>
-    [JsonConverter(typeof(PhoneConverter))]
+    /// <remarks>
+    /// See also https://pro.whitepages.com/developer/documentation/find-person-api/
+    /// </remarks>
+    //[JsonConverter(typeof(PhoneConverter))]
     public class Phone : IPhone
     {
         /// <summary>
@@ -15,6 +18,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The identifier.
         /// </value>
+        [JsonProperty("id")]
         public string ExternalId { get; set; }
         /// <summary>
         /// Gets or sets the phone number.
@@ -22,6 +26,15 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The phone number.
         /// </value>
+        [JsonProperty("phone_number")]
         public string PhoneNumber { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the line.
+        /// </summary>
+        /// <value>
+        /// The type of the line.
+        /// </value>
+        [JsonProperty("line_type")]
+        public string LineType { get; set; }
     }
 }

@@ -6,18 +6,18 @@ using Serilog;
 using NameSearch.Utility.Interfaces;
 using System.Collections.Generic;
 using System;
-using NameSearch.Models.Entities;
 using System.Linq;
 using System.Threading;
 using System.Diagnostics;
 using NameSearch.Extensions;
+using NameSearch.Models.Utility;
 
 namespace NameSearch.App.Tasks
 {
     /// <summary>
     /// Run Searches to Find People
     /// </summary>
-    public class PeopleFinder
+    public class PeopleFinder : IPeopleFinder
     {
         /// <summary>
         /// The logger
@@ -56,7 +56,7 @@ namespace NameSearch.App.Tasks
         /// </summary>
         /// <param name="people">The people.</param>
         /// <returns></returns>
-        public async Task<bool> Run(IEnumerable<Models.Domain.Api.Request.IPerson> people, IProgress<Models.Domain.Api.Request.IPerson> progress, CancellationToken cancellationToken)
+        public async Task<bool> Run<TProgressReport>(IEnumerable<Models.Domain.Api.Request.IPerson> people, IProgress<TProgressReport> progress, CancellationToken cancellationToken) where TProgressReport : IProgressReport, new()
         {
             if (people == null || !people.Any())
             {
@@ -67,16 +67,30 @@ namespace NameSearch.App.Tasks
 
             var stopwatch = new Stopwatch();
 
+            var totalPeople = people.Count();
+
             //Start
+            var progressReport = new TProgressReport
+            {
+                IsRunning = true,
+                ProgressCount = 1,
+                TotalCount = totalPeople
+            };
+
+            progress.Report(progressReport);
+
             stopwatch.Start();
 
-            var personSearchJob = new PersonSearchJob();
+            var personSearchJob = new Models.Entities.PersonSearchJob();
             Repository.Create(personSearchJob);
             await Repository.SaveAsync();
 
             log.With("PersonSearchJob.Id", personSearchJob.Id);
 
             log.InformationEvent("Run", "Processing started", stopwatch.ElapsedMilliseconds);
+            progressReport.Message = "Processing started";
+            progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+            progress.Report(progressReport);
 
             try
             {
@@ -89,23 +103,25 @@ namespace NameSearch.App.Tasks
                     log.With("Person", person)
                         .InformationEvent("Run", "Created PersonSearchJob Record after {ms}ms", stopwatch.ElapsedMilliseconds);
 
+                    progressReport.Message = "Created PersonSearchJob Record";
+                    progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+                    progress.Report(progressReport);
+
                     var jObject = JObject.Parse(result.Content);
 
                     var exportToJsonFileTask = Task.Run(async () => await this.Export.ToJsonAsync(jObject, $"SearchJob-{personSearchJob.Id}-{person.Name}", cancellationToken));
 
                     var parseAndSaveSearchTask = Task.Run(async () =>
                     {
-                        var personObj = (JObject)jObject["person"];
+                        log.With("Content", jObject);
 
-                        log.With("personObj", personObj);
-
-                        var search = new PersonSearchResult();
+                        var search = new Models.Entities.PersonSearchResult();
                         search.PersonSearchJobId = personSearchJob.Id;
                         search.HttpStatusCode = result.StatusCode;
                         search.NumberOfResults = (int)jObject["count_person"];
                         search.Warnings = (string)jObject["warnings"];
                         search.Error = (string)jObject["error"];
-                        search.Data = personObj.ToString();
+                        search.Data = jObject.ToString();
 
                         log.With("PersonSearchResult", search);
 
@@ -114,14 +130,23 @@ namespace NameSearch.App.Tasks
                         if (!string.IsNullOrWhiteSpace(search.Warnings))
                         {
                             log.WarningEvent("Run", "FindPerson api result returned with warning messages");
+                            progressReport.Message = "FindPerson api result returned with warning messages";
+                            progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+                            progress.Report(progressReport);
                         }
                         if (!string.IsNullOrWhiteSpace(search.Error))
                         {
                             log.ErrorEvent("Run", "FindPerson api result returned with error message");
+                            progressReport.Message = "FindPerson api result returned with error message";
+                            progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+                            progress.Report(progressReport);
                         }
                         if (string.IsNullOrWhiteSpace(search.Data))
                         {
                             log.ErrorEvent("Run", "FindPerson api result returned with no person data");
+                            progressReport.Message = "FindPerson api result returned with no person data";
+                            progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+                            progress.Report(progressReport);
                         }
 
                         #endregion
@@ -132,22 +157,34 @@ namespace NameSearch.App.Tasks
                     });
 
                     Task.WaitAll(exportToJsonFileTask, parseAndSaveSearchTask);
-                    progress.Report(person);
-
 
                     log.DebugEvent("Run", "Finished processing person search result after {ms}ms", stopwatch.ElapsedMilliseconds);
+
+                    progressReport.Message = "Finished processing person search result";
+                    progressReport.UpdateRemaining();
+                    progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+                    progress.Report(progressReport);
                 }
 
                 //Complete
                 personSearchJob.IsSuccessful = true;
 
                 log.DebugEvent("Run", "Sucessfully processed {peopleCount} people after {ms}ms", people.Count(), stopwatch.ElapsedMilliseconds);
+
+                progressReport.Message = "Finished processing person search result";
+                progressReport.UpdateRemaining();
+                progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+                progress.Report(progressReport);
             }
             catch (Exception ex)
             {
+                personSearchJob.IsSuccessful = false;
+
                 log.FatalEvent(ex, "Run", "Processing failed at {peopleCount} people after {ms}ms", people.Count(), stopwatch.ElapsedMilliseconds);
 
-                personSearchJob.IsSuccessful = false;
+                progressReport.Message = "Processing failed with an Exception";
+                progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+                progress.Report(progressReport);
             }
 
             //Finish
@@ -157,7 +194,12 @@ namespace NameSearch.App.Tasks
 
             stopwatch.Stop();
 
-            log.InformationEvent( "Run", "Processing person search job finished after {ms}ms", stopwatch.ElapsedMilliseconds);
+            log.InformationEvent("Run", "Processing person search job finished after {ms}ms", stopwatch.ElapsedMilliseconds);
+
+            progressReport.Message = "Processing person search job finished after";
+            progressReport.UpdateRemaining();
+            progressReport.ElapsedTimeSpan = stopwatch.Elapsed;
+            progress.Report(progressReport);
 
             return personSearchJob.IsSuccessful;
         }

@@ -1,11 +1,13 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using NameSearch.Extensions;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace NameSearch.Utility
         /// <summary>
         /// The logger
         /// </summary>
-        private ILogger logger = Log.Logger.ForContext<Export>();
+        private readonly ILogger logger = Log.Logger.ForContext<Export>();
 
         /// <summary>
         /// The CSV helper configuration
@@ -58,18 +60,34 @@ namespace NameSearch.Utility
         /// <param name="records">The records.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="isAppend">if set to <c>true</c> [is append].</param>
-        public void ToCsv<T>(T records, string fileName, bool isAppend)
-            where T : IEnumerable
+        public void ToCsv<T>(IEnumerable<T> records, string fileName, bool isAppend)
         {
+            var log = logger.With("IEnumerable<T>", typeof(T))
+                .With("records", records.Count())
+                .With("fileName", fileName)
+                .With("Directory", Directory)
+                .With("isAppend", isAppend);
+
             if (!fileName.EndsWith(".csv"))
             {
                 fileName = $"{fileName}.csv";
+
+                log.InformationEvent("ToCsv", "Invalid file extension, adding .csv extension");
             }
 
             var fullPath = Path.Combine(Directory, fileName);
-            if (File.Exists(fullPath))
+
+            log.With("fullPath", fullPath);
+
+            var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
+            if (fileExists)
             {
                 fullPath = GetAvailableFullPath(fullPath);
+
+                log.InformationEvent("ToCsv", "File already exists at path, getting new filename of {filename}", fullPath);
             }
 
             using (var textWriter = new StreamWriter(fullPath, isAppend))
@@ -78,9 +96,7 @@ namespace NameSearch.Utility
                 csv.WriteRecords(records);
             }
 
-            logger.ForContext("fullPath", fullPath)
-                .ForContext("IEnumerable<T>", typeof(T))
-                .Information("<{EventID:l}> - {Message}", "ToCsv", "File saved successfully");
+            log.InformationEvent("ToCsv", "Saved {records} records successfully", records.Count());
         }
 
         /// <summary>
@@ -91,15 +107,30 @@ namespace NameSearch.Utility
         /// <exception cref=""></exception>
         public void ToTxt(string text, string fileName)
         {
+            var log = logger.With("length", text.Length)
+                .With("fileName", fileName)
+                .With("Directory", Directory);
+
             if (!fileName.EndsWith(".txt"))
             {
                 fileName = $"{fileName}.txt";
+
+                log.InformationEvent("ToTxt", "Invalid file extension, adding .txt extension");
             }
 
             var fullPath = Path.Combine(Directory, fileName);
-            if (File.Exists(fullPath))
+
+            log.With("fullPath", fullPath);
+
+            var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
+            if (fileExists)
             {
                 fullPath = GetAvailableFullPath(fullPath);
+
+                log.InformationEvent("ToTxt", "File already exists at path, getting new filename of {filename}", fullPath);
             }
 
             using (var textWriter = new StreamWriter(fullPath))
@@ -107,8 +138,7 @@ namespace NameSearch.Utility
                 textWriter.Write(text);
             }
 
-            logger.ForContext("fullPath", fullPath)
-                .Information("<{EventID:l}> - {Message}", "ToTxt", "File saved successfully");
+            log.InformationEvent("ToTxt", "Saved {records} text characters successfully", text.Length);
         }
 
         /// <summary>
@@ -118,15 +148,30 @@ namespace NameSearch.Utility
         /// <param name="fileName">Name of the file.</param>
         public void ToJson(JObject json, string fileName)
         {
-            if (!fileName.EndsWith(".csv"))
+            var log = logger.With("tokens", json.Count)
+                            .With("fileName", fileName)
+                            .With("Directory", Directory);
+
+            if (!fileName.EndsWith(".json"))
             {
-                fileName = $"{fileName}.csv";
+                fileName = $"{fileName}.json";
+
+                log.InformationEvent("ToJson", "Invalid file extension, adding .json extension");
             }
 
             var fullPath = Path.Combine(Directory, fileName);
-            if (File.Exists(fullPath))
+
+            log.With("fullPath", fullPath);
+
+            var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
+            if (fileExists)
             {
                 fullPath = GetAvailableFullPath(fullPath);
+
+                log.InformationEvent("ToJson", "File already exists at path, getting new filename of {filename}", fullPath);
             }
 
             using (var file = File.CreateText(fullPath))
@@ -135,36 +180,49 @@ namespace NameSearch.Utility
                 json.WriteTo(writer);
             }
 
-            logger.ForContext("fullPath", fullPath)
-                .Information("<{EventID:l}> - {Message}", "ToJson", "File saved successfully");
+            log.InformationEvent("ToJson", "Saved JSON with {tokens} tokens successfully", json.Count);
         }
 
         /// <summary>
         /// To the txt asynchronous.
         /// </summary>
-        /// <param name="test">The test.</param>
+        /// <param name="text">The test.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
-        public async Task ToTxtAsync(string test, string fileName)
+        public async Task ToTxtAsync(string text, string fileName)
         {
+            var log = logger.With("length", text.Length)
+                .With("fileName", fileName)
+                .With("Directory", Directory);
+
             if (!fileName.EndsWith(".txt"))
             {
                 fileName = $"{fileName}.txt";
+
+                log.InformationEvent("ToTxtAsync", "Invalid file extension, adding .txt extension");
             }
 
             var fullPath = Path.Combine(Directory, fileName);
-            if (File.Exists(fullPath))
+
+            log.With("fullPath", fullPath);
+
+            var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
+            if (fileExists)
             {
                 fullPath = GetAvailableFullPath(fullPath);
+
+                log.InformationEvent("ToTxtAsync", "File already exists at path, getting new filename of {filename}", fullPath);
             }
 
             using (var textWriter = new StreamWriter(fullPath))
             {
-                await textWriter.WriteAsync(test);
+                await textWriter.WriteAsync(text);
             }
 
-            logger.ForContext("fullPath", fullPath)
-                .Information("<{EventID:l}> - {Message}", "ToTxtAsync", "File saved successfully");
+            log.InformationEvent("ToTxtAsync", "Saved {records} text characters successfully", text.Length);
         }
 
         /// <summary>
@@ -176,15 +234,30 @@ namespace NameSearch.Utility
         /// <returns></returns>
         public async Task ToJsonAsync(JObject json, string fileName, CancellationToken cancellationToken)
         {
-            if (!fileName.EndsWith(".csv"))
+            var log = logger.With("tokens", json.Count)
+                            .With("fileName", fileName)
+                            .With("Directory", Directory);
+
+            if (!fileName.EndsWith(".json"))
             {
-                fileName = $"{fileName}.csv";
+                fileName = $"{fileName}.json";
+
+                log.InformationEvent("ToJson", "Invalid file extension, adding .json extension");
             }
 
             var fullPath = Path.Combine(Directory, fileName);
-            if (File.Exists(fullPath))
+
+            log.With("fullPath", fullPath);
+
+            var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
+            if (fileExists)
             {
                 fullPath = GetAvailableFullPath(fullPath);
+
+                log.InformationEvent("ToJson", "File already exists at path, getting new filename of {filename}", fullPath);
             }
 
             using (var file = File.CreateText(fullPath))
@@ -193,8 +266,7 @@ namespace NameSearch.Utility
                 await json.WriteToAsync(writer, cancellationToken);
             }
 
-            logger.ForContext("fullPath", fullPath)
-                .Information("<{EventID:l}> - {Message}", "ToJsonAsync", "File saved successfully");
+            log.InformationEvent("ToJsonAsync", "Saved JSON with {tokens} tokens successfully", json.Count);
         }
 
         /// <summary>
@@ -216,10 +288,6 @@ namespace NameSearch.Utility
                 string tempFileName = string.Format("{0}({1})", fileNameOnly, count++);
                 newFullPath = Path.Combine(path, tempFileName + extension);
             }
-
-            logger.ForContext("fullPath", fullPath)
-                .ForContext("newFullPath", newFullPath)
-                .Information("<{EventID:l}> - {Message}", "GetAvailableFullPath", "File Exists, path updated.");
 
             return newFullPath;
         }

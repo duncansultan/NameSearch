@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace NameSearch.Utility.Interfaces
         /// <param name="records">The records.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="isAppend">if set to <c>true</c> [is append].</param>
-        void ToCsv<T>(T records, string fileName, bool isAppend) where T : IEnumerable;
+        void ToCsv<T>(IEnumerable<T> records, string fileName, bool isAppend);
         /// <summary>
         /// To the txt.
         /// </summary>

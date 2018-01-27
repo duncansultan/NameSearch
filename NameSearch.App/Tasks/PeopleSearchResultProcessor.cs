@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NameSearch.Extensions;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using Newtonsoft.Json;
@@ -18,7 +19,7 @@ namespace NameSearch.App.Tasks
         /// <summary>
         /// The logger
         /// </summary>
-        private ILogger logger = Log.Logger.ForContext<PeopleSearchResultProcessor>();
+        private readonly ILogger logger = Log.Logger.ForContext<PeopleSearchResultProcessor>();
         /// <summary>
         /// The repository
         /// </summary>
@@ -38,8 +39,8 @@ namespace NameSearch.App.Tasks
         /// <param name="repository">The repository.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="serializerSettings">The serializer settings.</param>
-        public PeopleSearchResultProcessor(IEntityFrameworkRepository repository, 
-            IMapper mapper, 
+        public PeopleSearchResultProcessor(IEntityFrameworkRepository repository,
+            IMapper mapper,
             JsonSerializerSettings serializerSettings)
         {
             this.Repository = repository;
@@ -69,6 +70,9 @@ namespace NameSearch.App.Tasks
                 throw new ArgumentNullException(nameof(personSearchJob.PersonSearchResults));
             }
 
+            var log = logger.With("personSearchJob.Id", personSearchJob.Id)
+                .With("PersonSearchResultsCount", personSearchJob.PersonSearchResults.Count());
+
             var stopwatch = new Stopwatch();
 
             //Start
@@ -85,22 +89,22 @@ namespace NameSearch.App.Tasks
                 }
                 catch (JsonException ex)
                 {
-                    logger.ForContext("Data", personSearchResult.Data)
-                        .ForContext("PersonSearchJob.Id", personSearchJob.Id)
-                        .Warning(ex, "<{EventID:l}> - {message} - {ms} ms", "Run", "Json Data Deserialization Failed", stopwatch.ElapsedMilliseconds);
+                    log.With("Data", personSearchResult.Data)
+                        .ErrorEvent(ex, "Run", "Json Data Deserialization failed after {ms}ms", stopwatch.ElapsedMilliseconds);
 
                     continue;
                 }
-                
+
                 var personEntity = Mapper.Map<Models.Entities.Person>(person);
                 personEntity.PersonSearchResultId = personSearchResult.Id;
+
+                log.With("Person", personEntity);
 
                 Repository.Create(personEntity);
                 await Repository.SaveAsync();
 
-                logger.ForContext("Person", person)
-                   .ForContext("PersonSearchJob.Id", personSearchJob.Id)
-                   .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Created Person Record", stopwatch.ElapsedMilliseconds);
+                log.With("Data", personSearchResult.Data)
+                    .InformationEvent("Run", "Created Person record after {ms}ms", stopwatch.ElapsedMilliseconds);
             }
 
             personSearchJob.IsProcessed = true;
@@ -109,8 +113,7 @@ namespace NameSearch.App.Tasks
 
             stopwatch.Stop();
 
-            logger.ForContext("PersonSearchJob.Id", personSearchJob.Id)
-                .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Processing finished", stopwatch.ElapsedMilliseconds);
+            log.InformationEvent("Run", "Processing finished after {ms}ms", stopwatch.ElapsedMilliseconds);
 
             return personSearchJob.IsProcessed;
         }

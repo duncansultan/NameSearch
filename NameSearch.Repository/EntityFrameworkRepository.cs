@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NameSearch.Context;
+using NameSearch.Extensions;
 using NameSearch.Models.Entities.Interfaces;
 using Serilog;
 
@@ -280,12 +281,12 @@ namespace NameSearch.Repository
                         try
                         {
                             var result = Context.SaveChanges();
-                            logger.Information("<{EventID:l}> - {Message}", "Save", result);
+                            logger.DebugEvent("Save", "Result {result}", result);
                         }
                         catch (DbUpdateConcurrencyException ex)
                         {
                             saveFailed = true;
-                            logger.Warning("<{EventID:l}> - {Message}", "Save", "Optimistic Concurrency Fault, reloading entity and trying again.");
+                            logger.WarningEvent(ex, "Save", "Optimistic Concurrency Fault, reloading entity and trying again");
                             //TODO: custom optimistic concurrency resolution
                             ex.Entries.Single().Reload();
                         }
@@ -296,13 +297,13 @@ namespace NameSearch.Repository
                 }
                 else
                 {
-                    logger.Warning("<{EventID:l}> - {Message}", "Save", "No Changes to be saved");
+                    logger.Warning("Save", "No Changes to be saved");
                 }
 
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateException ex)
             {
-                logger.Fatal("<{EventID:l}> - {Message}", "Save", "Save failed with DbUpdateException.");
+                logger.FatalEvent(ex, "Save", "Save failed with DbUpdateException");
             }
         }
 
@@ -313,12 +314,12 @@ namespace NameSearch.Repository
             {
                 return Context.SaveChangesAsync();
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateException ex)
             {
-                logger.Fatal("<{EventID:l}> - {Message}", "SaveAsync", "Save failed with DbUpdateException.");
+                logger.FatalEvent(ex, "SaveAsync", "Save failed with DbUpdateException");
             }
             var result = Task.FromResult(0);
-            logger.Fatal("<{EventID:l}> - {Message}", "SaveAsync", result);
+            logger.DebugEvent("SaveAsync", "Result {result}", result);
             return result;
         }
     }

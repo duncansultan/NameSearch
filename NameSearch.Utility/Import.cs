@@ -1,11 +1,13 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using NameSearch.Extensions;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace NameSearch.Utility
         /// <summary>
         /// The logger
         /// </summary>
-        private ILogger logger = Log.Logger.ForContext<Import>();
+        private readonly ILogger logger = Log.Logger.ForContext<Import>();
 
         /// <summary>
         /// The CSV helper configuration
@@ -60,16 +62,23 @@ namespace NameSearch.Utility
         /// <exception cref="FileNotFoundException"></exception>
         public IEnumerable<T> FromCsv<T>(string fileName)
         {
+            var log = logger.With("fileName", fileName)
+                .With("Directory", Directory)
+                .With("IEnumerable<T>", typeof(T));
+
             var fullPath = Path.Combine(Directory, fileName);
 
+            log.With("fullPath", fullPath);
+
             var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
             if (!fileExists)
             {
-                logger.ForContext("fullPath", fullPath)
-                    .ForContext("fileExists", fileExists)
-                    .Error("<{EventID:l}> - {Message}", "FromCsv", "File not found.");
+                log.ErrorEvent("FromCsv", "File not found");
 
-                throw new FileNotFoundException("FromCsv - File not found.", fullPath);
+                throw new FileNotFoundException("FromCsv - File not found", fullPath);
             }
 
             using (var textReader = new StreamReader(fullPath))
@@ -77,12 +86,10 @@ namespace NameSearch.Utility
             {
                 var records = csv.GetRecords<T>();
 
-                logger.ForContext("fullPath", fullPath)
-                    .ForContext("IEnumerable<T>", typeof(T))
-                    .Information("<{EventID:l}> - {Message}", "FromCsv", "File imported successfully");
+                log.InformationEvent("FromCsv", "Imported {rows} rows successfully", records.Count());
 
                 return records;
-            }           
+            }
         }
 
         /// <summary>
@@ -93,16 +100,22 @@ namespace NameSearch.Utility
         /// <exception cref="FileNotFoundException"></exception>
         public JObject FromJson(string fileName)
         {
+            var log = logger.With("fileName", fileName)
+                .With("Directory", Directory);
+
             var fullPath = Path.Combine(Directory, fileName);
 
+            log.With("fullPath", fullPath);
+
             var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
             if (!fileExists)
             {
-                logger.ForContext("fullPath", fullPath)
-                    .ForContext("fileExists", fileExists)
-                    .Error("<{EventID:l}> - {Message}", "FromJson", "File not found.");
+                log.ErrorEvent("FromJson", "File not found");
 
-                throw new FileNotFoundException("FromJson - File not found.", fullPath);
+                throw new FileNotFoundException("FromJson - File not found", fullPath);
             }
 
             using (var file = File.OpenText(fullPath))
@@ -110,8 +123,7 @@ namespace NameSearch.Utility
             {
                 JObject jObject = (JObject)JToken.ReadFrom(reader);
 
-                logger.ForContext("fullPath", fullPath)
-                    .Information("<{EventID:l}> - {Message}", "FromJson", "File imported successfully");
+                log.InformationEvent("FromJson", "Imported JObject with {tokens} tokens successfully", jObject.Count);
 
                 return jObject;
             }
@@ -126,16 +138,22 @@ namespace NameSearch.Utility
         /// <exception cref="FileNotFoundException"></exception>
         public async Task<JObject> FromJsonAsync(string fileName, CancellationToken cancellationToken)
         {
+            var log = logger.With("fileName", fileName)
+                .With("Directory", Directory);
+
             var fullPath = Path.Combine(Directory, fileName);
 
+            log.With("fullPath", fullPath);
+
             var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
             if (!fileExists)
             {
-                logger.ForContext("fullPath", fullPath)
-                    .ForContext("fileExists", fileExists)
-                    .Error("<{EventID:l}> - {Message}", "FromJsonAsync", "File not found.");
+                log.ErrorEvent("FromJsonAsync", "File not found");
 
-                throw new FileNotFoundException("FromJsonAsync - File not found.", fullPath);
+                throw new FileNotFoundException("FromJsonAsync - File not found", fullPath);
             }
 
             using (var file = File.OpenText(fullPath))
@@ -143,8 +161,7 @@ namespace NameSearch.Utility
             {
                 JObject jObject = (JObject)await JToken.ReadFromAsync(reader, cancellationToken);
 
-                logger.ForContext("fullPath", fullPath)
-    .Information("<{EventID:l}> - {Message}", "FromJsonAsync", "File imported successfully");
+                log.InformationEvent("FromJsonAsync", "Imported JObject with {tokens} tokens successfully", jObject.Count);
 
                 return jObject;
             }

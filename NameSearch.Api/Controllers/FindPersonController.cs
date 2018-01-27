@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using HttpClient.Factory;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.Extensions;
 using NameSearch.Models.Domain.Api.Response;
 using Serilog;
 
@@ -34,7 +36,7 @@ namespace NameSearch.Api.Controllers
         /// <summary>
         /// The logger
         /// </summary>
-        private ILogger logger = Log.Logger.ForContext<FindPersonController>();
+        private readonly ILogger logger = Log.Logger.ForContext<FindPersonController>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindPersonController"/> class.
@@ -65,9 +67,19 @@ namespace NameSearch.Api.Controllers
                 throw new ArgumentNullException(nameof(person));
             }
 
+            var log = logger.With("person", person);
+
             var requestUri = GetFindPersonUri(person);
 
+            log.With("Uri", requestUri);
+
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
             var httpResponse = await HttpRequestFactory.Get(requestUri);
+
+            stopwatch.Stop();
 
             var apiResponse = new ApiResponse
             {
@@ -76,12 +88,9 @@ namespace NameSearch.Api.Controllers
                 Content = await httpResponse.Content.ReadAsStringAsync()
             };
 
-            logger.ForContext("Person", person, true)
-                .ForContext("Uri", requestUri)
-                .ForContext("Headers", httpResponse.Headers)
-                .ForContext("StatusCode", httpResponse.StatusCode)
-                .ForContext("IsSuccessStatusCode", httpResponse.IsSuccessStatusCode)
-                .Information("<{EventID:l}> - Uri {uri}", "GetFindPerson", requestUri);
+            log.With("apiResponse", apiResponse);
+
+            log.InformationEvent("GetFindPerson", "Request completed in {ms}ms with HTTP Status Code {statusCode}", apiResponse.StatusCode, stopwatch.ElapsedMilliseconds);
 
             return apiResponse;
         }

@@ -10,6 +10,7 @@ using NameSearch.Models.Entities;
 using System.Linq;
 using System.Threading;
 using System.Diagnostics;
+using NameSearch.Extensions;
 
 namespace NameSearch.App.Tasks
 {
@@ -21,7 +22,7 @@ namespace NameSearch.App.Tasks
         /// <summary>
         /// The logger
         /// </summary>
-        private ILogger logger = Log.Logger.ForContext<PeopleFinder>();
+        private readonly ILogger logger = Log.Logger.ForContext<PeopleFinder>();
         /// <summary>
         /// The repository
         /// </summary>
@@ -62,8 +63,10 @@ namespace NameSearch.App.Tasks
                 throw new ArgumentNullException(nameof(people));
             }
 
+            var log = logger.With("people", people);
+
             var stopwatch = new Stopwatch();
-            
+
             //Start
             stopwatch.Start();
 
@@ -71,9 +74,9 @@ namespace NameSearch.App.Tasks
             Repository.Create(personSearchJob);
             await Repository.SaveAsync();
 
-            logger.ForContext("people", people)
-                .ForContext("PersonSearchJob.Id", personSearchJob.Id)
-                .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Processing started", stopwatch.ElapsedMilliseconds);
+            log.With("PersonSearchJob.Id", personSearchJob.Id);
+
+            log.InformationEvent("Run", "Processing started", stopwatch.ElapsedMilliseconds);
 
             try
             {
@@ -81,10 +84,10 @@ namespace NameSearch.App.Tasks
                 {
                     var result = await FindPersonController.GetFindPerson(person);
 
-                    logger.ForContext("Person", person, true)
-                        .ForContext("RequestUri", result.RequestUri)
-                        .ForContext("StatusCode", result.StatusCode)
-                        .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Created PersonSearchJob Record", stopwatch.ElapsedMilliseconds);
+                    log.With("PersonSearchJob.Id", personSearchJob.Id);
+
+                    log.With("Person", person)
+                        .InformationEvent("Run", "Created PersonSearchJob Record after {ms}ms", stopwatch.ElapsedMilliseconds);
 
                     var jObject = JObject.Parse(result.Content);
 
@@ -94,6 +97,8 @@ namespace NameSearch.App.Tasks
                     {
                         var personObj = (JObject)jObject["person"];
 
+                        log.With("personObj", personObj);
+
                         var search = new PersonSearchResult();
                         search.PersonSearchJobId = personSearchJob.Id;
                         search.HttpStatusCode = result.StatusCode;
@@ -102,56 +107,45 @@ namespace NameSearch.App.Tasks
                         search.Error = (string)jObject["error"];
                         search.Data = personObj.ToString();
 
+                        log.With("PersonSearchResult", search);
+
                         #region Log Data Problems
 
                         if (!string.IsNullOrWhiteSpace(search.Warnings))
                         {
-                            logger.ForContext("personObj", personObj)
-                                .ForContext("PersonSearchResult", search)
-                                .ForContext("Warnings", search.Warnings)
-                                .Warning("<{EventID:l}> - {message} - {ms} ms", "Run", "FindPerson api result returned with warning messages", stopwatch.ElapsedMilliseconds);
+                            log.WarningEvent("Run", "FindPerson api result returned with warning messages");
                         }
                         if (!string.IsNullOrWhiteSpace(search.Error))
                         {
-                            logger.ForContext("personObj", personObj)
-                                .ForContext("Error", search)
-                                .ForContext("Warnings", search.Error)
-                                .Error("<{EventID:l}> - {message} - {ms} ms", "Run", "FindPerson api result returned with error messages", stopwatch.ElapsedMilliseconds);
+                            log.ErrorEvent("Run", "FindPerson api result returned with error message");
                         }
                         if (string.IsNullOrWhiteSpace(search.Data))
                         {
-                            logger.ForContext("personObj", personObj)
-                                .ForContext("Error", search)
-                                .ForContext("Warnings", search.Error)
-                                .Error("<{EventID:l}> - {message} - {ms} ms", "Run", "FindPerson api result returned with no person data", stopwatch.ElapsedMilliseconds);
+                            log.ErrorEvent("Run", "FindPerson api result returned with no person data");
                         }
 
                         #endregion
 
                         Repository.Create(search);
 
-                        await Repository.SaveAsync();                        
+                        await Repository.SaveAsync();
                     });
 
                     Task.WaitAll(exportToJsonFileTask, parseAndSaveSearchTask);
                     progress.Report(person);
 
-                    logger.ForContext("Person", person, true)
-                        .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Finished processing person", stopwatch.ElapsedMilliseconds);
+
+                    log.DebugEvent("Run", "Finished processing person search result after {ms}ms", stopwatch.ElapsedMilliseconds);
                 }
 
                 //Complete
                 personSearchJob.IsSuccessful = true;
 
-                logger.ForContext("people", people)
-                    .ForContext("PersonSearchJob.Id", personSearchJob.Id)
-                    .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Sucessfully processed all people", stopwatch.ElapsedMilliseconds);
+                log.DebugEvent("Run", "Sucessfully processed {peopleCount} people after {ms}ms", people.Count(), stopwatch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
-                logger.ForContext("people", people)
-                    .ForContext("PersonSearchJob.Id", personSearchJob.Id)
-                    .Fatal(ex, "<{EventID:l}> - {message} - {ms} ms", "Run", "Processing failed", stopwatch.ElapsedMilliseconds);
+                log.FatalEvent(ex, "Run", "Processing failed at {peopleCount} people after {ms}ms", people.Count(), stopwatch.ElapsedMilliseconds);
 
                 personSearchJob.IsSuccessful = false;
             }
@@ -163,9 +157,7 @@ namespace NameSearch.App.Tasks
 
             stopwatch.Stop();
 
-            logger.ForContext("people", people)
-                .ForContext("PersonSearchJob.Id", personSearchJob.Id)
-                .Information("<{EventID:l}> - {message} - {ms} ms", "Run", "Processing finished", stopwatch.ElapsedMilliseconds);
+            log.InformationEvent( "Run", "Processing person search job finished after {ms}ms", stopwatch.ElapsedMilliseconds);
 
             return personSearchJob.IsSuccessful;
         }

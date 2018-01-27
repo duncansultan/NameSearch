@@ -58,7 +58,7 @@ namespace NameSearch.App.Tasks
         /// or
         /// PersonSearchResults
         /// </exception>
-        public async Task<bool> Run(PersonSearchJob personSearchJob)
+        public async Task<bool> Run(PersonSearchJob personSearchJob) //ToDo: Add IProgress
         {
             if (personSearchJob == null)
             {
@@ -80,6 +80,8 @@ namespace NameSearch.App.Tasks
 
             foreach (var personSearchResult in personSearchJob.PersonSearchResults)
             {
+                #region Deserialize JSON into Model
+
                 Models.Domain.Api.Response.IFindPersonResponse findPersonResponse;
 
                 try
@@ -95,16 +97,27 @@ namespace NameSearch.App.Tasks
                     continue;
                 }
 
+                #endregion
+
+                #region Map Model into Entity
+
+                //ToDo: Fix Mapper
                 var personEntity = Mapper.Map<Models.Entities.Person>(findPersonResponse);
                 personEntity.PersonSearchResultId = personSearchResult.Id;
 
                 log.With("Person", personEntity);
 
+                #endregion
+
+                #region Save Entity to Database
+                
                 Repository.Create(personEntity);
                 await Repository.SaveAsync();
 
                 log.With("Data", personSearchResult.Data)
                     .InformationEvent("Run", "Created Person record after {ms}ms", stopwatch.ElapsedMilliseconds);
+                
+                #endregion
             }
 
             personSearchJob.IsProcessed = true;

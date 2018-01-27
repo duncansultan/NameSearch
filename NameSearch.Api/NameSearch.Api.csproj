@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HttpClient.Factory\HttpClient.Factory.csproj" />
+    <ProjectReference Include="..\NameSearch.Extensions\NameSearch.Extensions.csproj" />
     <ProjectReference Include="..\NameSearch.Models\NameSearch.Models.csproj" />
   </ItemGroup>
 

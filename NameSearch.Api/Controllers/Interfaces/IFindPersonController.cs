@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using NameSearch.Models.Domain.Api.Response;
 
 namespace NameSearch.Api.Controllers.Interfaces
 {
@@ -15,6 +14,6 @@ namespace NameSearch.Api.Controllers.Interfaces
         /// <returns>
         ///     Api Response
         /// </returns>
-        Task<IApiResponse> GetFindPerson(Models.Domain.Api.Request.IPerson model);
+        Task<Models.Domain.Api.Response.IApiResponse> GetFindPerson(Models.Domain.Api.Request.IPerson model);
     }
 }

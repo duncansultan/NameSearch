@@ -85,7 +85,18 @@ namespace NameSearch.App.Tests
         /// Gets the API response.
         /// </summary>
         /// <returns></returns>
-        public static ApiResponse GetApiResponse()
+        public static IApiResponse GetApiResponse()
+        {
+            var apiResponse = new ApiResponse
+            {
+                RequestUri = "https://proapi.whitepages.com/3.0/person?name=Giaan+Qiuntero&address.city=Lynden&address.state_code=WA&api_key=KEYVAL",
+                StatusCode = 200,
+                Content = GetResponseContentAsJson()
+            };
+            return apiResponse;
+        }
+
+        public static IApiResponse GetApiResponse(Models.Domain.Api.Request.IPerson person)
         {
             var apiResponse = new ApiResponse
             {

@@ -9,7 +9,7 @@ namespace NameSearch.App.Services
     /// <summary>
     /// Create Search Jobs and Requests
     /// </summary>
-    public class PeopleSearchJobHelper : IPeopleSearchJobHelper
+    public class PeopleSearchJobHelper
     {
         /// <summary>
         /// The logger

@@ -180,7 +180,7 @@ namespace NameSearch.Repository.Tests
                 FirstName = "Duncan",
                 LastName = "Sultan",
                 Alias = "Sultan of Swing",
-                AgeRange = 33
+                AgeRange = "22-33"
             };
         }
         /// <summary>

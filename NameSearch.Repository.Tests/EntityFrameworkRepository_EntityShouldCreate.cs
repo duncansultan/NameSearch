@@ -60,10 +60,10 @@ namespace NameSearch.Repository.Tests
         }
 
         /// <summary>
-        /// Creates the person search job with results.
+        /// Creates the person search job with requests.
         /// </summary>
         [Fact]
-        public void CreatePersonSearchJobWithResults()
+        public void CreatePersonSearchJobWithRequests()
         {
             //Arrange
             //Act
@@ -71,24 +71,69 @@ namespace NameSearch.Repository.Tests
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchResults = MockData.GetPersonSearchResults(personSearchJob.Id);
-            foreach (var name in personSearchResults)
+            var personSearchRequests = MockData.GetPersonSearchRequests(personSearchJob.Id);
+            foreach (var personSearchRequest in personSearchRequests)
             {
-                Repository.Create(name);
+                Repository.Create(personSearchRequest);
                 Repository.Save();
             }
 
-            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id, includeProperties: "PersonSearchResults");
-            var savedPersonSearchResults = Repository.Get<PersonSearchResult>(x => x.PersonSearchJobId == personSearchJob.Id);
+            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id, includeProperties: "PersonSearchRequests");
+            var savedPersonSearchRequests = Repository.Get<PersonSearchRequest>(x => x.PersonSearchJobId == personSearchJob.Id);
 
             //Assert
             Assert.Equal(personSearchJob.Id, savedPersonSearchJob.Id);
-            Assert.Equal(personSearchResults.Count(), savedPersonSearchResults.Count());
-            Assert.Equal(personSearchJob.PersonSearchResults.Count(), savedPersonSearchJob.PersonSearchResults.Count());
+            Assert.Equal(personSearchRequests.Count(), savedPersonSearchRequests.Count());
+            Assert.Equal(personSearchJob.PersonSearchRequests.Count(), savedPersonSearchJob.PersonSearchRequests.Count());
 
-            foreach (var savedName in savedPersonSearchResults)
+            foreach (var savedName in savedPersonSearchRequests)
             {
-                var anyName = personSearchResults.Any(x => x.Id == savedName.Id);
+                var anyName = personSearchRequests.Any(x => x.Id == savedName.Id);
+                Assert.True(anyName);
+            }
+        }
+
+        /// <summary>
+        /// Creates the person search job with requests.
+        /// </summary>
+        [Fact]
+        public void CreatePersonSearchJobWithRequestsAndResults()
+        {
+            //Arrange
+            //Act
+            var personSearchJob = MockData.GetPersonSearchJob();
+            Repository.Create(personSearchJob);
+            Repository.Save();
+
+            var personSearchRequests = MockData.GetPersonSearchRequests(personSearchJob.Id);
+            foreach (var personSearchRequest in personSearchRequests)
+            {
+                Repository.Create(personSearchRequest);
+                Repository.Save();
+            }
+
+            foreach (var personSearchRequest in personSearchRequests)
+            {
+                var personSearchResults = MockData.GetPersonSearchResults(personSearchRequest.Id);
+
+                foreach (var personSearchResult in personSearchResults)
+                {
+                    Repository.Create(personSearchResult);
+                    Repository.Save();
+                }
+            }
+
+            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id, includeProperties: "PersonSearchRequests");
+            var savedPersonSearchRequests = Repository.Get<PersonSearchRequest>(x => x.PersonSearchJobId == personSearchJob.Id, includeProperties: "PersonSearchResults");
+
+            //Assert
+            Assert.Equal(personSearchJob.Id, savedPersonSearchJob.Id);
+            Assert.Equal(personSearchRequests.Count(), savedPersonSearchRequests.Count());
+            Assert.Equal(personSearchJob.PersonSearchRequests.Count(), savedPersonSearchJob.PersonSearchRequests.Count());
+
+            foreach (var savedName in savedPersonSearchRequests)
+            {
+                var anyName = personSearchRequests.Any(x => x.Id == savedName.Id);
                 Assert.True(anyName);
             }
         }
@@ -163,7 +208,7 @@ namespace NameSearch.Repository.Tests
             Assert.Equal(person.FirstName, savedPerson.FirstName);
             Assert.Equal(person.LastName, savedPerson.LastName);
             Assert.Equal(person.Alias, savedPerson.Alias);
-            Assert.Equal(person.Age, savedPerson.Age);
+            Assert.Equal(person.AgeRange, savedPerson.AgeRange);
             Assert.Equal(addresses.Count(), savedAddresses.Count());
             Assert.Equal(addresses.Count(), savedPerson.Addresses.Count());
 
@@ -209,7 +254,7 @@ namespace NameSearch.Repository.Tests
             Assert.Equal(person.FirstName, savedPerson.FirstName);
             Assert.Equal(person.LastName, savedPerson.LastName);
             Assert.Equal(person.Alias, savedPerson.Alias);
-            Assert.Equal(person.Age, savedPerson.Age);
+            Assert.Equal(person.AgeRange, savedPerson.AgeRange);
             Assert.Equal(phones.Count(), savedPhones.Count());
             Assert.Equal(phones.Count(), savedPerson.Phones.Count());
 
@@ -255,7 +300,7 @@ namespace NameSearch.Repository.Tests
             Assert.Equal(person.FirstName, savedPerson.FirstName);
             Assert.Equal(person.LastName, savedPerson.LastName);
             Assert.Equal(person.Alias, savedPerson.Alias);
-            Assert.Equal(person.Age, savedPerson.Age);
+            Assert.Equal(person.AgeRange, savedPerson.AgeRange);
             Assert.Equal(associates.Count(), savedAssociate.Count());
             Assert.Equal(associates.Count(), savedPerson.Associates.Count());
 

@@ -33,7 +33,7 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The searches.
         /// </value>
-        public List<PersonSearchResult> PersonSearchResults { get; set; }
+        public List<PersonSearchRequest> PersonSearchRequests { get; set; }
 
         #region Equality
 
@@ -47,7 +47,7 @@ namespace NameSearch.Models.Entities
             if (other == null) return false;
             return IsProcessed == other.IsProcessed &&
                 IsSuccessful == other.IsSuccessful &&
-                (PersonSearchResults ?? new List<PersonSearchResult>()).Equals(other.PersonSearchResults);
+                (PersonSearchRequests ?? new List<PersonSearchRequest>()).Equals(other.PersonSearchRequests);
         }
 
         /// <summary>

@@ -76,13 +76,13 @@ namespace NameSearch.Repository.Tests
         /// <summary>
         /// Gets the person search result.
         /// </summary>
-        /// <param name="personSearchJobId">The person search job identifier.</param>
+        /// <param name="personSearchRequestId">The person search job identifier.</param>
         /// <returns></returns>
-        public static PersonSearchResult GetPersonSearchResult(long personSearchJobId)
+        public static PersonSearchResult GetPersonSearchResult(long personSearchRequestId)
         {
             return new PersonSearchResult
             {
-                PersonSearchJobId = personSearchJobId,
+                PersonSearchRequestId = personSearchRequestId,
                 Data = GetExampleJsonData(),
                 Error = null,
                 Warnings = "Missing Input Name",
@@ -93,15 +93,15 @@ namespace NameSearch.Repository.Tests
         /// <summary>
         /// Gets the person search results.
         /// </summary>
-        /// <param name="personSearchJobId">The person search job identifier.</param>
+        /// <param name="personSearchRequestId">The person search job identifier.</param>
         /// <returns></returns>
-        public static List<PersonSearchResult> GetPersonSearchResults(long personSearchJobId)
+        public static List<PersonSearchResult> GetPersonSearchResults(long personSearchRequestId)
         {
             return new List<PersonSearchResult>
             {
                new PersonSearchResult
                 {
-                    PersonSearchJobId = personSearchJobId,
+                    PersonSearchRequestId = personSearchRequestId,
                     Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Missing Input Name",
@@ -110,7 +110,7 @@ namespace NameSearch.Repository.Tests
                 },
                 new PersonSearchResult
                 {
-                    PersonSearchJobId = personSearchJobId,
+                    PersonSearchRequestId = personSearchRequestId,
                     Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Missing Input Address",
@@ -119,12 +119,51 @@ namespace NameSearch.Repository.Tests
                 },
                 new PersonSearchResult
                 {
-                    PersonSearchJobId = personSearchJobId,
+                    PersonSearchRequestId = personSearchRequestId,
                     Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Partial Address",
                     HttpStatusCode = 200,
                     NumberOfResults = 1
+                }
+            };
+        }
+        public static List<PersonSearchRequest> GetPersonSearchRequests(long personSearchJobId)
+        {
+            return new List<PersonSearchRequest>
+            {
+               new PersonSearchRequest
+                {
+                    PersonSearchJobId = personSearchJobId,
+                    Name = "John Adams",
+                    Address1 = "123 Smith",
+                    Address2 = "5555",
+                    City = "Plano",
+                    State  = "TX",
+                    Zip  = "77777",
+                    Country  = "US"
+                },
+                new PersonSearchRequest
+                {
+                    PersonSearchJobId = personSearchJobId,
+                    Name = "John Williamson",
+                    Address1 = "999 South St",
+                    Address2 = "12",
+                    City = "Fort Worth",
+                    State  = "TX",
+                    Zip  = "72277",
+                    Country  = "US"
+                },
+                new PersonSearchRequest
+                {
+                    PersonSearchJobId = personSearchJobId,
+                    Name = "John Hancock",
+                    Address1 = "456 Oak Dr",
+                    Address2 = "",
+                    City = "Denton",
+                    State  = "TX",
+                    Zip  = "77767",
+                    Country  = "US"
                 }
             };
         }
@@ -141,7 +180,7 @@ namespace NameSearch.Repository.Tests
                 FirstName = "Duncan",
                 LastName = "Sultan",
                 Alias = "Sultan of Swing",
-                Age = 33
+                AgeRange = 33
             };
         }
         /// <summary>

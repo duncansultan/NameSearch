@@ -91,7 +91,7 @@ namespace NameSearch.Repository.Tests
         {
             //Arrange
             var person = Repository.GetFirst<Person>();
-            person.Age = person.Age++;
+            person.AgeRange = person.AgeRange++;
             person.LastName = $"Updated-{person.LastName}";
             person.FirstName = $"Updated-{person.FirstName}";
             person.Alias = $"Updated-{person.Alias}";

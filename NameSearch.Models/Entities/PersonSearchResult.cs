@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
 namespace NameSearch.Models.Entities
@@ -11,13 +12,13 @@ namespace NameSearch.Models.Entities
     public class PersonSearchResult : EntityBase<PersonSearchResult>
     {
         /// <summary>
-        /// Gets or sets the search job identifier.
+        /// Gets or sets the search request identifier.
         /// </summary>
         /// <value>
-        /// The search job identifier.
+        /// The search request identifier.
         /// </value>
-        [ForeignKey("PersonSearchJobForeignKey")]
-        public long PersonSearchJobId { get; set; }
+        [ForeignKey("PersonSearchRequestForeignKey")]
+        public long PersonSearchRequestId { get; set; }
         /// <summary>
         /// Gets or sets the HTTP response.
         /// </summary>
@@ -53,6 +54,13 @@ namespace NameSearch.Models.Entities
         /// The json data.
         /// </value>
         public string Data { get; set; }
+        /// <summary>
+        /// Gets or sets the people.
+        /// </summary>
+        /// <value>
+        /// The people.
+        /// </value>
+        public List<Person> People { get; set; }
 
         #region Equality
 
@@ -64,12 +72,13 @@ namespace NameSearch.Models.Entities
         public override bool Equals(PersonSearchResult other)
         {
             if (other == null) return false;
-            return PersonSearchJobId == other.PersonSearchJobId &&
+            return PersonSearchRequestId == other.PersonSearchRequestId &&
                 HttpStatusCode == other.HttpStatusCode &&
                 NumberOfResults == other.NumberOfResults &&
                 string.Equals(Warnings, other.Warnings) &&
                 string.Equals(Error, other.Error) &&
-                string.Equals(Data, other.Data);
+                string.Equals(Data, other.Data) &&
+                (People ?? new List<Person>()).Equals(other.People);
         }
 
         /// <summary>

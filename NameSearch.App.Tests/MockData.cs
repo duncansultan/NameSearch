@@ -36,7 +36,7 @@ namespace NameSearch.App.Tests
         public static PersonSearchJob GetPersonSearchJob()
         {
             var personSearchJob = new PersonSearchJob();
-            personSearchJob.PersonSearchResults = GetPersonSearchResults();
+            personSearchJob.PersonSearchRequests = GetPersonSearchRequests();
             return personSearchJob;
         }
 
@@ -47,6 +47,31 @@ namespace NameSearch.App.Tests
                 GetPersonSearchResult()
             };
             return personSearchResults;
+        }
+
+        public static List<PersonSearchRequest> GetPersonSearchRequests()
+        {
+            var personSearchRequest = new List<PersonSearchRequest>
+            {
+                GetPersonSearchRequest()
+            };
+            return personSearchRequest;
+        }
+
+        public static PersonSearchRequest GetPersonSearchRequest()
+        {
+            return new PersonSearchRequest
+            {
+                Id = 1,
+                PersonSearchJobId = 1,
+                Name = "Omondi",
+                Address1 = "123 Smith Rd",
+                Address2 = "456",
+                City = "Dallas",
+                State = "TX",
+                Zip = "81201",
+                Country = "USA"
+            };
         }
 
         private static PersonSearchResult GetPersonSearchResult()
@@ -122,7 +147,7 @@ namespace NameSearch.App.Tests
         /// <returns></returns>
         public static string GetResponseContentAsJson()
         {
-            var person = GetPersonObject("Person.fbb71b50-0000-4b57-aba0-eafef8ce9c57.Durable", "Duncan Sultan", "Duncan", "", "Sultan", "25-29","Male" , new JArray(), new JArray(), new JArray(), new JArray());
+            var person = GetPersonObject("Person.fbb71b50-0000-4b57-aba0-eafef8ce9c57.Durable", "Duncan Sultan", "Duncan", "", "Sultan", "25-29", "Male", new JArray(), new JArray(), new JArray(), new JArray());
             var responseObject = GetResponseObject(10, person, "", "");
             return responseObject.ToString();
         }

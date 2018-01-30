@@ -115,6 +115,13 @@ namespace NameSearch.Context
         /// <value>
         /// The person search results.
         /// </value>
+        public DbSet<PersonSearchRequest> PersonSearchRequests { get; set; }
+        /// <summary>
+        /// Gets or sets the person search results.
+        /// </summary>
+        /// <value>
+        /// The person search results.
+        /// </value>
         public DbSet<PersonSearchResult> PersonSearchResults { get; set; }
 
         /// <summary>
@@ -137,6 +144,7 @@ namespace NameSearch.Context
             modelBuilder.Entity<Name>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<NameImport>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Person>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<PersonSearchRequest>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<PersonSearchResult>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<PersonSearchJob>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Phone>().HasQueryFilter(p => p.IsActive);

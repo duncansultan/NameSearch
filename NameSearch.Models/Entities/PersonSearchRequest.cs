@@ -1,75 +1,87 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
 namespace NameSearch.Models.Entities
 {
     /// <summary>
-    /// Person Entity
+    /// Search Request Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.Person}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.PersonSearchRequest}" />
     /// <inheritdoc />
-    public class Person : EntityBase<Person>
+    public class PersonSearchRequest : EntityBase<PersonSearchRequest>
     {
         /// <summary>
-        /// Gets or sets the person search result identifier.
+        /// Gets or sets the search job identifier.
         /// </summary>
         /// <value>
-        /// The person search result identifier.
+        /// The search job identifier.
         /// </value>
-        [ForeignKey("PersonSearchResultForeignKey")]
-        public long PersonSearchResultId { get; set; }
+        [ForeignKey("PersonSearchJobForeignKey")]
+        public long PersonSearchJobId { get; set; }
         /// <summary>
-        /// Gets or sets the first name.
+        /// Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The first name.
+        /// The name.
         /// </value>
-        public string FirstName { get; set; }
+        public string Name { get; set; }
         /// <summary>
-        /// Gets or sets the last name.
+        /// Gets or sets the address1.
         /// </summary>
         /// <value>
-        /// The last name.
+        /// The address1.
         /// </value>
-        [Required]
-        public string LastName { get; set; }
+        public string Address1 { get; set; }
         /// <summary>
-        /// Gets or sets the alias.
+        /// Gets or sets the address2.
         /// </summary>
         /// <value>
-        /// The alias.
+        /// The address2.
         /// </value>
-        public string Alias { get; set; }
+        public string Address2 { get; set; }
         /// <summary>
-        /// Gets or sets the age.
+        /// Gets or sets the city.
         /// </summary>
         /// <value>
-        /// The age.
+        /// The city.
         /// </value>
-        public string AgeRange { get; set; }
+        public string City { get; set; }
         /// <summary>
-        /// Gets or sets the addresses.
+        /// Gets or sets the state.
         /// </summary>
         /// <value>
-        /// The addresses.
+        /// The state.
         /// </value>
-        public List<Address> Addresses { get; set; }
+        public string State { get; set; }
         /// <summary>
-        /// Gets or sets the phones.
+        /// Gets or sets the zip.
         /// </summary>
         /// <value>
-        /// The phones.
+        /// The zip.
         /// </value>
-        public List<Phone> Phones { get; set; }
+        public string Zip { get; set; }
         /// <summary>
-        /// Gets or sets the associates.
+        /// Gets or sets the country.
         /// </summary>
         /// <value>
-        /// The associates.
+        /// The country.
         /// </value>
-        public List<Associate> Associates { get; set; }
+        public string Country { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is processed.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is processed; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsProcessed { get; set; }
+        /// <summary>
+        /// Gets or sets the person search results.
+        /// </summary>
+        /// <value>
+        /// The person search results.
+        /// </value>
+        public List<PersonSearchResult> PersonSearchResults { get; set; }
 
         #region Equality
 
@@ -78,17 +90,18 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(Person other)
+        public override bool Equals(PersonSearchRequest other)
         {
             if (other == null) return false;
-            return PersonSearchResultId == other.PersonSearchResultId &&
-                string.Equals(FirstName, other.FirstName) &&
-                string.Equals(LastName, other.LastName) &&
-                string.Equals(Alias, other.Alias) &&
-                AgeRange == other.AgeRange &&
-                (Addresses ?? new List<Address>()).Equals(other.Addresses) &&
-                (Phones ?? new List<Phone>()).Equals(other.Phones) &&
-                (Associates ?? new List<Associate>()).Equals(other.Associates);
+            return PersonSearchJobId == other.PersonSearchJobId &&
+                string.Equals(Name, other.Name) &&
+                string.Equals(Address1, other.Address1) &&
+                string.Equals(Address2, other.Address2) &&
+                string.Equals(State, other.State) &&
+                string.Equals(Zip, other.Zip) &&
+                string.Equals(Country, other.Country) &&
+                IsProcessed == other.IsProcessed &&
+                (PersonSearchResults ?? new List<PersonSearchResult>()).Equals(other.PersonSearchResults);
         }
 
         /// <summary>
@@ -103,7 +116,7 @@ namespace NameSearch.Models.Entities
             if (obj is null) return false;
             if (this is null) return false;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as Person);
+            return Equals(obj as PersonSearchResult);
         }
 
         /// <summary>

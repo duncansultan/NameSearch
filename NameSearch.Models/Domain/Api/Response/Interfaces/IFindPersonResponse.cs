@@ -22,7 +22,7 @@ namespace NameSearch.Models.Domain.Api.Response
         /// <value>
         /// The person Array of objects.
         /// </value>
-        IEnumerable<Person> Person { get; set; }
+        IList<Person> Person { get; set; }
         /// <summary>
         /// Gets or sets the Array o warnings messages describing search and input address validation. Possible values are:
         /// </summary>
@@ -36,13 +36,13 @@ namespace NameSearch.Models.Domain.Api.Response
         /// International Address
         /// Partial Address
         /// </example>
-        IEnumerable<string> Warnings { get; set; }
+        IList<string> Warnings { get; set; }
         /// <summary>
         /// Gets or sets the error.
         /// </summary>
         /// <value>
         /// The error.
         /// </value>
-        IEnumerable<string> Error { get; set; }
+        IList<string> Error { get; set; }
     }
 }

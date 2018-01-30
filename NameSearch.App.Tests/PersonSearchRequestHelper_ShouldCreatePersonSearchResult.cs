@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
 using Moq;
 using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.App.Tasks;
-using NameSearch.Models.Domain.Api.Response;
+using NameSearch.App.Services;
+using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using NameSearch.Utility.Interfaces;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,7 +17,7 @@ namespace NameSearch.App.Tests
     /// <summary>
     /// Unit tests for PeopleFinder that Should Create Search Transactions
     /// </summary>
-    public class PeopleFinder_ShouldCreatePersonSearchResults
+    public class PeopleSearchRequestHelper_ShouldCreatePersonSearchResult
     {
         /// <summary>
         /// The mock repository
@@ -37,21 +37,17 @@ namespace NameSearch.App.Tests
         /// <summary>
         /// The people finder
         /// </summary>
-        private readonly IPeopleFinder PeopleFinder;
+        private readonly PersonSearchRequestHelper PersonSearchRequestHelper;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeopleFinder_ShouldCreatePersonSearchResults"/> class.
+        /// Initializes a new instance of the <see cref="PeopleSearchHelper_ShouldCreatePersonSearchResult"/> class.
         /// </summary>
-        public PeopleFinder_ShouldCreatePersonSearchResults()
+        public PeopleSearchRequestHelper_ShouldCreatePersonSearchResult()
         {
             MockRepository = new Mock<IEntityFrameworkRepository>();
             //Config Mock
-            MockRepository.Setup(x => x.GetAll<Models.Entities.Name>(null, null, null, null)).Returns(MockData.GetTestSearchNames());
-            MockRepository.Setup(x => x.GetAllAsync<Models.Entities.Name>(null, null, null, null)).Returns(Task.FromResult(MockData.GetTestSearchNames()));
-            MockRepository.Setup(x => x.Create(It.IsAny<Models.Entities.PersonSearchJob>()));
-            MockRepository.Setup(x => x.Create(It.IsAny<Models.Entities.PersonSearchResult>()));
-            MockRepository.Setup(x => x.Update(It.IsAny<Models.Entities.PersonSearchJob>()));
-            MockRepository.Setup(x => x.Update(It.IsAny<Models.Entities.PersonSearchResult>()));
+            MockRepository.Setup(x => x.Create(It.IsAny<PersonSearchResult>()));
+            MockRepository.Setup(x => x.Update(It.IsAny<PersonSearchRequest>()));
             MockRepository.Setup(x => x.Save());
             MockRepository.Setup(x => x.SaveAsync()).Returns(Task.CompletedTask);
      
@@ -66,33 +62,42 @@ namespace NameSearch.App.Tests
             MockExport.Setup(x => x.ToTxtAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
             MockExport.Setup(x => x.ToJsonAsync(It.IsAny<JObject>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
 
-            this.PeopleFinder = new PeopleFinder(MockRepository.Object, MockFindPersonController.Object, MockExport.Object);
+            var serializerSettings = new JsonSerializerSettings();
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Models.Domain.Api.Response.Person, Models.Entities.Person>()
+                    .ForMember(x => x.Addresses,
+                               m => m.MapFrom(a => a.CurrentAddresses))
+                    .ForMember(x => x.Associates,
+                               m => m.MapFrom(a => a.AssociatedPeople))
+                    .ForMember(x => x.Phones,
+                               m => m.MapFrom(a => a.Phones)).ReverseMap();
+            });
+            var mapper = new Mapper(config);
+
+            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(MockRepository.Object, MockFindPersonController.Object, serializerSettings, mapper, MockExport.Object);
         }
 
-        /// <summary>
-        /// Runs this instance.
-        /// </summary>
-        /// <returns></returns>
         [Fact]
-        public async Task Run()
+        public async Task Search()
         {
             // Arrange
-            var people = MockData.GetTestPeople();
+            var personSearchRequest = MockData.GetPersonSearchRequest();
 
             // Act
             var progress = new Progress<Models.Utility.ProgressReport>();
             var cancellationToken = new CancellationToken();
-            var result = await PeopleFinder.Run(people, progress, cancellationToken);
+            var result = await PersonSearchRequestHelper.SearchAsync(personSearchRequest, cancellationToken);
 
             // Assert
-            Assert.IsType<bool>(result);
-            Assert.True(result);
+            Assert.IsType<PersonSearchResult>(result);
 
-            MockRepository.Verify(c => c.Create(It.IsAny<Models.Entities.PersonSearchJob>()), Times.Once);
-            MockRepository.Verify(c => c.Create(It.IsAny<Models.Entities.PersonSearchResult>()), Times.Exactly(people.Count()));
-            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(people.Count() + 1));
-            MockFindPersonController.Verify(c => c.GetFindPerson(It.IsAny<Models.Domain.Api.Request.Person>()), Times.Exactly(people.Count()));
-            MockExport.Verify(c => c.ToJsonAsync(It.IsAny<JObject>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Exactly(people.Count()));
+            MockRepository.Verify(c => c.Update(It.IsAny<PersonSearchRequest>()), Times.Once);
+            MockRepository.Verify(c => c.Create(It.IsAny<PersonSearchResult>()), Times.Once);
+            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(2));
+            MockFindPersonController.Verify(c => c.GetFindPerson(It.IsAny<Models.Domain.Api.Request.Person>()), Times.Once);
+            MockExport.Verify(c => c.ToJsonAsync(It.IsAny<JObject>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

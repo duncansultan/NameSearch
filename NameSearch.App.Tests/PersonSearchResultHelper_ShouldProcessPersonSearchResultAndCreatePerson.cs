@@ -114,7 +114,8 @@ namespace NameSearch.App.Tests
 
             //Assert
             Assert.IsType<int>(result);
-            //ToDo Add all the mock data checks here for 100 records
+            MockRepository.Verify(c => c.Create(It.IsAny<Person>()), Times.Exactly(result));
+            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(result));
         }
     }
 }

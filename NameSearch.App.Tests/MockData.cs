@@ -74,7 +74,7 @@ namespace NameSearch.App.Tests
             };
         }
 
-        private static PersonSearchResult GetPersonSearchResult()
+        public static PersonSearchResult GetPersonSearchResult()
         {
             return new PersonSearchResult
             {

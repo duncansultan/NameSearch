@@ -54,7 +54,7 @@ namespace NameSearch.App.Services
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">personSearchResult</exception>
-        public async Task<Models.Entities.Person> ProcessAsync(Models.Entities.PersonSearchResult personSearchResult, CancellationToken cancellationToken)
+        public async Task<int> ProcessAsync(Models.Entities.PersonSearchResult personSearchResult, CancellationToken cancellationToken)
         {
             if (personSearchResult == null)
             {
@@ -83,27 +83,31 @@ namespace NameSearch.App.Services
 
             #endregion
 
-            #region Map Model into Entity
+            foreach (var person in findPersonResponse.Person)
+            {
+                #region Map Model into Entity
 
-            var personEntity = Mapper.Map<Models.Entities.Person>(findPersonResponse.Person);
+                var personEntity = Mapper.Map<Models.Entities.Person>(person);
 
-            log.With("Person", personEntity);
+                log.With("Person", personEntity);
 
-            #endregion
+                #endregion
 
-            #region Save Entity to Database
+                #region Save Entity to Database
 
-            Repository.Create(personEntity);
-            await Repository.SaveAsync();
+                Repository.Create(personEntity);
+                await Repository.SaveAsync();
 
-            log.With("Data", personSearchResult.Data)
-                .InformationEvent("Run", "Created Person record after {ms}ms", stopwatch.ElapsedMilliseconds);
+                log.With("Data", personSearchResult.Data)
+                    .InformationEvent("Run", "Created Person record after {ms}ms", stopwatch.ElapsedMilliseconds);
 
-            #endregion
+                #endregion
+
+            }
 
             log.InformationEvent("Run", "Processing search result finished after {ms}ms", stopwatch.ElapsedMilliseconds);
 
-            return personEntity;
+            return findPersonResponse.Person.Count;
         }
     }
 }

@@ -28,6 +28,23 @@ namespace NameSearch.Extensions
         ///     Verboses the event.
         /// </summary>
         /// <param name="logger">The logger.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="messageTemplate">The message template.</param>
+        /// <param name="propertyValues">The property values.</param>
+        public static void VerboseEvent(this ILogger logger, string eventId, string messageTemplate,
+            params object[] propertyValues)
+        {
+            var allProps = new object[] { eventId }.Concat(propertyValues).ToArray();
+
+            if (!string.IsNullOrWhiteSpace(messageTemplate)) messageTemplate = " - " + messageTemplate;
+
+            logger.Verbose("<{EventID:l}> " + messageTemplate, allProps);
+        }
+
+        /// <summary>
+        ///     Verboses the event.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="messageTemplate">The message template.</param>
@@ -42,23 +59,6 @@ namespace NameSearch.Extensions
             messageTemplate += " - MemoryUsage {MemoryUsage}";
 
             logger.Verbose(exception, "<{EventID:l}> " + messageTemplate, allProps);
-        }
-
-        /// <summary>
-        ///     Verboses the event.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="eventId">The event identifier.</param>
-        /// <param name="messageTemplate">The message template.</param>
-        /// <param name="propertyValues">The property values.</param>
-        public static void VerboseEvent(this ILogger logger, string eventId, string messageTemplate,
-            params object[] propertyValues)
-        {
-            var allProps = new object[] { eventId }.Concat(propertyValues).ToArray();
-
-            if (!string.IsNullOrWhiteSpace(messageTemplate)) messageTemplate = " - " + messageTemplate;
-
-            logger.Verbose("<{EventID:l}> " + messageTemplate, allProps);
         }
 
         /// <summary>
@@ -137,6 +137,23 @@ namespace NameSearch.Extensions
         ///     Warningls the event.
         /// </summary>
         /// <param name="logger">The logger.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="messageTemplate">The message template.</param>
+        /// <param name="propertyValues">The property values.</param>
+        public static void WarningEvent(this ILogger logger, string eventId, string messageTemplate,
+            params object[] propertyValues)
+        {
+            var allProps = new object[] { eventId }.Concat(propertyValues).ToArray();
+
+            if (!string.IsNullOrWhiteSpace(messageTemplate)) messageTemplate = " - " + messageTemplate;
+
+            logger.Warning("<{EventID:l}>" + messageTemplate, allProps);
+        }
+
+        /// <summary>
+        ///     Warningls the event.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="messageTemplate">The message template.</param>
@@ -154,20 +171,22 @@ namespace NameSearch.Extensions
         }
 
         /// <summary>
-        ///     Warningls the event.
+        ///     Errors the event.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="messageTemplate">The message template.</param>
         /// <param name="propertyValues">The property values.</param>
-        public static void WarningEvent(this ILogger logger, string eventId, string messageTemplate,
+        public static void ErrorEvent(this ILogger logger, string eventId, string messageTemplate,
             params object[] propertyValues)
         {
             var allProps = new object[] { eventId }.Concat(propertyValues).ToArray();
 
             if (!string.IsNullOrWhiteSpace(messageTemplate)) messageTemplate = " - " + messageTemplate;
 
-            logger.Warning("<{EventID:l}>" + messageTemplate, allProps);
+            messageTemplate += " - MemoryUsage {MemoryUsage}";
+
+            logger.Error("<{EventID:l}>" + messageTemplate, allProps);
         }
 
         /// <summary>
@@ -194,6 +213,24 @@ namespace NameSearch.Extensions
         ///     Fatals the event.
         /// </summary>
         /// <param name="logger">The logger.</param>
+        /// <param name="eventId">The event identifier.</param>
+        /// <param name="messageTemplate">The message template.</param>
+        /// <param name="propertyValues">The property values.</param>
+        public static void FatalEvent(this ILogger logger, string eventId, string messageTemplate, params object[] propertyValues)
+        {
+            var allProps = new object[] { eventId }.Concat(propertyValues).ToArray();
+
+            if (!string.IsNullOrWhiteSpace(messageTemplate)) messageTemplate = " - " + messageTemplate;
+
+            messageTemplate += " - MemoryUsage {MemoryUsage}";
+
+            logger.Fatal("<{EventID:l}>" + messageTemplate, allProps);
+        }
+
+        /// <summary>
+        ///     Fatals the event.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="eventId">The event identifier.</param>
         /// <param name="messageTemplate">The message template.</param>
@@ -208,43 +245,6 @@ namespace NameSearch.Extensions
             messageTemplate += " - MemoryUsage {MemoryUsage}";
 
             logger.Fatal(exception, "<{EventID:l}>" + messageTemplate, allProps);
-        }
-
-        /// <summary>
-        ///     Errors the event.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="eventId">The event identifier.</param>
-        /// <param name="messageTemplate">The message template.</param>
-        /// <param name="propertyValues">The property values.</param>
-        public static void ErrorEvent(this ILogger logger, string eventId, string messageTemplate,
-            params object[] propertyValues)
-        {
-            var allProps = new object[] { eventId }.Concat(propertyValues).ToArray();
-
-            if (!string.IsNullOrWhiteSpace(messageTemplate)) messageTemplate = " - " + messageTemplate;
-
-            messageTemplate += " - MemoryUsage {MemoryUsage}";
-
-            logger.Error("<{EventID:l}>" + messageTemplate, allProps);
-        }
-
-        /// <summary>
-        ///     Fatals the event.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="eventId">The event identifier.</param>
-        /// <param name="messageTemplate">The message template.</param>
-        /// <param name="propertyValues">The property values.</param>
-        public static void FatalEvent(this ILogger logger, string eventId, string messageTemplate, params object[] propertyValues)
-        {
-            var allProps = new object[] { eventId }.Concat(propertyValues).ToArray();
-
-            if (!string.IsNullOrWhiteSpace(messageTemplate)) messageTemplate = " - " + messageTemplate;
-
-            messageTemplate += " - MemoryUsage {MemoryUsage}";
-
-            logger.Fatal("<{EventID:l}>" + messageTemplate, allProps);
         }
 
         /// <summary>

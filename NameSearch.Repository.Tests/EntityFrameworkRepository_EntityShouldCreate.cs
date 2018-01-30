@@ -184,7 +184,11 @@ namespace NameSearch.Repository.Tests
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchResult = MockData.GetPersonSearchResult(personSearchJob.Id);
+            var personSearchRequest = MockData.GetPersonSearchRequest(personSearchJob.Id);
+            Repository.Create(personSearchRequest);
+            Repository.Save();
+
+            var personSearchResult = MockData.GetPersonSearchResult(personSearchRequest.Id);
             Repository.Create(personSearchResult);
             Repository.Save();
 
@@ -230,7 +234,11 @@ namespace NameSearch.Repository.Tests
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchResult = MockData.GetPersonSearchResult(personSearchJob.Id);
+            var personSearchRequest = MockData.GetPersonSearchRequest(personSearchJob.Id);
+            Repository.Create(personSearchRequest);
+            Repository.Save();
+
+            var personSearchResult = MockData.GetPersonSearchResult(personSearchRequest.Id);
             Repository.Create(personSearchResult);
             Repository.Save();
 
@@ -276,7 +284,11 @@ namespace NameSearch.Repository.Tests
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchResult = MockData.GetPersonSearchResult(personSearchJob.Id);
+            var personSearchRequest = MockData.GetPersonSearchRequest(personSearchJob.Id);
+            Repository.Create(personSearchRequest);
+            Repository.Save();
+
+            var personSearchResult = MockData.GetPersonSearchResult(personSearchRequest.Id);
             Repository.Create(personSearchResult);
             Repository.Save();
 

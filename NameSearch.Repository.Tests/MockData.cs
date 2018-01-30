@@ -128,6 +128,25 @@ namespace NameSearch.Repository.Tests
                 }
             };
         }
+        /// <summary>
+        /// Gets the person search request.
+        /// </summary>
+        /// <param name="personSearchJobId">The person search job identifier.</param>
+        /// <returns></returns>
+        public static PersonSearchRequest GetPersonSearchRequest(long personSearchJobId)
+        {
+            return new PersonSearchRequest
+            {
+                PersonSearchJobId = personSearchJobId,
+                Name = "John Adams",
+                Address1 = "123 Smith",
+                Address2 = "5555",
+                City = "Plano",
+                State = "TX",
+                Zip = "77777",
+                Country = "US"
+            };
+        }
         public static List<PersonSearchRequest> GetPersonSearchRequests(long personSearchJobId)
         {
             return new List<PersonSearchRequest>

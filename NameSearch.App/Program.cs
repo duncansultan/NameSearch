@@ -10,6 +10,13 @@ using Serilog;
 using Serilog.Events;
 using NameSearch.Extensions;
 using System.IO;
+using AutoMapper;
+using System.Security.AccessControl;
+using NameSearch.App.Tasks;
+using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.Api.Controllers;
+using Microsoft.Extensions.Configuration;
+using NameSearch.Utility.Interfaces;
 
 namespace NameSearch.App
 {
@@ -35,6 +42,28 @@ namespace NameSearch.App
             {
                 //ToDo: Parse args for parameters
                 #region Parse args
+
+                var directory = "";
+
+                var command = ""; //ToDo Create Enum for Search, Import, Export
+
+                //ToDo: Option to Import Names using SearchNameImporter
+
+                //ToDo: Parse city, state, zip from console input
+
+                #endregion
+
+                #region Parse Console Input
+
+                #endregion
+
+                #region Configure Dependencies
+
+                var mapperConfiguration = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Models.Domain.Api.Response.Person, Models.Entities.Person>();
+                });
+                var mapper = new Mapper(mapperConfiguration);
 
                 #endregion
 
@@ -66,62 +95,59 @@ namespace NameSearch.App
 
                 #endregion
 
-                var serviceProvider = container.GetInstance<IServiceProvider>();
-                var dbContext = serviceProvider.GetService<DbContext>();
-                var repository = serviceProvider.GetService<IEntityFrameworkRepository>();
-
-                //ToDo: Test Directory exists and has access
                 #region Validate Configuration
-
-                var directory = "";
 
                 var directoryExists = Directory.Exists(directory);
                 if (!directoryExists)
                 {
                     log.ErrorEvent("Main", "Directory does not exist {path}", directory);
-                    throw new ArgumentNullException(nameof(directory));
+                    throw new DirectoryNotFoundException(nameof(directory));
+                }
+
+                //ToDo: Test Directory exists and has access
+                //There is not an easy way to check folder permissions in .net core
+                var directoryInfo = new DirectoryInfo(directory);
+                var directorySecurity = directoryInfo.GetAccessControl(AccessControlSections.All);
+
+                var directoryHasAccess = true;
+                if (!directoryHasAccess)
+                {
+                    log.ErrorEvent("Main", "Directory access is denied {path}", directoryInfo.FullName);
+                    throw new ArgumentException(nameof(directory));
                 }
 
                 #endregion
 
-                //ToDo: Create User Interface with command line
-                Console.WriteLine("Hello World!");
+                #region Commands
 
+                var serviceProvider = container.GetInstance<IServiceProvider>();
+                var configuration = serviceProvider.GetService<IConfiguration>();
+                var repository = serviceProvider.GetService<IEntityFrameworkRepository>();
+                var export = serviceProvider.GetService<IExport>();
 
-                //ToDo: Option to Import Names using SearchNameImporter
-
-                //ToDo: Parse city, state, zip from console input
-                string city;
-                string state;
-                string zip;
-
-                #region Parse Console Input
+                //ISearchNameImporter searchNameImporter = new SearchNameImporter();
+                //ISearchName searchName = new SearchName();
+                //IFindPersonController findPersonController = new FindPersonController(configuration);
+                //IPeopleFinder peopleFinder = new PeopleFinder(repository, findPersonController, export);
+                //IPeopleSearchResultProcessor peopleSearchResultProcessor = new PeopleSearchResultProcessor(repository, mapper);
 
                 #endregion
 
                 #region Execute Commands
 
-                #endregion
-                //ToDo: Get List of searchNames
-                //var nameImport = Repository.GetFirst<NameImport>(null, o => o.OrderByDescending(y => y.Id));
-                //var names = Repository.Get<Name>(x => x.NameImportId == nameImport.Id, o => o.OrderByDescending(y => y.Value));
-                //var people = names.Select(x => new NameSearch.Models.Domain.Api.Request.Person
-                //{
-                //    Name = x.Value,
-                //    City = city,
-                //    State = state,
-                //    Zip = zip
-                //}).ToList();
-
                 //ToDo: Execute PeopleFinder.Run() in batches of x (from config file) records.
-
                 //ToDo: Execute PeopleFinder.Run()
                 //ToDo: Execute PeopleSearchResultProcessor.Run()
                 //ToDo: Execute Export.ToCsv();
+
+                //ToDo: Create User Interface with command line
+                Console.WriteLine("Hello World!");
+
+                #endregion
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Fatal Application Failure");
+                log.FatalEvent(ex, "Fatal Application Failure", null);
                 throw;
             }
             finally

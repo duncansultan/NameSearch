@@ -1,21 +1,37 @@
-﻿using NameSearch.Models.Domain.Api.Response;
+﻿using NameSearch.Models.Domain;
+using NameSearch.Models.Domain.Api.Response;
 using NameSearch.Models.Entities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NameSearch.App.Tests
 {
     /// <summary>
     ///     Domain Test Data for Unit Tests
     /// </summary>
-    public static class MockData
+    public static class MockDataFactory
     {
+        /// <summary>
+        /// Gets the test search criteria.
+        /// </summary>
+        /// <returns></returns>
+        public static SearchCriteria GetTestSearchCriteria()
+        {
+            return new SearchCriteria
+            {
+                City = "Raleigh",
+                State = "NC",
+                Country = "USA"
+            };
+        }
+
         /// <summary>
         /// Gets the test people.
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Models.Domain.Api.Request.Person> GetTestPeople()
+        public static List<Models.Domain.Api.Request.Person> GetTestPeople()
         {
             var people = new List<Models.Domain.Api.Request.Person>
             {
@@ -84,11 +100,16 @@ namespace NameSearch.App.Tests
             };
         }
 
+        public static List<string> GetTestNames()
+        {
+            return GetTestSearchNames().Select(x => x.Value).ToList();
+        }
+
         /// <summary>
         /// Gets the test search names.
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Models.Entities.Name> GetTestSearchNames()
+        public static List<Models.Entities.Name> GetTestSearchNames()
         {
             var people = new List<Models.Entities.Name>
             {
@@ -139,6 +160,15 @@ namespace NameSearch.App.Tests
         public static string GetExampleJsonData()
         {
             return Properties.Resources.TestResponseJson;
+        }
+
+        /// <summary>
+        /// Gets the example j object.
+        /// </summary>
+        /// <returns></returns>
+        public static JObject GetExampleJObject()
+        {
+            return JObject.Parse(GetExampleJsonData());
         }
 
         /// <summary>

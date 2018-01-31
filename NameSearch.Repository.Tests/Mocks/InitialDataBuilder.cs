@@ -10,44 +10,44 @@
         /// </summary>
         public static void Build(IEntityFrameworkRepository repository)
         {
-            var nameImport = MockData.GetNameImport();
+            var nameImport = MockDataFactory.GetNameImport();
             repository.Create(nameImport);
             repository.Save();
 
-            var names = MockData.GetNames(nameImport.Id);
+            var names = MockDataFactory.GetNames(nameImport.Id);
             foreach (var name in names)
             {
                 repository.Create(name);
                 repository.Save();
             }
 
-            var personSearchJob = MockData.GetPersonSearchJob();
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
             repository.Create(personSearchJob);
             repository.Save();
 
-            var personSearchResult = MockData.GetPersonSearchResult(personSearchJob.Id);
+            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchJob.Id);
             repository.Create(personSearchResult);
             repository.Save();
 
-            var person = MockData.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearchResult.Id);
             repository.Create(person);
             repository.Save();
 
-            var addresses = MockData.GetAddresses(person.Id);
+            var addresses = MockDataFactory.GetAddresses(person.Id);
             foreach (var address in addresses)
             {
                 repository.Create(address);
                 repository.Save();
             }
 
-            var associates = MockData.GetAssociates(person.Id);
+            var associates = MockDataFactory.GetAssociates(person.Id);
             foreach (var associate in associates)
             {
                 repository.Create(associate);
                 repository.Save();
             }
 
-            var phones = MockData.GetPhones(person.Id);
+            var phones = MockDataFactory.GetPhones(person.Id);
             foreach (var phone in phones)
             {
                 repository.Create(phone);

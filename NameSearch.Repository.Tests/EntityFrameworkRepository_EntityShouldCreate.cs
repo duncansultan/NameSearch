@@ -31,7 +31,7 @@ namespace NameSearch.Repository.Tests
         {
             //Arrange
             //Act
-            var personSearchJob = MockData.GetPersonSearchJob();
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
 
@@ -49,7 +49,7 @@ namespace NameSearch.Repository.Tests
         {
             //Arrange
             //Act
-            var nameImport = MockData.GetNameImport();
+            var nameImport = MockDataFactory.GetNameImport();
             Repository.Create(nameImport);
             Repository.Save();
 
@@ -67,11 +67,11 @@ namespace NameSearch.Repository.Tests
         {
             //Arrange
             //Act
-            var personSearchJob = MockData.GetPersonSearchJob();
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchRequests = MockData.GetPersonSearchRequests(personSearchJob.Id);
+            var personSearchRequests = MockDataFactory.GetPersonSearchRequests(personSearchJob.Id);
             foreach (var personSearchRequest in personSearchRequests)
             {
                 Repository.Create(personSearchRequest);
@@ -101,11 +101,11 @@ namespace NameSearch.Repository.Tests
         {
             //Arrange
             //Act
-            var personSearchJob = MockData.GetPersonSearchJob();
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchRequests = MockData.GetPersonSearchRequests(personSearchJob.Id);
+            var personSearchRequests = MockDataFactory.GetPersonSearchRequests(personSearchJob.Id);
             foreach (var personSearchRequest in personSearchRequests)
             {
                 Repository.Create(personSearchRequest);
@@ -114,7 +114,7 @@ namespace NameSearch.Repository.Tests
 
             foreach (var personSearchRequest in personSearchRequests)
             {
-                var personSearchResults = MockData.GetPersonSearchResults(personSearchRequest.Id);
+                var personSearchResults = MockDataFactory.GetPersonSearchResults(personSearchRequest.Id);
 
                 foreach (var personSearchResult in personSearchResults)
                 {
@@ -145,12 +145,12 @@ namespace NameSearch.Repository.Tests
         public void CreateNameImportWithNames()
         {
             //Arrange            
-            var nameImport = MockData.GetNameImport();
+            var nameImport = MockDataFactory.GetNameImport();
             Repository.Create(nameImport);
             Repository.Save();
 
             //Act
-            var names = MockData.GetNames(nameImport.Id);
+            var names = MockDataFactory.GetNames(nameImport.Id);
             foreach (var name in names)
             {
                 Repository.Create(name);
@@ -180,24 +180,24 @@ namespace NameSearch.Repository.Tests
         public void CreatePersonWithAddresses()
         {
             //Arrange           
-            var personSearchJob = MockData.GetPersonSearchJob();
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchRequest = MockData.GetPersonSearchRequest(personSearchJob.Id);
+            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
             Repository.Create(personSearchRequest);
             Repository.Save();
 
-            var personSearchResult = MockData.GetPersonSearchResult(personSearchRequest.Id);
+            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
             Repository.Create(personSearchResult);
             Repository.Save();
 
             //Act
-            var person = MockData.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearchResult.Id);
             Repository.Create(person);
             Repository.Save();
 
-            var addresses = MockData.GetAddresses(person.Id);
+            var addresses = MockDataFactory.GetAddresses(person.Id);
             foreach (var address in addresses)
             {
                 Repository.Create(address);
@@ -230,24 +230,24 @@ namespace NameSearch.Repository.Tests
         public void CreatePersonWithPhones()
         {
             //Arrange           
-            var personSearchJob = MockData.GetPersonSearchJob();
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchRequest = MockData.GetPersonSearchRequest(personSearchJob.Id);
+            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
             Repository.Create(personSearchRequest);
             Repository.Save();
 
-            var personSearchResult = MockData.GetPersonSearchResult(personSearchRequest.Id);
+            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
             Repository.Create(personSearchResult);
             Repository.Save();
 
             //Act
-            var person = MockData.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearchResult.Id);
             Repository.Create(person);
             Repository.Save();
 
-            var phones = MockData.GetPhones(person.Id);
+            var phones = MockDataFactory.GetPhones(person.Id);
             foreach (var phone in phones)
             {
                 Repository.Create(phone);
@@ -280,24 +280,24 @@ namespace NameSearch.Repository.Tests
         public void CreatePersonWithAssociates()
         {
             //Arrange           
-            var personSearchJob = MockData.GetPersonSearchJob();
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
 
-            var personSearchRequest = MockData.GetPersonSearchRequest(personSearchJob.Id);
+            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
             Repository.Create(personSearchRequest);
             Repository.Save();
 
-            var personSearchResult = MockData.GetPersonSearchResult(personSearchRequest.Id);
+            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
             Repository.Create(personSearchResult);
             Repository.Save();
 
             //Act
-            var person = MockData.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearchResult.Id);
             Repository.Create(person);
             Repository.Save();
 
-            var associates = MockData.GetAssociates(person.Id);
+            var associates = MockDataFactory.GetAssociates(person.Id);
             foreach (var associate in associates)
             {
                 Repository.Create(associate);

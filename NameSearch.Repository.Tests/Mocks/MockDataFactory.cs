@@ -7,7 +7,7 @@ namespace NameSearch.Repository.Tests
     /// <summary>
     ///     Entity Test Data for Unit Tests
     /// </summary>
-    public static class MockData
+    public static class MockDataFactory
     {
         /// <summary>
         /// Gets the example json data.

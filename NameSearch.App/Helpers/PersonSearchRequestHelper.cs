@@ -10,6 +10,9 @@ using NameSearch.Utility.Interfaces;
 using System.Threading;
 using AutoMapper;
 using Newtonsoft.Json;
+using NameSearch.Models.Entities;
+using System.Collections.Generic;
+using NameSearch.App.Factories;
 
 namespace NameSearch.App.Services
 {
@@ -18,6 +21,8 @@ namespace NameSearch.App.Services
     /// </summary>
     public class PersonSearchRequestHelper
     {
+        #region Dependencies
+
         /// <summary>
         /// The logger
         /// </summary>
@@ -43,6 +48,8 @@ namespace NameSearch.App.Services
         /// </summary>
         private readonly IExport Export;
 
+        #endregion
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonSearchRequestHelper"/> class.
         /// </summary>
@@ -63,6 +70,17 @@ namespace NameSearch.App.Services
         }
 
         /// <summary>
+        /// Gets the person search requests.
+        /// </summary>
+        /// <param name="personSearchJobId">The person search job identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<PersonSearchRequest> Get(long personSearchJobId)
+        {
+            var personSearchRequests = Repository.Get<PersonSearchRequest>(x => x.PersonSearchJobId == personSearchJobId && !x.IsProcessed);
+            return personSearchRequests;
+        }
+
+        /// <summary>
         /// Searches the specified person.
         /// </summary>
         /// <param name="person">The person.</param>
@@ -70,7 +88,7 @@ namespace NameSearch.App.Services
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">person</exception>
-        public async Task<Models.Entities.PersonSearchResult> SearchAsync(Models.Entities.PersonSearchRequest personSearchRequest, CancellationToken cancellationToken)
+        public async Task<PersonSearchResult> SearchAsync(PersonSearchRequest personSearchRequest, CancellationToken cancellationToken)
         {
             if (personSearchRequest == null)
             {
@@ -107,15 +125,10 @@ namespace NameSearch.App.Services
 
                 #endregion
 
+                //todo
                 #region Create PersonSearchResult Entity
 
-                var personSearchResult = new Models.Entities.PersonSearchResult();
-                personSearchResult.PersonSearchRequestId = personSearchRequest.Id;
-                personSearchResult.HttpStatusCode = result.StatusCode;
-                personSearchResult.NumberOfResults = (int)jObject["count_person"];
-                personSearchResult.Warnings = (string)jObject["warnings"];
-                personSearchResult.Error = (string)jObject["error"];
-                personSearchResult.Data = jObject.ToString();
+                var personSearchResult = PersonSearchResultFactory.Create(personSearchRequest.Id, result.StatusCode, jObject);
 
                 log.With("PersonSearchResult", personSearchResult);
 
@@ -164,65 +177,6 @@ namespace NameSearch.App.Services
                 log.ErrorEvent(ex, "Search", "Processing person failed after {ms}ms", stopwatch.ElapsedMilliseconds);
                 throw;
             }
-        }
-
-        /// <summary>
-        /// Processes the specified person search result.
-        /// </summary>
-        /// <param name="personSearchResult">The person search result.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException">personSearchResult</exception>
-        public async Task<Models.Entities.Person> ProcessAsync(Models.Entities.PersonSearchResult personSearchResult, CancellationToken cancellationToken)
-        {
-            if (personSearchResult == null)
-            {
-                throw new ArgumentNullException(nameof(personSearchResult));
-            }
-
-            var log = logger.With("personSearchResult", personSearchResult);
-
-            var stopwatch = new Stopwatch();
-
-            #region Deserialize JSON into Model
-
-            Models.Domain.Api.Response.IFindPersonResponse findPersonResponse;
-
-            try
-            {
-                findPersonResponse = JsonConvert.DeserializeObject<Models.Domain.Api.Response.FindPersonResponse>(personSearchResult.Data, SerializerSettings);
-            }
-            catch (JsonException ex)
-            {
-                //Log and throw
-                log.With("Data", personSearchResult.Data)
-                    .ErrorEvent(ex, "Run", "Json Data Deserialization failed after {ms}ms", stopwatch.ElapsedMilliseconds);
-                throw;
-            }
-
-            #endregion
-
-            #region Map Model into Entity
-
-            var personEntity = Mapper.Map<Models.Entities.Person>(findPersonResponse.Person);
-
-            log.With("Person", personEntity);
-
-            #endregion
-
-            #region Save Entity to Database
-
-            Repository.Create(personEntity);
-            await Repository.SaveAsync();
-
-            log.With("Data", personSearchResult.Data)
-                .InformationEvent("Run", "Created Person record after {ms}ms", stopwatch.ElapsedMilliseconds);
-
-            #endregion
-
-            log.InformationEvent("Run", "Processing search result finished after {ms}ms", stopwatch.ElapsedMilliseconds);
-
-            return personEntity;
         }
     }
 }

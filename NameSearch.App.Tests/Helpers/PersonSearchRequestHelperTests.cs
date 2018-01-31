@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using Moq;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.App.Factories;
 using NameSearch.App.Services;
+using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,7 +21,7 @@ namespace NameSearch.App.Tests
     /// <summary>
     /// Unit tests for PeopleFinder that Should Create Search Transactions
     /// </summary>
-    public class PeopleSearchRequestHelper_ShouldCreatePersonSearchResult
+    public class PersonSearchRequestHelperTests
     {
         /// <summary>
         /// The mock repository
@@ -42,48 +46,44 @@ namespace NameSearch.App.Tests
         /// <summary>
         /// Initializes a new instance of the <see cref="PeopleSearchHelper_ShouldCreatePersonSearchResult"/> class.
         /// </summary>
-        public PeopleSearchRequestHelper_ShouldCreatePersonSearchResult()
+        public PersonSearchRequestHelperTests()
         {
-            MockRepository = new Mock<IEntityFrameworkRepository>();
-            //Config Mock
-            MockRepository.Setup(x => x.Create(It.IsAny<PersonSearchResult>()));
-            MockRepository.Setup(x => x.Update(It.IsAny<PersonSearchRequest>()));
-            MockRepository.Setup(x => x.Save());
-            MockRepository.Setup(x => x.SaveAsync()).Returns(Task.CompletedTask);
-     
-            MockFindPersonController = new Mock<IFindPersonController>();
-            //Config Mock
-            MockFindPersonController.Setup(x => x.GetFindPerson(It.IsAny<Models.Domain.Api.Request.Person>())).Returns((Models.Domain.Api.Request.Person p) => Task.FromResult(MockData.GetApiResponse(p)));
+            MockRepository = MockRepositoryFactory.Get();
+            MockFindPersonController = MockFindPersonControllerFactory.Get();
+            MockExport = MockExportFactory.Get();
 
-            MockExport = new Mock<IExport>();
-            //Config Mock
-            MockExport.Setup(x => x.ToTxt(It.IsAny<string>(), It.IsAny<string>()));
-            MockExport.Setup(x => x.ToJson(It.IsAny<JObject>(), It.IsAny<string>()));
-            MockExport.Setup(x => x.ToTxtAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
-            MockExport.Setup(x => x.ToJsonAsync(It.IsAny<JObject>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
-
-            var serializerSettings = new JsonSerializerSettings();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Models.Domain.Api.Response.Person, Models.Entities.Person>()
-                    .ForMember(x => x.Addresses,
-                               m => m.MapFrom(a => a.CurrentAddresses))
-                    .ForMember(x => x.Associates,
-                               m => m.MapFrom(a => a.AssociatedPeople))
-                    .ForMember(x => x.Phones,
-                               m => m.MapFrom(a => a.Phones)).ReverseMap();
-            });
-            var mapper = new Mapper(config);
-
+            var serializerSettings = JsonSerializerSettingsFactory.Get();
+            var mapper = MapperFactory.Get();
             this.PersonSearchRequestHelper = new PersonSearchRequestHelper(MockRepository.Object, MockFindPersonController.Object, serializerSettings, mapper, MockExport.Object);
         }
 
+        /// <summary>
+        /// Gets the valid input return person search requests.
+        /// </summary>
         [Fact]
-        public async Task Search()
+        public void Get_ValidInput_ReturnPersonSearchRequests()
         {
             // Arrange
-            var personSearchRequest = MockData.GetPersonSearchRequest();
+            var personSearchJobId = MockDataFactory.GetPersonSearchJob().Id;
+
+            // Act
+            var result = PersonSearchRequestHelper.Get(personSearchJobId);
+
+            // Assert
+            Assert.IsAssignableFrom<IEnumerable<PersonSearchRequest>>(result);
+            Assert.NotNull(result);
+            MockRepository.Verify(c => c.Get<PersonSearchRequest>(It.IsAny<Expression<Func<PersonSearchRequest,bool>>>(), null, null, null, null), Times.Once);
+        }
+
+        /// <summary>
+        /// Searches the asynchronous valid input create person search result.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task SearchAsync_ValidInput_CreatePersonSearchResult()
+        {
+            // Arrange
+            var personSearchRequest = MockDataFactory.GetPersonSearchRequest();
 
             // Act
             var progress = new Progress<Models.Utility.ProgressReport>();

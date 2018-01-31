@@ -86,7 +86,7 @@ namespace NameSearch.Models.Entities
         /// <value>
         ///   <c>true</c> if this instance is current; otherwise, <c>false</c>.
         /// </value>
-        public double? Lattitue { get; set; }
+        public double? Latitude { get; set; }
         /// <summary>
         /// Gets or sets the longitude.
         /// </summary>
@@ -144,7 +144,7 @@ namespace NameSearch.Models.Entities
                 string.Equals(Zip, other.Zip) &&
                 string.Equals(Plus4, other.Plus4) &&
                 string.Equals(Country, other.Country) &&
-                Lattitue == other.Lattitue &&
+                Latitude == other.Latitude &&
                 Longitude == other.Longitude &&
                 Accuracy == other.Accuracy &&
                 IsCurrent == other.IsCurrent &&

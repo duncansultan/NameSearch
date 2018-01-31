@@ -222,7 +222,7 @@ namespace NameSearch.Repository.Tests
                     Plus4 = "1234",
                     Country = "US",
                     Longitude = null,
-                    Lattitue = null,
+                    Latitude = null,
                     IsCurrent = true
                 },
                 new Address
@@ -235,7 +235,7 @@ namespace NameSearch.Repository.Tests
                     Zip = "12346",
                     Plus4 = "",
                     Country = "US",
-                    Lattitue = 40.712775,
+                    Latitude = 40.712775,
                     Longitude = -74.005973,
                     IsCurrent = true
                 },
@@ -249,7 +249,7 @@ namespace NameSearch.Repository.Tests
                     Zip = "12346",
                     Plus4 = null,
                     Country = "US",
-                    Lattitue = 32.776664,
+                    Latitude = 32.776664,
                     Longitude = -96.796988,
                     IsCurrent = true
                 }

@@ -12,7 +12,7 @@ namespace NameSearch.App.Factories
         /// </summary>
         /// <param name="personSearchRequestId">The person search request identifier.</param>
         /// <param name="httpStatusCode">The HTTP status code.</param>
-        /// <param name="jObject">The j object.</param>
+        /// <param name="jObject">The json object.</param>
         /// <returns></returns>
         public static Models.Entities.PersonSearchResult Create(long personSearchRequestId, int? httpStatusCode, JObject jObject)
         {

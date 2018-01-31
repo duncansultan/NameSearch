@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using Serilog;
+using System.Collections.Generic;
 
 namespace NameSearch.App.Services
 {
@@ -17,16 +17,17 @@ namespace NameSearch.App.Services
         /// The logger
         /// </summary>
         private readonly ILogger logger = Log.Logger.ForContext<NameHelper>();
-        /// <summary>
-        /// The repository
-        /// </summary>
-        private readonly IEntityFrameworkRepository Repository;
+
         /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper Mapper;
-        
-        #endregion
+
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IEntityFrameworkRepository Repository;
+        #endregion Dependencies
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NameHelper"/> class.
@@ -54,7 +55,7 @@ namespace NameSearch.App.Services
             };
             Repository.Create(nameImport);
             Repository.Save();
-            
+
             foreach (var name in names)
             {
                 var exists = Repository.GetExists<Name>(x => x.Value == name);

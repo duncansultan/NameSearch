@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NameSearch.App.Factories;
 using NameSearch.Repository;
 using Serilog;
 using System.Collections.Generic;
@@ -16,16 +17,17 @@ namespace NameSearch.App.Services
         /// The logger
         /// </summary>
         private readonly ILogger logger = Log.Logger.ForContext<PersonHelper>();
-        /// <summary>
-        /// The repository
-        /// </summary>
-        private readonly IEntityFrameworkRepository Repository;
+
         /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper Mapper;
 
-        #endregion
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IEntityFrameworkRepository Repository;
+        #endregion Dependencies
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonHelper"/> class.
@@ -52,9 +54,8 @@ namespace NameSearch.App.Services
 
             foreach (var personEntity in peopleEntities)
             {
-                var person = new Models.Domain.Person();
-                //ToDo: Mapping
-                people.Add(person);
+                var peopleConversion = PeopleFactory.Get(personEntity);
+                people.AddRange(peopleConversion);
             }
 
             return people;

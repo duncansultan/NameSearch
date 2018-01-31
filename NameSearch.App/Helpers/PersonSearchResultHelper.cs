@@ -1,16 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using NameSearch.Repository;
-using NameSearch.Extensions;
-using Serilog;
-using System.Threading;
-using AutoMapper;
-using Newtonsoft.Json;
-using NameSearch.Models.Entities;
-using Newtonsoft.Json.Linq;
+﻿using AutoMapper;
 using NameSearch.App.Factories;
+using NameSearch.Extensions;
+using NameSearch.Models.Entities;
+using NameSearch.Repository;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Serilog;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NameSearch.App.Services
 {
@@ -25,20 +25,22 @@ namespace NameSearch.App.Services
         /// The logger
         /// </summary>
         private readonly ILogger logger = Log.Logger.ForContext<PersonSearchResultHelper>();
-        /// <summary>
-        /// The repository
-        /// </summary>
-        private readonly IEntityFrameworkRepository Repository;
-        /// <summary>
-        /// The serializer settings
-        /// </summary>
-        private readonly JsonSerializerSettings SerializerSettings;
+
         /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper Mapper;
 
-        #endregion
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IEntityFrameworkRepository Repository;
+
+        /// <summary>
+        /// The serializer settings
+        /// </summary>
+        private readonly JsonSerializerSettings SerializerSettings;
+        #endregion Dependencies
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonSearchResultHelper"/> class.
@@ -53,6 +55,66 @@ namespace NameSearch.App.Services
             this.Repository = repository;
             this.SerializerSettings = serializerSettings;
             this.Mapper = mapper;
+        }
+
+        /// <summary>
+        /// Imports the asynchronous.
+        /// </summary>
+        /// <param name="jObject">The j object.</param>
+        /// <param name="personSearchJobId">The person search job identifier.</param>
+        /// <returns></returns>
+        public async Task<PersonSearchResult> ImportAsync(JObject jObject, long personSearchJobId)
+        {
+            var log = logger.ForContext("personSearchJobId", personSearchJobId);
+
+            #region Create Search Request Entity
+
+            var personSearchRequest = new PersonSearchRequest
+            {
+                PersonSearchJobId = personSearchJobId
+            };
+            Repository.Create(personSearchRequest);
+            await Repository.SaveAsync();
+
+            #endregion Create Search Request Entity
+
+            #region Create PersonSearchResult Entity
+
+            var personSearchResult = PersonSearchResultFactory.Create(personSearchRequest.Id, null, jObject);
+
+            log.With("PersonSearchResult", personSearchResult);
+
+            #endregion Create PersonSearchResult Entity
+
+            #region Log Data Problems
+
+            if (!string.IsNullOrWhiteSpace(personSearchResult.Warnings))
+            {
+                log.WarningEvent("Search", "FindPerson api result returned with warning messages");
+            }
+            if (!string.IsNullOrWhiteSpace(personSearchResult.Error))
+            {
+                log.ErrorEvent("Search", "FindPerson api result returned with error message");
+            }
+            if (string.IsNullOrWhiteSpace(personSearchResult.Data))
+            {
+                log.ErrorEvent("Search", "FindPerson api result returned with no person data"); ;
+            }
+
+            #endregion Log Data Problems
+
+            #region Save Entity to Database
+
+            Repository.Create(personSearchResult);
+            await Repository.SaveAsync();
+
+            personSearchRequest.IsProcessed = true;
+            Repository.Update(personSearchRequest);
+            await Repository.SaveAsync();
+
+            #endregion Save Entity to Database
+
+            return personSearchResult;
         }
 
         /// <summary>
@@ -89,7 +151,7 @@ namespace NameSearch.App.Services
                 throw;
             }
 
-            #endregion
+            #endregion Deserialize JSON into Model
 
             var people = new List<Person>();
 
@@ -102,7 +164,7 @@ namespace NameSearch.App.Services
 
                 log.With("Person", personEntity);
 
-                #endregion
+                #endregion Map Model into Entity
 
                 #region Save Entity to Database
 
@@ -112,72 +174,12 @@ namespace NameSearch.App.Services
                 log.With("Data", personSearchResult.Data)
                     .InformationEvent("Run", "Created Person record after {ms}ms", stopwatch.ElapsedMilliseconds);
 
-                #endregion
+                #endregion Save Entity to Database
             }
 
             log.InformationEvent("Run", "Processing search result finished after {ms}ms", stopwatch.ElapsedMilliseconds);
 
             return people;
-        }
-
-        /// <summary>
-        /// Imports the asynchronous.
-        /// </summary>
-        /// <param name="jObject">The j object.</param>
-        /// <param name="personSearchJobId">The person search job identifier.</param>
-        /// <returns></returns>
-        public async Task<PersonSearchResult> ImportAsync(JObject jObject, long personSearchJobId)
-        {
-            var log = logger.ForContext("personSearchJobId", personSearchJobId);
-
-            #region Create Search Request Entity
-            
-            var personSearchRequest = new PersonSearchRequest
-            {
-                PersonSearchJobId = personSearchJobId
-            };
-            Repository.Create(personSearchRequest);
-            await Repository.SaveAsync();
-
-            #endregion
-
-            #region Create PersonSearchResult Entity
-
-            var personSearchResult = PersonSearchResultFactory.Create(personSearchRequest.Id, null, jObject);
-
-            log.With("PersonSearchResult", personSearchResult);
-
-            #endregion
-
-            #region Log Data Problems
-
-            if (!string.IsNullOrWhiteSpace(personSearchResult.Warnings))
-            {
-                log.WarningEvent("Search", "FindPerson api result returned with warning messages");
-            }
-            if (!string.IsNullOrWhiteSpace(personSearchResult.Error))
-            {
-                log.ErrorEvent("Search", "FindPerson api result returned with error message");
-            }
-            if (string.IsNullOrWhiteSpace(personSearchResult.Data))
-            {
-                log.ErrorEvent("Search", "FindPerson api result returned with no person data"); ;
-            }
-
-            #endregion
-
-            #region Save Entity to Database
-
-            Repository.Create(personSearchResult);
-            await Repository.SaveAsync();
-
-            personSearchRequest.IsProcessed = true;
-            Repository.Update(personSearchRequest);
-            await Repository.SaveAsync();
-
-            #endregion
-
-            return personSearchResult;
         }
     }
 }

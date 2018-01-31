@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using NameSearch.Extensions;
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
-using Newtonsoft.Json.Linq;
 using Serilog;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace NameSearch.App.Services
 {
@@ -21,16 +18,17 @@ namespace NameSearch.App.Services
         /// The logger
         /// </summary>
         private readonly ILogger logger = Log.Logger.ForContext<PersonSearchJobHelper>();
-        /// <summary>
-        /// The repository
-        /// </summary>
-        private readonly IEntityFrameworkRepository Repository;
+
         /// <summary>
         /// The mapper
         /// </summary>
         private readonly IMapper Mapper;
 
-        #endregion
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IEntityFrameworkRepository Repository;
+        #endregion Dependencies
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonSearchJobHelper"/> class.
@@ -45,14 +43,17 @@ namespace NameSearch.App.Services
         }
 
         /// <summary>
-        /// Gets the specified identifier.
+        /// Completes the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        public PersonSearchJob Get(long id)
+        /// <param name="isSuccessful">if set to <c>true</c> [is successful].</param>
+        public void Complete(long id, bool isSuccessful = true)
         {
-            var personSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == id, includeProperties: "PersonSearchRequests");
-            return personSearchJob;
+            var personSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == id);
+            personSearchJob.IsProcessed = true;
+            personSearchJob.IsSuccessful = isSuccessful;
+            Repository.Update(personSearchJob);
+            Repository.Save();
         }
 
         /// <summary>
@@ -100,17 +101,14 @@ namespace NameSearch.App.Services
         }
 
         /// <summary>
-        /// Completes the specified identifier.
+        /// Gets the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <param name="isSuccessful">if set to <c>true</c> [is successful].</param>
-        public void Complete(long id, bool isSuccessful = true)
+        /// <returns></returns>
+        public PersonSearchJob Get(long id)
         {
-            var personSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == id);
-            personSearchJob.IsProcessed = true;
-            personSearchJob.IsSuccessful = isSuccessful;
-            Repository.Update(personSearchJob);
-            Repository.Save();
+            var personSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == id, includeProperties: "PersonSearchRequests");
+            return personSearchJob;
         }
     }
 }

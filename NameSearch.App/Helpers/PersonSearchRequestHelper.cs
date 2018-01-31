@@ -1,18 +1,18 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
+﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.Repository;
-using NameSearch.Extensions;
-using Serilog;
-using NameSearch.Utility.Interfaces;
-using System.Threading;
-using AutoMapper;
-using Newtonsoft.Json;
-using NameSearch.Models.Entities;
-using System.Collections.Generic;
 using NameSearch.App.Factories;
+using NameSearch.Extensions;
+using NameSearch.Models.Entities;
+using NameSearch.Repository;
+using NameSearch.Utility.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NameSearch.App.Services
 {
@@ -24,31 +24,35 @@ namespace NameSearch.App.Services
         #region Dependencies
 
         /// <summary>
-        /// The logger
-        /// </summary>
-        private readonly ILogger logger = Log.Logger.ForContext<PersonSearchRequestHelper>();
-        /// <summary>
-        /// The repository
-        /// </summary>
-        private readonly IEntityFrameworkRepository Repository;
-        /// <summary>
-        /// The serializer settings
-        /// </summary>
-        private readonly JsonSerializerSettings SerializerSettings;
-        /// <summary>
-        /// The find person controller
-        /// </summary>
-        private readonly IFindPersonController FindPersonController;
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper Mapper;
-        /// <summary>
         /// The export
         /// </summary>
         private readonly IExport Export;
 
-        #endregion
+        /// <summary>
+        /// The find person controller
+        /// </summary>
+        private readonly IFindPersonController FindPersonController;
+
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private readonly ILogger logger = Log.Logger.ForContext<PersonSearchRequestHelper>();
+
+        /// <summary>
+        /// The mapper
+        /// </summary>
+        private readonly IMapper Mapper;
+
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IEntityFrameworkRepository Repository;
+
+        /// <summary>
+        /// The serializer settings
+        /// </summary>
+        private readonly JsonSerializerSettings SerializerSettings;
+        #endregion Dependencies
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonSearchRequestHelper"/> class.
@@ -117,22 +121,23 @@ namespace NameSearch.App.Services
 
                 log.ForContext("Content", jObject);
 
-                #endregion
+                #endregion Execute Find Person request
 
                 #region Save Response to JSON text file
 
                 await this.Export.ToJsonAsync(jObject, $"SearchJob-{personSearchRequest.Id}-{person.Name}", cancellationToken);
 
-                #endregion
+                #endregion Save Response to JSON text file
 
                 //todo
+
                 #region Create PersonSearchResult Entity
 
                 var personSearchResult = PersonSearchResultFactory.Create(personSearchRequest.Id, result.StatusCode, jObject);
 
                 log.With("PersonSearchResult", personSearchResult);
 
-                #endregion
+                #endregion Create PersonSearchResult Entity
 
                 #region Log Data Problems
 
@@ -149,14 +154,14 @@ namespace NameSearch.App.Services
                     log.ErrorEvent("Search", "FindPerson api result returned with no person data"); ;
                 }
 
-                #endregion
+                #endregion Log Data Problems
 
                 #region Save Entity to Database
 
                 Repository.Create(personSearchResult);
                 await Repository.SaveAsync();
 
-                #endregion
+                #endregion Save Entity to Database
 
                 #region Update PersonSearchRequest
 
@@ -164,7 +169,7 @@ namespace NameSearch.App.Services
                 Repository.Update(personSearchRequest);
                 await Repository.SaveAsync();
 
-                #endregion
+                #endregion Update PersonSearchRequest
 
                 stopwatch.Stop();
                 log.DebugEvent("Search", "Finished processing person search result after {ms}ms", stopwatch.ElapsedMilliseconds);

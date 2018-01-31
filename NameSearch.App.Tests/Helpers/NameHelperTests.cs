@@ -1,11 +1,14 @@
 ﻿using Moq;
 using NameSearch.App.Factories;
+using NameSearch.App.Helpers;
 using NameSearch.App.Services;
+using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using Xunit;
 
-namespace NameSearch.App.Tests
+namespace NameSearch.App.Tests.Helpers
 {
     /// <summary>
     /// Unit tests for NameHelper

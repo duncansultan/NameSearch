@@ -1,5 +1,8 @@
 ﻿namespace NameSearch.Models.Domain
 {
+    /// <summary>
+    /// Person Search Criteria
+    /// </summary>
     public class SearchCriteria
     {
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using NameSearch.Models.Utility.Interfaces;
 
 namespace NameSearch.Models.Utility
 {

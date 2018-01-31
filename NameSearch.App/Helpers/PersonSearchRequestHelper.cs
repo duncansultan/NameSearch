@@ -4,6 +4,7 @@ using NameSearch.App.Factories;
 using NameSearch.Extensions;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,7 +15,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NameSearch.App.Services
+namespace NameSearch.App.Helpers
 {
     /// <summary>
     /// Run Person Search

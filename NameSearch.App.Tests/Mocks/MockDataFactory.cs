@@ -1,12 +1,15 @@
 ﻿using NameSearch.Models.Domain;
+using NameSearch.Models.Domain.Api.Request.Interfaces;
 using NameSearch.Models.Domain.Api.Response;
 using NameSearch.Models.Entities;
+using NameSearch.Models.Utility;
+using NameSearch.Models.Utility.Interfaces;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NameSearch.App.Tests
+namespace NameSearch.App.Tests.Mocks
 {
     /// <summary>
     /// Domain Test Data for Unit Tests
@@ -211,7 +214,7 @@ namespace NameSearch.App.Tests
         /// </summary>
         /// <param name="person">The person.</param>
         /// <returns></returns>
-        public static IApiResponse GetApiResponse(Models.Domain.Api.Request.IPerson person)
+        public static IApiResponse GetApiResponse(IPerson person)
         {
             var apiResponse = new ApiResponse
             {

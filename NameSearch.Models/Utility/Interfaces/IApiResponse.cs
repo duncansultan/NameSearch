@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace NameSearch.Models.Domain.Api.Response
+namespace NameSearch.Models.Utility.Interfaces
 {
     /// <summary>
     ///     Api Response

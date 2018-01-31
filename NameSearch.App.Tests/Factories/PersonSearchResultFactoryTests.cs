@@ -1,9 +1,10 @@
 ﻿using NameSearch.App.Factories;
+using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Entities;
 using System.Net;
 using Xunit;
 
-namespace NameSearch.App.Tests
+namespace NameSearch.App.Tests.Factories
 {
     /// <summary>
     /// Unit tests for PersonSearchResultFactory

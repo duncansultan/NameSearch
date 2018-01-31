@@ -1,4 +1,6 @@
-﻿namespace NameSearch.Models.Domain.Api.Response
+﻿using NameSearch.Models.Utility.Interfaces;
+
+namespace NameSearch.Models.Utility
 {
     /// <summary>
     ///     Api Response

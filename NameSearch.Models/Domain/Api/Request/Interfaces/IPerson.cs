@@ -1,4 +1,4 @@
-﻿namespace NameSearch.Models.Domain.Api.Request
+﻿namespace NameSearch.Models.Domain.Api.Request.Interfaces
 {
     /// <summary>
     /// A Person Search Model

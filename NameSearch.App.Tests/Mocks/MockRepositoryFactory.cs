@@ -1,11 +1,12 @@
 ﻿using Moq;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace NameSearch.App.Tests
+namespace NameSearch.App.Tests.Mocks
 {
     /// <summary>
     /// Mock for Repository

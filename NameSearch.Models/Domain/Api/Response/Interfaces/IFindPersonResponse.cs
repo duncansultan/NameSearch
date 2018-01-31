@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NameSearch.Models.Domain.Api.Response
+namespace NameSearch.Models.Domain.Api.Response.Interfaces
 {
     /// <summary>
     /// WhitePages Find Person Api Search Result

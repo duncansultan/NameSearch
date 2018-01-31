@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NameSearch.Models.Domain.Api.Response.Interfaces;
 
 namespace NameSearch.Models.Domain.Api.Response
 {

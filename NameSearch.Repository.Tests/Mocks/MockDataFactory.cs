@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NameSearch.Repository.Tests
+namespace NameSearch.Repository.Tests.Mocks
 {
     /// <summary>
     /// Entity Test Data for Unit Tests

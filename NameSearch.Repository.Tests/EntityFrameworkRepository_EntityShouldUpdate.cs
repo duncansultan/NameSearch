@@ -1,5 +1,7 @@
 ﻿using NameSearch.Context;
 using NameSearch.Models.Entities;
+using NameSearch.Repository.Interfaces;
+using NameSearch.Repository.Tests.Mocks;
 using System;
 using Xunit;
 

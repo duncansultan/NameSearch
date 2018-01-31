@@ -2,11 +2,11 @@
 using Moq;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Factories;
+using NameSearch.App.Helpers;
 using NameSearch.App.Services;
-using NameSearch.App.Tasks;
 using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Domain;
-using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;

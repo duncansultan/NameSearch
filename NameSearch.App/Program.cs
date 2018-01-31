@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NameSearch.Context;
 using NameSearch.Repository;
 using StructureMap;
@@ -12,11 +11,9 @@ using NameSearch.Extensions;
 using System.IO;
 using AutoMapper;
 using System.Security.AccessControl;
-using NameSearch.App.Tasks;
-using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.Api.Controllers;
 using Microsoft.Extensions.Configuration;
 using NameSearch.Utility.Interfaces;
+using NameSearch.Repository.Interfaces;
 
 namespace NameSearch.App
 {

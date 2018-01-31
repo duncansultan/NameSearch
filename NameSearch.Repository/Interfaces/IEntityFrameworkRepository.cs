@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NameSearch.Context;
 using NameSearch.Models.Entities.Interfaces;
 
-namespace NameSearch.Repository
+namespace NameSearch.Repository.Interfaces
 {
     /// <summary>
     /// Interface for Entity Framework Repository

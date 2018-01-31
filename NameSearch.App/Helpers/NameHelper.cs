@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using Serilog;
 using System.Collections.Generic;
 
-namespace NameSearch.App.Services
+namespace NameSearch.App.Helpers
 {
     /// <summary>
     /// Search Name Helper

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using NameSearch.App.Factories;
 using NameSearch.Extensions;
+using NameSearch.Models.Domain.Api.Response.Interfaces;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
@@ -12,7 +14,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NameSearch.App.Services
+namespace NameSearch.App.Helpers
 {
     /// <summary>
     /// Run Person Search
@@ -137,7 +139,7 @@ namespace NameSearch.App.Services
 
             #region Deserialize JSON into Model
 
-            Models.Domain.Api.Response.IFindPersonResponse findPersonResponse;
+            IFindPersonResponse findPersonResponse;
 
             try
             {

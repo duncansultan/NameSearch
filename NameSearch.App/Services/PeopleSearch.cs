@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.App.Helpers;
 using NameSearch.App.Services;
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Serilog;
@@ -12,7 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NameSearch.App.Tasks
+namespace NameSearch.App.Services
 {
     /// <summary>
     /// Run Searches to Find People

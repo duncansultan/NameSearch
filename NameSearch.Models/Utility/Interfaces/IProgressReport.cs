@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NameSearch.Models.Utility
+namespace NameSearch.Models.Utility.Interfaces
 {
     public interface IProgressReport
     {

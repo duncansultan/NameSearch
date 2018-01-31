@@ -1,4 +1,6 @@
-﻿namespace NameSearch.Repository.Tests
+﻿using NameSearch.Repository.Interfaces;
+
+namespace NameSearch.Repository.Tests.Mocks
 {
     /// <summary>
     /// Loads Database with Initialization Data for Unit Tests

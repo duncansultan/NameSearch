@@ -2,10 +2,11 @@
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
+using NameSearch.Repository.Interfaces;
 using Serilog;
 using System.Collections.Generic;
 
-namespace NameSearch.App.Services
+namespace NameSearch.App.Helpers
 {
     /// <summary>
     /// Create Search Jobs and Requests

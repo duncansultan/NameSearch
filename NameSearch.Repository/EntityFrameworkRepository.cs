@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using NameSearch.Context;
 using NameSearch.Extensions;
 using NameSearch.Models.Entities.Interfaces;
+using NameSearch.Repository.Interfaces;
 using Serilog;
 
 // ReSharper disable RedundantTypeArgumentsOfMethod

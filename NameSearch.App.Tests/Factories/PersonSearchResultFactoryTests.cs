@@ -10,6 +10,9 @@ namespace NameSearch.App.Tests
     /// </summary>
     public class PersonSearchResultFactoryTests
     {
+        /// <summary>
+        /// Creates the valid input return search result.
+        /// </summary>
         [Fact]
         public void Create_ValidInput_ReturnSearchResult()
         {

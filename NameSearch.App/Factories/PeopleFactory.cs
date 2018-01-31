@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace NameSearch.App.Factories
 {
@@ -26,7 +27,7 @@ namespace NameSearch.App.Factories
                 person.Zip = address.Zip;
                 person.Plus4 = address.Plus4;
                 person.Country = address.Country;
-                person.Lattitude = address.Latitude;
+                person.Latitude = address.Latitude;
                 person.Longitude = address.Longitude;
                 people.Add(person);
             }
@@ -45,6 +46,7 @@ namespace NameSearch.App.Factories
             {
                 FirstName = personEntity.FirstName,
                 LastName = personEntity.LastName,
+                Phone = personEntity.Phones?.FirstOrDefault().PhoneNumber,
                 AgeRange = personEntity.AgeRange
             };
         }

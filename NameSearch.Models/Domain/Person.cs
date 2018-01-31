@@ -32,7 +32,7 @@
         /// <value>
         /// The phone number.
         /// </value>
-        public string PhoneNumber { get; set; }
+        public string Phone { get; set; }
         /// <summary>
         /// Gets or sets the address1.
         /// </summary>
@@ -88,7 +88,7 @@
         /// <value>
         /// The lattitude.
         /// </value>
-        public double? Lattitude { get; set; }
+        public double? Latitude { get; set; }
         /// <summary>
         /// Gets or sets the longitude.
         /// </summary>

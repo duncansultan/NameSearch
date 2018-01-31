@@ -19,18 +19,19 @@ namespace NameSearch.Utility
     public class Export : IExport
     {
         /// <summary>
-        /// The logger
-        /// </summary>
-        private readonly ILogger logger = Log.Logger.ForContext<Export>();
-
-        /// <summary>
         /// The CSV helper configuration
         /// </summary>
         private readonly Configuration CsvHelperConfiguration;
+
         /// <summary>
         /// The directory
         /// </summary>
         private readonly string Directory;
+
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private readonly ILogger logger = Log.Logger.ForContext<Export>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Export" /> class.
@@ -100,48 +101,6 @@ namespace NameSearch.Utility
         }
 
         /// <summary>
-        /// To the Txt.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="fileName">Name of the file.</param>
-        /// <exception cref=""></exception>
-        public void ToTxt(string text, string fileName)
-        {
-            var log = logger.With("length", text.Length)
-                .With("fileName", fileName)
-                .With("Directory", Directory);
-
-            if (!fileName.EndsWith(".txt"))
-            {
-                fileName = $"{fileName}.txt";
-
-                log.InformationEvent("ToTxt", "Invalid file extension, adding .txt extension");
-            }
-
-            var fullPath = Path.Combine(Directory, fileName);
-
-            log.With("fullPath", fullPath);
-
-            var fileExists = File.Exists(fullPath);
-
-            log.With("fileExists", fileExists);
-
-            if (fileExists)
-            {
-                fullPath = GetAvailableFullPath(fullPath);
-
-                log.InformationEvent("ToTxt", "File already exists at path, getting new filename of {filename}", fullPath);
-            }
-
-            using (var textWriter = new StreamWriter(fullPath))
-            {
-                textWriter.Write(text);
-            }
-
-            log.InformationEvent("ToTxt", "Saved {records} text characters successfully", text.Length);
-        }
-
-        /// <summary>
         /// To the json.
         /// </summary>
         /// <param name="json">The json.</param>
@@ -181,48 +140,6 @@ namespace NameSearch.Utility
             }
 
             log.InformationEvent("ToJson", "Saved JSON with {tokens} tokens successfully", json.Count);
-        }
-
-        /// <summary>
-        /// To the txt asynchronous.
-        /// </summary>
-        /// <param name="text">The test.</param>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        public async Task ToTxtAsync(string text, string fileName)
-        {
-            var log = logger.With("length", text.Length)
-                .With("fileName", fileName)
-                .With("Directory", Directory);
-
-            if (!fileName.EndsWith(".txt"))
-            {
-                fileName = $"{fileName}.txt";
-
-                log.InformationEvent("ToTxtAsync", "Invalid file extension, adding .txt extension");
-            }
-
-            var fullPath = Path.Combine(Directory, fileName);
-
-            log.With("fullPath", fullPath);
-
-            var fileExists = File.Exists(fullPath);
-
-            log.With("fileExists", fileExists);
-
-            if (fileExists)
-            {
-                fullPath = GetAvailableFullPath(fullPath);
-
-                log.InformationEvent("ToTxtAsync", "File already exists at path, getting new filename of {filename}", fullPath);
-            }
-
-            using (var textWriter = new StreamWriter(fullPath))
-            {
-                await textWriter.WriteAsync(text);
-            }
-
-            log.InformationEvent("ToTxtAsync", "Saved {records} text characters successfully", text.Length);
         }
 
         /// <summary>
@@ -267,6 +184,90 @@ namespace NameSearch.Utility
             }
 
             log.InformationEvent("ToJsonAsync", "Saved JSON with {tokens} tokens successfully", json.Count);
+        }
+
+        /// <summary>
+        /// To the Txt.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <exception cref=""></exception>
+        public void ToTxt(string text, string fileName)
+        {
+            var log = logger.With("length", text.Length)
+                .With("fileName", fileName)
+                .With("Directory", Directory);
+
+            if (!fileName.EndsWith(".txt"))
+            {
+                fileName = $"{fileName}.txt";
+
+                log.InformationEvent("ToTxt", "Invalid file extension, adding .txt extension");
+            }
+
+            var fullPath = Path.Combine(Directory, fileName);
+
+            log.With("fullPath", fullPath);
+
+            var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
+            if (fileExists)
+            {
+                fullPath = GetAvailableFullPath(fullPath);
+
+                log.InformationEvent("ToTxt", "File already exists at path, getting new filename of {filename}", fullPath);
+            }
+
+            using (var textWriter = new StreamWriter(fullPath))
+            {
+                textWriter.Write(text);
+            }
+
+            log.InformationEvent("ToTxt", "Saved {records} text characters successfully", text.Length);
+        }
+
+        /// <summary>
+        /// To the txt asynchronous.
+        /// </summary>
+        /// <param name="text">The test.</param>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        public async Task ToTxtAsync(string text, string fileName)
+        {
+            var log = logger.With("length", text.Length)
+                .With("fileName", fileName)
+                .With("Directory", Directory);
+
+            if (!fileName.EndsWith(".txt"))
+            {
+                fileName = $"{fileName}.txt";
+
+                log.InformationEvent("ToTxtAsync", "Invalid file extension, adding .txt extension");
+            }
+
+            var fullPath = Path.Combine(Directory, fileName);
+
+            log.With("fullPath", fullPath);
+
+            var fileExists = File.Exists(fullPath);
+
+            log.With("fileExists", fileExists);
+
+            if (fileExists)
+            {
+                fullPath = GetAvailableFullPath(fullPath);
+
+                log.InformationEvent("ToTxtAsync", "File already exists at path, getting new filename of {filename}", fullPath);
+            }
+
+            using (var textWriter = new StreamWriter(fullPath))
+            {
+                await textWriter.WriteAsync(text);
+            }
+
+            log.InformationEvent("ToTxtAsync", "Saved {records} text characters successfully", text.Length);
         }
 
         /// <summary>

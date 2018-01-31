@@ -1,6 +1,6 @@
-﻿using System;
-using NameSearch.Context;
+﻿using NameSearch.Context;
 using NameSearch.Models.Entities;
+using System;
 using Xunit;
 
 namespace NameSearch.Repository.Tests
@@ -22,87 +22,6 @@ namespace NameSearch.Repository.Tests
         {
             Repository = new EntityFrameworkRepository(new ApplicationDbContext());
             InitialDataBuilder.Build(Repository);
-        }
-
-        /// <summary>
-        /// Updates the name import.
-        /// </summary>
-        [Fact]
-        public void UpdateNameImport()
-        {
-            //Arrange
-            var nameImport = Repository.GetFirst<NameImport>();
-            nameImport.FileName = $"Updated-{nameImport.FileName}";
-
-            //Act
-            Repository.Update(nameImport);
-            Repository.Save();
-
-            //Assert
-            Assert.NotNull(nameImport.ModifiedDateTime);
-            Assert.True(nameImport.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Updates the name.
-        /// </summary>
-        [Fact]
-        public void UpdateName()
-        {
-            //Arrange
-            var name = Repository.GetFirst<Name>();
-            name.Value = $"Updated-{name.Value}";
-            name.Description = $"Updated-{name.Description}";
-
-            //Act
-            Repository.Update(name);
-            Repository.Save();
-
-            //Assert
-            Assert.NotNull(name.ModifiedDateTime);
-            Assert.True(name.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Updates the person search job.
-        /// </summary>
-        [Fact]
-        public void UpdatePersonSearchJob()
-        {
-            //Arrange
-            var personSearchJob = Repository.GetFirst<PersonSearchJob>();
-            personSearchJob.IsProcessed = !personSearchJob.IsProcessed;
-            personSearchJob.IsSuccessful = !personSearchJob.IsSuccessful;
-
-            //Act
-            Repository.Update(personSearchJob);
-            Repository.Save();
-
-            //Assert
-            Assert.NotNull(personSearchJob.ModifiedDateTime);
-            Assert.True(personSearchJob.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Updates the person.
-        /// </summary>
-        [Fact]
-        public void UpdatePerson()
-        {
-            //Arrange
-            var person = Repository.GetFirst<Person>();
-            person.AgeRange = "23-32";
-            person.LastName = $"Updated-{person.LastName}";
-            person.FirstName = $"Updated-{person.FirstName}";
-            person.Alias = $"Updated-{person.Alias}";
-
-            //Act
-            Repository.Update(person);
-            Repository.Save();
-
-            //Assert
-            Assert.NotNull(person.ModifiedDateTime);
-            Assert.True(person.ModifiedDateTime.Value.Date == DateTime.Today);
         }
 
         /// <summary>
@@ -151,6 +70,86 @@ namespace NameSearch.Repository.Tests
             //Assert
             Assert.NotNull(associate.ModifiedDateTime);
             Assert.True(associate.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+
+        /// <summary>
+        /// Updates the name.
+        /// </summary>
+        [Fact]
+        public void UpdateName()
+        {
+            //Arrange
+            var name = Repository.GetFirst<Name>();
+            name.Value = $"Updated-{name.Value}";
+            name.Description = $"Updated-{name.Description}";
+
+            //Act
+            Repository.Update(name);
+            Repository.Save();
+
+            //Assert
+            Assert.NotNull(name.ModifiedDateTime);
+            Assert.True(name.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+
+        /// <summary>
+        /// Updates the name import.
+        /// </summary>
+        [Fact]
+        public void UpdateNameImport()
+        {
+            //Arrange
+            var nameImport = Repository.GetFirst<NameImport>();
+            nameImport.FileName = $"Updated-{nameImport.FileName}";
+
+            //Act
+            Repository.Update(nameImport);
+            Repository.Save();
+
+            //Assert
+            Assert.NotNull(nameImport.ModifiedDateTime);
+            Assert.True(nameImport.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+        /// <summary>
+        /// Updates the person.
+        /// </summary>
+        [Fact]
+        public void UpdatePerson()
+        {
+            //Arrange
+            var person = Repository.GetFirst<Person>();
+            person.AgeRange = "23-32";
+            person.LastName = $"Updated-{person.LastName}";
+            person.FirstName = $"Updated-{person.FirstName}";
+            person.Alias = $"Updated-{person.Alias}";
+
+            //Act
+            Repository.Update(person);
+            Repository.Save();
+
+            //Assert
+            Assert.NotNull(person.ModifiedDateTime);
+            Assert.True(person.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+
+        /// <summary>
+        /// Updates the person search job.
+        /// </summary>
+        [Fact]
+        public void UpdatePersonSearchJob()
+        {
+            //Arrange
+            var personSearchJob = Repository.GetFirst<PersonSearchJob>();
+            personSearchJob.IsProcessed = !personSearchJob.IsProcessed;
+            personSearchJob.IsSuccessful = !personSearchJob.IsSuccessful;
+
+            //Act
+            Repository.Update(personSearchJob);
+            Repository.Save();
+
+            //Assert
+            Assert.NotNull(personSearchJob.ModifiedDateTime);
+            Assert.True(personSearchJob.ModifiedDateTime.Value.Date == DateTime.Today);
         }
 
         /// <summary>

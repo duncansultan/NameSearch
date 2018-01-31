@@ -17,12 +17,14 @@ namespace NameSearch.Utility.Interfaces
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
         IEnumerable<T> FromCsv<T>(string fileName);
+
         /// <summary>
         /// Froms the json.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
         /// <returns></returns>
         JObject FromJson(string fileName);
+
         /// <summary>
         /// Froms the json asynchronous.
         /// </summary>

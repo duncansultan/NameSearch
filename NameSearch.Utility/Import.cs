@@ -19,19 +19,19 @@ namespace NameSearch.Utility
     public class Import : IImport
     {
         /// <summary>
-        /// The logger
-        /// </summary>
-        private readonly ILogger logger = Log.Logger.ForContext<Import>();
-
-        /// <summary>
         /// The CSV helper configuration
         /// </summary>
         private readonly Configuration CsvHelperConfiguration;
+
         /// <summary>
         /// The directory
         /// </summary>
         private readonly string Directory;
 
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private readonly ILogger logger = Log.Logger.ForContext<Import>();
         /// <summary>
         /// Initializes a new instance of the <see cref="Import" /> class.
         /// </summary>

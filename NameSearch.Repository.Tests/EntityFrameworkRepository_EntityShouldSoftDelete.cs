@@ -1,6 +1,6 @@
-﻿using System;
-using NameSearch.Context;
+﻿using NameSearch.Context;
 using NameSearch.Models.Entities;
+using System;
 using Xunit;
 
 namespace NameSearch.Repository.Tests
@@ -22,82 +22,6 @@ namespace NameSearch.Repository.Tests
         {
             Repository = new EntityFrameworkRepository(new ApplicationDbContext());
             InitialDataBuilder.Build(Repository);
-        }
-
-        /// <summary>
-        /// Deletes the name import.
-        /// </summary>
-        [Fact]
-        public void DeleteNameImport()
-        {
-            //Arrange
-            var nameImport = Repository.GetFirst<NameImport>();
-
-            //Act
-            Repository.Delete(nameImport);
-            Repository.Save();
-
-            //Assert
-            Assert.False(nameImport.IsActive);
-            Assert.NotNull(nameImport.ModifiedDateTime);
-            Assert.True(nameImport.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Deletes the name.
-        /// </summary>
-        [Fact]
-        public void DeleteName()
-        {
-            //Arrange
-            var name = Repository.GetFirst<Name>();
-
-            //Act
-            Repository.Delete(name);
-            Repository.Save();
-
-            //Assert
-            Assert.False(name.IsActive);
-            Assert.NotNull(name.ModifiedDateTime);
-            Assert.True(name.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Deletes the person search job.
-        /// </summary>
-        [Fact]
-        public void DeletePersonSearchJob()
-        {
-            //Arrange
-            var personSearchJob = Repository.GetFirst<PersonSearchJob>();
-
-            //Act
-            Repository.Delete(personSearchJob);
-            Repository.Save();
-
-            //Assert
-            Assert.False(personSearchJob.IsActive);
-            Assert.NotNull(personSearchJob.ModifiedDateTime);
-            Assert.True(personSearchJob.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Deletes the person.
-        /// </summary>
-        [Fact]
-        public void DeletePerson()
-        {
-            //Arrange
-            var person = Repository.GetFirst<Person>();
-
-            //Act
-            Repository.Delete(person);
-            Repository.Save();
-
-            //Assert
-            Assert.False(person.IsActive);
-            Assert.NotNull(person.ModifiedDateTime);
-            Assert.True(person.ModifiedDateTime.Value.Date == DateTime.Today);
         }
 
         /// <summary>
@@ -136,6 +60,81 @@ namespace NameSearch.Repository.Tests
             Assert.False(associate.IsActive);
             Assert.NotNull(associate.ModifiedDateTime);
             Assert.True(associate.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+
+        /// <summary>
+        /// Deletes the name.
+        /// </summary>
+        [Fact]
+        public void DeleteName()
+        {
+            //Arrange
+            var name = Repository.GetFirst<Name>();
+
+            //Act
+            Repository.Delete(name);
+            Repository.Save();
+
+            //Assert
+            Assert.False(name.IsActive);
+            Assert.NotNull(name.ModifiedDateTime);
+            Assert.True(name.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+
+        /// <summary>
+        /// Deletes the name import.
+        /// </summary>
+        [Fact]
+        public void DeleteNameImport()
+        {
+            //Arrange
+            var nameImport = Repository.GetFirst<NameImport>();
+
+            //Act
+            Repository.Delete(nameImport);
+            Repository.Save();
+
+            //Assert
+            Assert.False(nameImport.IsActive);
+            Assert.NotNull(nameImport.ModifiedDateTime);
+            Assert.True(nameImport.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+        /// <summary>
+        /// Deletes the person.
+        /// </summary>
+        [Fact]
+        public void DeletePerson()
+        {
+            //Arrange
+            var person = Repository.GetFirst<Person>();
+
+            //Act
+            Repository.Delete(person);
+            Repository.Save();
+
+            //Assert
+            Assert.False(person.IsActive);
+            Assert.NotNull(person.ModifiedDateTime);
+            Assert.True(person.ModifiedDateTime.Value.Date == DateTime.Today);
+        }
+
+        /// <summary>
+        /// Deletes the person search job.
+        /// </summary>
+        [Fact]
+        public void DeletePersonSearchJob()
+        {
+            //Arrange
+            var personSearchJob = Repository.GetFirst<PersonSearchJob>();
+
+            //Act
+            Repository.Delete(personSearchJob);
+            Repository.Save();
+
+            //Assert
+            Assert.False(personSearchJob.IsActive);
+            Assert.NotNull(personSearchJob.ModifiedDateTime);
+            Assert.True(personSearchJob.ModifiedDateTime.Value.Date == DateTime.Today);
         }
 
         /// <summary>

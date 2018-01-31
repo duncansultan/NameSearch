@@ -1,13 +1,14 @@
 ﻿namespace NameSearch.Repository.Tests
 {
     /// <summary>
-    ///     Loads Database with Initialization Data for Unit Tests
+    /// Loads Database with Initialization Data for Unit Tests
     /// </summary>
     public static class InitialDataBuilder
     {
         /// <summary>
-        ///     Builds this instance.
+        /// Builds this instance.
         /// </summary>
+        /// <param name="repository">The repository.</param>
         public static void Build(IEntityFrameworkRepository repository)
         {
             var nameImport = MockDataFactory.GetNameImport();

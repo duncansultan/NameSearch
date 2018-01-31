@@ -1,6 +1,6 @@
-using System.Linq;
 using NameSearch.Context;
 using NameSearch.Models.Entities;
+using System.Linq;
 using Xunit;
 
 namespace NameSearch.Repository.Tests
@@ -24,24 +24,6 @@ namespace NameSearch.Repository.Tests
         }
 
         /// <summary>
-        /// Creates the person search job.
-        /// </summary>
-        [Fact]
-        public void CreatePersonSearchJob()
-        {
-            //Arrange
-            //Act
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id);
-
-            //Assert
-            Assert.Equal(personSearchJob.Id, savedPersonSearchJob.Id);
-        }
-
-        /// <summary>
         /// Creates the name import.
         /// </summary>
         [Fact]
@@ -59,6 +41,58 @@ namespace NameSearch.Repository.Tests
             Assert.Equal(nameImport.Id, savedNameImport.Id);
         }
 
+        /// <summary>
+        /// Creates the name import with names.
+        /// </summary>
+        [Fact]
+        public void CreateNameImportWithNames()
+        {
+            //Arrange
+            var nameImport = MockDataFactory.GetNameImport();
+            Repository.Create(nameImport);
+            Repository.Save();
+
+            //Act
+            var names = MockDataFactory.GetNames(nameImport.Id);
+            foreach (var name in names)
+            {
+                Repository.Create(name);
+                Repository.Save();
+            }
+
+            var savedNameImport = Repository.GetFirst<NameImport>(x => x.Id == nameImport.Id);
+            var savedNames = Repository.Get<Name>(x => x.NameImportId == nameImport.Id);
+
+            //Assert
+            Assert.Equal(nameImport.Id, savedNameImport.Id);
+            Assert.Equal(nameImport.FileName, savedNameImport.FileName);
+            Assert.Equal(names.Count(), savedNames.Count());
+            Assert.Equal(names.Count(), savedNameImport.Names.Count());
+
+            foreach (var savedName in savedNames)
+            {
+                var anyName = names.Any(x => x.Id == savedName.Id);
+                Assert.True(anyName);
+            }
+        }
+
+        /// <summary>
+        /// Creates the person search job.
+        /// </summary>
+        [Fact]
+        public void CreatePersonSearchJob()
+        {
+            //Arrange
+            //Act
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
+            Repository.Create(personSearchJob);
+            Repository.Save();
+
+            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id);
+
+            //Assert
+            Assert.Equal(personSearchJob.Id, savedPersonSearchJob.Id);
+        }
         /// <summary>
         /// Creates the person search job with requests.
         /// </summary>
@@ -137,49 +171,13 @@ namespace NameSearch.Repository.Tests
                 Assert.True(anyName);
             }
         }
-
-        /// <summary>
-        /// Creates the name import with names.
-        /// </summary>
-        [Fact]
-        public void CreateNameImportWithNames()
-        {
-            //Arrange            
-            var nameImport = MockDataFactory.GetNameImport();
-            Repository.Create(nameImport);
-            Repository.Save();
-
-            //Act
-            var names = MockDataFactory.GetNames(nameImport.Id);
-            foreach (var name in names)
-            {
-                Repository.Create(name);
-                Repository.Save();
-            }
-
-            var savedNameImport = Repository.GetFirst<NameImport>(x => x.Id == nameImport.Id);
-            var savedNames = Repository.Get<Name>(x => x.NameImportId == nameImport.Id);
-
-            //Assert
-            Assert.Equal(nameImport.Id, savedNameImport.Id);
-            Assert.Equal(nameImport.FileName, savedNameImport.FileName);
-            Assert.Equal(names.Count(), savedNames.Count());
-            Assert.Equal(names.Count(), savedNameImport.Names.Count());
-
-            foreach (var savedName in savedNames)
-            {
-                var anyName = names.Any(x => x.Id == savedName.Id);
-                Assert.True(anyName);
-            }
-        }
-
         /// <summary>
         /// Creates the person with addresses.
         /// </summary>
         [Fact]
         public void CreatePersonWithAddresses()
         {
-            //Arrange           
+            //Arrange
             var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
@@ -224,62 +222,12 @@ namespace NameSearch.Repository.Tests
         }
 
         /// <summary>
-        /// Creates the person with phones.
-        /// </summary>
-        [Fact]
-        public void CreatePersonWithPhones()
-        {
-            //Arrange           
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
-            Repository.Create(personSearchRequest);
-            Repository.Save();
-
-            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
-            Repository.Create(personSearchResult);
-            Repository.Save();
-
-            //Act
-            var person = MockDataFactory.GetPerson(personSearchResult.Id);
-            Repository.Create(person);
-            Repository.Save();
-
-            var phones = MockDataFactory.GetPhones(person.Id);
-            foreach (var phone in phones)
-            {
-                Repository.Create(phone);
-                Repository.Save();
-            }
-
-            var savedPerson = Repository.GetFirst<Person>(x => x.Id == person.Id);
-            var savedPhones = Repository.Get<Phone>(x => x.PersonId == person.Id);
-
-            //Assert
-            Assert.Equal(person.Id, savedPerson.Id);
-            Assert.Equal(person.FirstName, savedPerson.FirstName);
-            Assert.Equal(person.LastName, savedPerson.LastName);
-            Assert.Equal(person.Alias, savedPerson.Alias);
-            Assert.Equal(person.AgeRange, savedPerson.AgeRange);
-            Assert.Equal(phones.Count(), savedPhones.Count());
-            Assert.Equal(phones.Count(), savedPerson.Phones.Count());
-
-            foreach (var savedPhone in savedPhones)
-            {
-                var anyPhone = phones.Any(x => x.Id == savedPhone.Id);
-                Assert.True(anyPhone);
-            }
-        }
-
-        /// <summary>
         /// Creates the person with associates.
         /// </summary>
         [Fact]
         public void CreatePersonWithAssociates()
         {
-            //Arrange           
+            //Arrange
             var personSearchJob = MockDataFactory.GetPersonSearchJob();
             Repository.Create(personSearchJob);
             Repository.Save();
@@ -320,6 +268,56 @@ namespace NameSearch.Repository.Tests
             {
                 var anyAssociate = associates.Any(x => x.Id == associate.Id);
                 Assert.True(anyAssociate);
+            }
+        }
+
+        /// <summary>
+        /// Creates the person with phones.
+        /// </summary>
+        [Fact]
+        public void CreatePersonWithPhones()
+        {
+            //Arrange
+            var personSearchJob = MockDataFactory.GetPersonSearchJob();
+            Repository.Create(personSearchJob);
+            Repository.Save();
+
+            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
+            Repository.Create(personSearchRequest);
+            Repository.Save();
+
+            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
+            Repository.Create(personSearchResult);
+            Repository.Save();
+
+            //Act
+            var person = MockDataFactory.GetPerson(personSearchResult.Id);
+            Repository.Create(person);
+            Repository.Save();
+
+            var phones = MockDataFactory.GetPhones(person.Id);
+            foreach (var phone in phones)
+            {
+                Repository.Create(phone);
+                Repository.Save();
+            }
+
+            var savedPerson = Repository.GetFirst<Person>(x => x.Id == person.Id);
+            var savedPhones = Repository.Get<Phone>(x => x.PersonId == person.Id);
+
+            //Assert
+            Assert.Equal(person.Id, savedPerson.Id);
+            Assert.Equal(person.FirstName, savedPerson.FirstName);
+            Assert.Equal(person.LastName, savedPerson.LastName);
+            Assert.Equal(person.Alias, savedPerson.Alias);
+            Assert.Equal(person.AgeRange, savedPerson.AgeRange);
+            Assert.Equal(phones.Count(), savedPhones.Count());
+            Assert.Equal(phones.Count(), savedPerson.Phones.Count());
+
+            foreach (var savedPhone in savedPhones)
+            {
+                var anyPhone = phones.Any(x => x.Id == savedPhone.Id);
+                Assert.True(anyPhone);
             }
         }
     }

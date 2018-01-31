@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NameSearch.App.Tests
 {
     /// <summary>
-    /// 
+    /// Mock for Repository
     /// </summary>
     public static class MockRepositoryFactory
     {

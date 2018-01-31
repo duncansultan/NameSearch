@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NameSearch.App.Tests.Mocks
 {
     /// <summary>
-    /// 
+    /// Mock for Export Utility
     /// </summary>
     public static class MockExportFactory
     {

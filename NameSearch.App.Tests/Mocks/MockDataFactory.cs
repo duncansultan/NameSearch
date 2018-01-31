@@ -9,72 +9,82 @@ using System.Linq;
 namespace NameSearch.App.Tests
 {
     /// <summary>
-    ///     Domain Test Data for Unit Tests
+    /// Domain Test Data for Unit Tests
     /// </summary>
     public static class MockDataFactory
     {
-        /// <summary>
-        /// Gets the test search criteria.
-        /// </summary>
-        /// <returns></returns>
-        public static SearchCriteria GetTestSearchCriteria()
-        {
-            return new SearchCriteria
-            {
-                City = "Raleigh",
-                State = "NC",
-                Country = "USA"
-            };
-        }
+        #region Entities
 
         /// <summary>
-        /// Gets the test people.
+        /// Gets the addresses.
         /// </summary>
+        /// <param name="personId">The person identifier.</param>
         /// <returns></returns>
-        public static List<Models.Domain.Api.Request.Person> GetTestPeople()
+        public static List<Models.Entities.Address> GetAddresses()
         {
-            var people = new List<Models.Domain.Api.Request.Person>
+            return new List<Models.Entities.Address>()
             {
-                new Models.Domain.Api.Request.Person
+                new Models.Entities.Address()
                 {
-                    Address1 = "",
+                    PersonId = 1,
+                    Address1 = "123 Oak Rd",
                     Address2 = "",
-                    City = "",
-                    Country = "",
-                    Name = "Mwangi",
+                    City = "Dallas",
+                    State = "TX",
+                    Zip = "75083",
+                    Plus4 = "1234",
+                    Country = "US",
+                    Longitude = null,
+                    Latitude = null,
+                    IsCurrent = true
+                },
+                new Models.Entities.Address
+                {
+                    PersonId = 1,
+                    Address1 = "456 Sunny Trail Court",
+                    Address2 = "",
+                    City = "Frisco",
+                    State = "TX",
+                    Zip = "12346",
+                    Plus4 = "",
+                    Country = "US",
+                    Latitude = 40.712775,
+                    Longitude = -74.005973,
+                    IsCurrent = true
+                },
+                new Models.Entities.Address
+                {
+                    PersonId = 1,
+                    Address1 = "123 Falcon Drive",
+                    Address2 = "#123",
+                    City = "Raleigh",
                     State = "NC",
-                    Zip = ""
+                    Zip = "12346",
+                    Plus4 = null,
+                    Country = "US",
+                    Latitude = 32.776664,
+                    Longitude = -96.796988,
+                    IsCurrent = true
                 }
             };
-            return people;
         }
 
-        public static PersonSearchJob GetPersonSearchJob()
+        /// <summary>
+        /// Gets the person search job.
+        /// </summary>
+        /// <returns></returns>
+        public static Models.Entities.PersonSearchJob GetPersonSearchJob()
         {
             var personSearchJob = new PersonSearchJob();
             personSearchJob.PersonSearchRequests = GetPersonSearchRequests();
             return personSearchJob;
         }
 
-        public static List<PersonSearchResult> GetPersonSearchResults()
-        {
-            var personSearchResults = new List<PersonSearchResult>
-            {
-                GetPersonSearchResult()
-            };
-            return personSearchResults;
-        }
-
-        public static List<PersonSearchRequest> GetPersonSearchRequests()
-        {
-            var personSearchRequest = new List<PersonSearchRequest>
-            {
-                GetPersonSearchRequest()
-            };
-            return personSearchRequest;
-        }
-
-        public static PersonSearchRequest GetPersonSearchRequest()
+        /// <summary>
+        /// Gets the person search request.
+        /// </summary>
+        /// <returns></returns>
+        public static Models.Entities.PersonSearchRequest GetPersonSearchRequest()
         {
             return new PersonSearchRequest
             {
@@ -90,7 +100,24 @@ namespace NameSearch.App.Tests
             };
         }
 
-        public static PersonSearchResult GetPersonSearchResult()
+        /// <summary>
+        /// Gets the person search requests.
+        /// </summary>
+        /// <returns></returns>
+        public static List<Models.Entities.PersonSearchRequest> GetPersonSearchRequests()
+        {
+            var personSearchRequest = new List<PersonSearchRequest>
+            {
+                GetPersonSearchRequest()
+            };
+            return personSearchRequest;
+        }
+
+        /// <summary>
+        /// Gets the person search result.
+        /// </summary>
+        /// <returns></returns>
+        public static Models.Entities.PersonSearchResult GetPersonSearchResult()
         {
             return new PersonSearchResult
             {
@@ -100,9 +127,28 @@ namespace NameSearch.App.Tests
             };
         }
 
-        public static List<string> GetTestNames()
+        /// <summary>
+        /// Gets the person search results.
+        /// </summary>
+        /// <returns></returns>
+        public static List<Models.Entities.PersonSearchResult> GetPersonSearchResults()
         {
-            return GetTestSearchNames().Select(x => x.Value).ToList();
+            var personSearchResults = new List<PersonSearchResult>
+            {
+                GetPersonSearchResult()
+            };
+            return personSearchResults;
+        }
+
+        /// <summary>
+        /// Gets the test person.
+        /// </summary>
+        /// <returns></returns>
+        public static Models.Entities.Person GetTestPerson()
+        {
+            var personEntity = new Models.Entities.Person();
+            personEntity.Addresses = GetAddresses();
+            return personEntity;
         }
 
         /// <summary>
@@ -127,6 +173,10 @@ namespace NameSearch.App.Tests
             return people;
         }
 
+        #endregion Entities
+
+        #region Domain
+
         /// <summary>
         /// Gets the API response.
         /// </summary>
@@ -142,6 +192,11 @@ namespace NameSearch.App.Tests
             return apiResponse;
         }
 
+        /// <summary>
+        /// Gets the API response.
+        /// </summary>
+        /// <param name="person">The person.</param>
+        /// <returns></returns>
         public static IApiResponse GetApiResponse(Models.Domain.Api.Request.IPerson person)
         {
             var apiResponse = new ApiResponse
@@ -154,96 +209,53 @@ namespace NameSearch.App.Tests
         }
 
         /// <summary>
-        /// Gets the example json data.
+        /// Gets the test names.
         /// </summary>
         /// <returns></returns>
-        public static string GetExampleJsonData()
+        public static List<string> GetTestNames()
         {
-            return Properties.Resources.TestResponseJson;
+            return GetTestSearchNames().Select(x => x.Value).ToList();
         }
 
         /// <summary>
-        /// Gets the example j object.
+        /// Gets the test people.
         /// </summary>
         /// <returns></returns>
-        public static JObject GetExampleJObject()
+        public static List<Models.Domain.Api.Request.Person> GetTestPeople()
         {
-            return JObject.Parse(GetExampleJsonData());
-        }
-
-        /// <summary>
-        /// Gets the response content as json.
-        /// </summary>
-        /// <returns></returns>
-        public static string GetResponseContentAsJson()
-        {
-            var person = GetPersonObject("Person.fbb71b50-0000-4b57-aba0-eafef8ce9c57.Durable", "Duncan Sultan", "Duncan", "", "Sultan", "25-29", "Male", new JArray(), new JArray(), new JArray(), new JArray());
-            var responseObject = GetResponseObject(10, person, "", "");
-            return responseObject.ToString();
-        }
-
-        /// <summary>
-        /// Gets the response object.
-        /// </summary>
-        /// <param name="countPerson">The count person.</param>
-        /// <param name="person">The person.</param>
-        /// <param name="warnings">The warnings.</param>
-        /// <param name="error">The error.</param>
-        /// <returns></returns>
-        public static JObject GetResponseObject(int countPerson, JObject person, string warnings, string error)
-        {
-            var jObject = new JObject
+            var people = new List<Models.Domain.Api.Request.Person>
             {
-                new JProperty("count_person", countPerson),
-                new JProperty("person", person),
-                new JProperty("warnings", warnings),
-                new JProperty("error", error)
+                new Models.Domain.Api.Request.Person
+                {
+                    Address1 = "",
+                    Address2 = "",
+                    City = "",
+                    Country = "",
+                    Name = "Mwangi",
+                    State = "NC",
+                    Zip = ""
+                }
             };
-            return jObject;
+            return people;
         }
 
         /// <summary>
-        /// Gets the person object.
+        /// Gets the test search criteria.
         /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="firstName">The first name.</param>
-        /// <param name="middleName">Name of the middle.</param>
-        /// <param name="lastName">The last name.</param>
-        /// <param name="age_range">The age range.</param>
-        /// <param name="gender">The gender.</param>
-        /// <param name="current_addresses">The current addresses.</param>
-        /// <param name="historical_addresses">The historical addresses.</param>
-        /// <param name="phones">The phones.</param>
-        /// <param name="associated_people">The associated people.</param>
         /// <returns></returns>
-        public static JObject GetPersonObject(string id,
-            string name,
-            string firstName,
-            string middleName,
-            string lastName,
-            string age_range,
-            string gender,
-            JArray current_addresses,
-            JArray historical_addresses,
-            JArray phones,
-            JArray associated_people)
+        public static SearchCriteria GetTestSearchCriteria()
         {
-            var person = new JObject
+            return new SearchCriteria
             {
-                new JProperty("id", id),
-                new JProperty("name", name),
-                new JProperty("middleName", middleName),
-                new JProperty("lastName", lastName),
-                new JProperty("ageRange", age_range),
-                new JProperty("gender", gender),
-                new JProperty("current_addresses", current_addresses),
-                new JProperty("historical_addresses", historical_addresses),
-                new JProperty("phones", phones),
-                new JProperty("associated_people", associated_people)
+                City = "Raleigh",
+                State = "NC",
+                Country = "USA"
             };
-            return person;
         }
+
+        #endregion Domain
+
+        #region Json
 
         /// <summary>
         /// Gets the address object.
@@ -311,6 +323,67 @@ namespace NameSearch.App.Tests
         }
 
         /// <summary>
+        /// Gets the example j object.
+        /// </summary>
+        /// <returns></returns>
+        public static JObject GetExampleJObject()
+        {
+            return JObject.Parse(GetExampleJsonData());
+        }
+
+        /// <summary>
+        /// Gets the example json data.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetExampleJsonData()
+        {
+            return Properties.Resources.TestResponseJson;
+        }
+
+        /// <summary>
+        /// Gets the person object.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="firstName">The first name.</param>
+        /// <param name="middleName">Name of the middle.</param>
+        /// <param name="lastName">The last name.</param>
+        /// <param name="age_range">The age range.</param>
+        /// <param name="gender">The gender.</param>
+        /// <param name="current_addresses">The current addresses.</param>
+        /// <param name="historical_addresses">The historical addresses.</param>
+        /// <param name="phones">The phones.</param>
+        /// <param name="associated_people">The associated people.</param>
+        /// <returns></returns>
+        public static JObject GetPersonObject(string id,
+            string name,
+            string firstName,
+            string middleName,
+            string lastName,
+            string age_range,
+            string gender,
+            JArray current_addresses,
+            JArray historical_addresses,
+            JArray phones,
+            JArray associated_people)
+        {
+            var person = new JObject
+            {
+                new JProperty("id", id),
+                new JProperty("name", name),
+                new JProperty("middleName", middleName),
+                new JProperty("lastName", lastName),
+                new JProperty("ageRange", age_range),
+                new JProperty("gender", gender),
+                new JProperty("current_addresses", current_addresses),
+                new JProperty("historical_addresses", historical_addresses),
+                new JProperty("phones", phones),
+                new JProperty("associated_people", associated_people)
+            };
+            return person;
+        }
+
+        /// <summary>
         /// Gets the phone object.
         /// </summary>
         /// <param name="id">The identifier.</param>
@@ -327,5 +400,38 @@ namespace NameSearch.App.Tests
             };
             return phone;
         }
+
+        /// <summary>
+        /// Gets the response content as json.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetResponseContentAsJson()
+        {
+            var person = GetPersonObject("Person.fbb71b50-0000-4b57-aba0-eafef8ce9c57.Durable", "Duncan Sultan", "Duncan", "", "Sultan", "25-29", "Male", new JArray(), new JArray(), new JArray(), new JArray());
+            var responseObject = GetResponseObject(10, person, "", "");
+            return responseObject.ToString();
+        }
+
+        /// <summary>
+        /// Gets the response object.
+        /// </summary>
+        /// <param name="countPerson">The count person.</param>
+        /// <param name="person">The person.</param>
+        /// <param name="warnings">The warnings.</param>
+        /// <param name="error">The error.</param>
+        /// <returns></returns>
+        public static JObject GetResponseObject(int countPerson, JObject person, string warnings, string error)
+        {
+            var jObject = new JObject
+            {
+                new JProperty("count_person", countPerson),
+                new JProperty("person", person),
+                new JProperty("warnings", warnings),
+                new JProperty("error", error)
+            };
+            return jObject;
+        }
+
+        #endregion Json
     }
 }

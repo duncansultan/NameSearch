@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace NameSearch.App.Tests.Mocks
 {
     /// <summary>
-    /// 
+    /// Mock for FindPersonController
     /// </summary>
     public static class MockFindPersonControllerFactory
     {

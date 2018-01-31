@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NameSearch.Utility.Interfaces;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NameSearch.App.Tests.Mocks
 {
@@ -17,8 +18,8 @@ namespace NameSearch.App.Tests.Mocks
         {
             var MockImport = new Mock<IImport>();
             MockImport.Setup(x => x.FromCsv<string>(It.IsAny<string>())).Returns(MockDataFactory.GetTestNames());
-            MockImport.Setup(x => x.FromJson(It.IsAny<string>()));
-            MockImport.Setup(x => x.FromJsonAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()));
+            MockImport.Setup(x => x.FromJson(It.IsAny<string>())).Returns(MockDataFactory.GetExampleJObject());
+            MockImport.Setup(x => x.FromJsonAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(MockDataFactory.GetExampleJObject()));
             return MockImport;
         }
     }

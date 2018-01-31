@@ -1,17 +1,16 @@
-﻿using NameSearch.Repository;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
-using Serilog;
+using NameSearch.App.Services;
+using NameSearch.Models.Domain;
+using NameSearch.Models.Entities;
+using NameSearch.Repository;
 using NameSearch.Utility.Interfaces;
+using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Linq;
 using System.Threading;
-using NameSearch.App.Services;
-using NameSearch.Models.Entities;
-using NameSearch.Models.Domain;
-using Newtonsoft.Json;
-using AutoMapper;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NameSearch.App.Tasks
 {
@@ -23,55 +22,64 @@ namespace NameSearch.App.Tasks
         #region Dependencies
 
         /// <summary>
-        /// The logger
+        /// The export
         /// </summary>
-        private readonly ILogger logger = Log.Logger.ForContext<PeopleSearch>();
-        /// <summary>
-        /// The repository
-        /// </summary>
-        private readonly IEntityFrameworkRepository Repository;
+        private readonly IExport Export;
+
         /// <summary>
         /// The find person controller
         /// </summary>
         private readonly IFindPersonController FindPersonController;
-        /// <summary>
-        /// The serializer settings
-        /// </summary>
-        private readonly JsonSerializerSettings SerializerSettings;
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper Mapper;
+
         /// <summary>
         /// The import
         /// </summary>
         private readonly IImport Import;
+
         /// <summary>
-        /// The export
+        /// The logger
         /// </summary>
-        private readonly IExport Export;
+        private readonly ILogger logger = Log.Logger.ForContext<PeopleSearch>();
+
         /// <summary>
-        /// The people search request helper
+        /// The mapper
         /// </summary>
-        private readonly PersonSearchRequestHelper PersonSearchRequestHelper;
-        /// <summary>
-        /// The people search result helper
-        /// </summary>
-        private readonly PersonSearchResultHelper PersonSearchResultHelper;
-        /// <summary>
-        /// The people search job helper
-        /// </summary>
-        private readonly PersonSearchJobHelper PersonSearchJobHelper;
-        /// <summary>
-        /// The people search person helper
-        /// </summary>
-        private readonly PersonHelper PersonHelper;
+        private readonly IMapper Mapper;
+
         /// <summary>
         /// The people search name helper
         /// </summary>
         private readonly NameHelper NameHelper;
 
-        #endregion
+        /// <summary>
+        /// The people search person helper
+        /// </summary>
+        private readonly PersonHelper PersonHelper;
+
+        /// <summary>
+        /// The people search job helper
+        /// </summary>
+        private readonly PersonSearchJobHelper PersonSearchJobHelper;
+
+        /// <summary>
+        /// The people search request helper
+        /// </summary>
+        private readonly PersonSearchRequestHelper PersonSearchRequestHelper;
+
+        /// <summary>
+        /// The people search result helper
+        /// </summary>
+        private readonly PersonSearchResultHelper PersonSearchResultHelper;
+
+        /// <summary>
+        /// The repository
+        /// </summary>
+        private readonly IEntityFrameworkRepository Repository;
+        /// <summary>
+        /// The serializer settings
+        /// </summary>
+        private readonly JsonSerializerSettings SerializerSettings;
+        #endregion Dependencies
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PeopleFinder"/> class.
@@ -101,13 +109,52 @@ namespace NameSearch.App.Tasks
         }
 
         /// <summary>
+        /// Exports the people.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public void ExportPeople(string fileName)
+        {
+            var people = PersonHelper.GetPeople();
+            Export.ToCsv(people, fileName, false);
+        }
+
+        /// <summary>
+        /// Imports the names.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        public long ImportNames(string fileName)
+        {
+            var names = Import.FromCsv<string>(fileName);
+            var importId = NameHelper.Import(names, fileName);
+            return importId;
+        }
+
+        /// <summary>
+        /// Imports the person searches from json.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        public async Task<int> ImportPersonSearchesFromJsonAsync(string fileName, CancellationToken cancellationToken)
+        {
+            var jObject = await Import.FromJsonAsync(fileName, cancellationToken);
+
+            var peopleSearchJobId = PersonSearchJobHelper.Create();
+            var personSearchResult = await PersonSearchResultHelper.ImportAsync(jObject, peopleSearchJobId);
+            var people = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
+            PersonSearchJobHelper.Complete(peopleSearchJobId);
+
+            return people.Count();
+        }
+
+        /// <summary>
         /// Searches the specified search criteria.
         /// </summary>
         /// <param name="searchCriteria">The search criteria.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">searchCriteria</exception>
-        public async Task<bool> Search(SearchCriteria searchCriteria, CancellationToken cancellationToken)
+        public async Task<bool> SearchAsync(SearchCriteria searchCriteria, CancellationToken cancellationToken)
         {
             if (searchCriteria == null)
             {
@@ -128,39 +175,6 @@ namespace NameSearch.App.Tasks
             PersonSearchJobHelper.Complete(peopleSearchJobId);
 
             return true;
-        }
-
-        /// <summary>
-        /// Imports the names.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public long ImportNames(string fileName)
-        {
-            var names = Import.FromCsv<string>(fileName);
-            var importId = NameHelper.Import(names, fileName);
-            return importId;
-        }
-
-        public async Task<int> ImportPersonSearchesFromJson(string fileName, CancellationToken cancellationToken)
-        {
-            var jObject = await Import.FromJsonAsync(fileName, cancellationToken);
-
-            var peopleSearchJobId = PersonSearchJobHelper.Create();
-            var personSearchResult = await PersonSearchResultHelper.ImportAsync(jObject, peopleSearchJobId);
-            var people = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
-            PersonSearchJobHelper.Complete(peopleSearchJobId);
-
-            return people.Count();
-        }
-
-        /// <summary>
-        /// Exports the people.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public void ExportPeople(string fileName)
-        {
-            var people = PersonHelper.GetPeople();
-            Export.ToCsv(people, fileName, false);
         }
     }
 }

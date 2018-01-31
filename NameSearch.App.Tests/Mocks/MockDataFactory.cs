@@ -70,6 +70,20 @@ namespace NameSearch.App.Tests
         }
 
         /// <summary>
+        /// Gets the name import.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
+        public static NameImport GetNameImport(long id)
+        {
+            return new NameImport()
+            {
+                Id = id,
+                Names = GetTestSearchNames()
+            };
+        }
+
+        /// <summary>
         /// Gets the person search job.
         /// </summary>
         /// <returns></returns>

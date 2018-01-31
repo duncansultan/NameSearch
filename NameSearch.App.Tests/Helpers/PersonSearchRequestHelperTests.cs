@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Moq;
+﻿using Moq;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.App.Services;
@@ -7,7 +6,6 @@ using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using NameSearch.Utility.Interfaces;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,14 +17,14 @@ using Xunit;
 namespace NameSearch.App.Tests
 {
     /// <summary>
-    /// Unit tests for PeopleFinder that Should Create Search Transactions
+    /// Unit tests for PersonSearchRequestHelper
     /// </summary>
     public class PersonSearchRequestHelperTests
     {
         /// <summary>
-        /// The mock repository
+        /// The mock export
         /// </summary>
-        private readonly Mock<IEntityFrameworkRepository> MockRepository;
+        private readonly Mock<IExport> MockExport;
 
         /// <summary>
         /// The mock find person controller
@@ -34,9 +32,9 @@ namespace NameSearch.App.Tests
         private readonly Mock<IFindPersonController> MockFindPersonController;
 
         /// <summary>
-        /// The mock export
+        /// The mock repository
         /// </summary>
-        private readonly Mock<IExport> MockExport;
+        private readonly Mock<IEntityFrameworkRepository> MockRepository;
 
         /// <summary>
         /// The people finder
@@ -72,7 +70,7 @@ namespace NameSearch.App.Tests
             // Assert
             Assert.IsAssignableFrom<IEnumerable<PersonSearchRequest>>(result);
             Assert.NotNull(result);
-            MockRepository.Verify(c => c.Get<PersonSearchRequest>(It.IsAny<Expression<Func<PersonSearchRequest,bool>>>(), null, null, null, null), Times.Once);
+            MockRepository.Verify(c => c.Get<PersonSearchRequest>(It.IsAny<Expression<Func<PersonSearchRequest, bool>>>(), null, null, null, null), Times.Once);
         }
 
         /// <summary>

@@ -3,11 +3,13 @@ using NameSearch.App.Factories;
 using NameSearch.App.Services;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
-using System.Linq;
 using Xunit;
 
 namespace NameSearch.App.Tests
 {
+    /// <summary>
+    /// Unit tests for NameHelper
+    /// </summary>
     public class NameHelperTests
     {
         /// <summary>

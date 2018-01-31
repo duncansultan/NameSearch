@@ -8,6 +8,9 @@ using Xunit;
 
 namespace NameSearch.App.Tests
 {
+    /// <summary>
+    /// Unit tests for PersonHelper
+    /// </summary>
     public class PersonHelperTests
     {
         /// <summary>

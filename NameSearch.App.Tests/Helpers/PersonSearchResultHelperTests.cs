@@ -12,7 +12,7 @@ using Xunit;
 namespace NameSearch.App.Tests
 {
     /// <summary>
-    /// Unit tests for PeopleFinder that Should Create Search Transactions
+    /// Unit tests for PersonSearchResultHelper
     /// </summary>
     public class PersonSearchResultHelperTests
     {
@@ -38,23 +38,10 @@ namespace NameSearch.App.Tests
             this.PersonSearchResultHelper = new PersonSearchResultHelper(MockRepository.Object, serializerSettings, mapper);
         }
 
-        [Fact]
-        public async Task ProcessAsync_ValidInput_CreatePerson()
-        {
-            //Arrange
-            var personSearchResult = MockDataFactory.GetPersonSearchResult();
-            var cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
-
-            //Act
-            var result = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
-
-            //Assert
-            Assert.IsAssignableFrom<IEnumerable<Person>>(result);
-            MockRepository.Verify(c => c.Create(It.IsAny<Person>()), Times.Exactly(result.Count()));
-            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(result.Count()));
-        }
-
+        /// <summary>
+        /// Imports the asynchronous valid input create person search result.
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task ImportAsync_ValidInput_CreatePersonSearchResult()
         {
@@ -72,6 +59,27 @@ namespace NameSearch.App.Tests
             MockRepository.Verify(c => c.Create(It.IsAny<PersonSearchResult>()), Times.Once);
             MockRepository.Verify(c => c.Update(It.IsAny<PersonSearchRequest>()), Times.Once);
             MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(3));
+        }
+
+        /// <summary>
+        /// Processes the asynchronous valid input create person.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task ProcessAsync_ValidInput_CreatePerson()
+        {
+            //Arrange
+            var personSearchResult = MockDataFactory.GetPersonSearchResult();
+            var cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+
+            //Act
+            var result = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
+
+            //Assert
+            Assert.IsAssignableFrom<IEnumerable<Person>>(result);
+            MockRepository.Verify(c => c.Create(It.IsAny<Person>()), Times.Exactly(result.Count()));
+            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(result.Count()));
         }
     }
 }

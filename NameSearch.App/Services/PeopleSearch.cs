@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Helpers;
-using NameSearch.App.Services;
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
-using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
@@ -34,11 +32,6 @@ namespace NameSearch.App.Services
         private readonly IFindPersonController FindPersonController;
 
         /// <summary>
-        /// The import
-        /// </summary>
-        private readonly IImport Import;
-
-        /// <summary>
         /// The logger
         /// </summary>
         private readonly ILogger logger = Log.Logger.ForContext<PeopleSearch>();
@@ -47,16 +40,6 @@ namespace NameSearch.App.Services
         /// The mapper
         /// </summary>
         private readonly IMapper Mapper;
-
-        /// <summary>
-        /// The people search name helper
-        /// </summary>
-        private readonly NameHelper NameHelper;
-
-        /// <summary>
-        /// The people search person helper
-        /// </summary>
-        private readonly PersonHelper PersonHelper;
 
         /// <summary>
         /// The people search job helper
@@ -77,10 +60,12 @@ namespace NameSearch.App.Services
         /// The repository
         /// </summary>
         private readonly IEntityFrameworkRepository Repository;
+
         /// <summary>
         /// The serializer settings
         /// </summary>
         private readonly JsonSerializerSettings SerializerSettings;
+
         #endregion Dependencies
 
         /// <summary>
@@ -93,60 +78,16 @@ namespace NameSearch.App.Services
             IFindPersonController findPersonController,
             JsonSerializerSettings serializerSettings,
             IMapper mapper,
-            IImport import,
             IExport export)
         {
             this.Repository = repository;
             this.FindPersonController = findPersonController;
             this.SerializerSettings = serializerSettings;
             this.Mapper = mapper;
-            this.Import = import;
-            this.Export = export;
 
             this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, findPersonController, serializerSettings, mapper, export);
             this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, serializerSettings, mapper);
             this.PersonSearchJobHelper = new PersonSearchJobHelper(repository, mapper);
-            this.PersonHelper = new PersonHelper(repository, mapper);
-            this.NameHelper = new NameHelper(repository, mapper);
-        }
-
-        /// <summary>
-        /// Exports the people.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public void ExportPeople(string fileName)
-        {
-            var people = PersonHelper.GetPeople();
-            Export.ToCsv(people, fileName, false);
-        }
-
-        /// <summary>
-        /// Imports the names.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public long ImportNames(string fileName)
-        {
-            var names = Import.FromCsv<string>(fileName);
-            var importId = NameHelper.Import(names, fileName);
-            return importId;
-        }
-
-        /// <summary>
-        /// Imports the person searches from json.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns></returns>
-        public async Task<int> ImportPersonSearchesFromJsonAsync(string fileName, CancellationToken cancellationToken)
-        {
-            var jObject = await Import.FromJsonAsync(fileName, cancellationToken);
-
-            var peopleSearchJobId = PersonSearchJobHelper.Create();
-            var personSearchResult = await PersonSearchResultHelper.ImportAsync(jObject, peopleSearchJobId);
-            var people = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
-            PersonSearchJobHelper.Complete(peopleSearchJobId);
-
-            return people.Count();
         }
 
         /// <summary>

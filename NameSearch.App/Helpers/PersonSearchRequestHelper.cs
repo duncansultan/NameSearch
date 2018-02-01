@@ -3,7 +3,6 @@ using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.Extensions;
 using NameSearch.Models.Entities;
-using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;

@@ -28,7 +28,11 @@ namespace NameSearch.Repository.Tests.Mocks
             repository.Create(personSearchJob);
             repository.Save();
 
-            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchJob.Id);
+            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
+            repository.Create(personSearchRequest);
+            repository.Save();
+
+            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
             repository.Create(personSearchResult);
             repository.Save();
 

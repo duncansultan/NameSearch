@@ -1,5 +1,5 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
-using NameSearch.App.CommandConfiguration;
+using NameSearch.App.CommandConfigurations;
 using NameSearch.App.Commands.Interfaces;
 
 namespace NameSearch.App

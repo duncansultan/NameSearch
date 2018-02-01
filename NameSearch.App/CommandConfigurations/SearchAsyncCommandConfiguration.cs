@@ -1,7 +1,7 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using NameSearch.App.Commands;
 
-namespace NameSearch.App.CommandConfiguration
+namespace NameSearch.App.CommandConfigurations
 {
     /// <summary>
     /// Search Command Configuration
@@ -27,9 +27,12 @@ namespace NameSearch.App.CommandConfiguration
             var zipArgument = command.Argument("zip",
                        "Zip to search");
 
+            var pathArgument = command.Argument("path",
+                       "Tempfile path");
+
             command.OnExecute(() =>
             {
-                options.Command = new SearchAsyncCommand(cityArgument.Value, stateArgument.Value, zipArgument.Value, options);
+                options.Command = new SearchAsyncCommand(cityArgument.Value, stateArgument.Value, zipArgument.Value, pathArgument.Value, options);
 
                 return 0;
             });

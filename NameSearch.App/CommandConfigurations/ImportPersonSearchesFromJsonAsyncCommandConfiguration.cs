@@ -1,12 +1,12 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using NameSearch.App.Commands;
 
-namespace NameSearch.App.CommandConfiguration
+namespace NameSearch.App.CommandConfigurations
 {
     /// <summary>
-    /// Export People Command Configuration
+    /// Import Person Searches Command Configuration
     /// </summary>
-    public static class ExportPeopleCommandConfiguration
+    public static class ImportPersonSearchesFromJsonAsyncCommandConfiguration
     {
         /// <summary>
         /// Configures the specified command.
@@ -15,21 +15,21 @@ namespace NameSearch.App.CommandConfiguration
         /// <param name="options">The options.</param>
         public static void Configure(CommandLineApplication command, CommandLineOptions options)
         {
-            command.Description = "Export People to a csv file";
+            command.Description = "Import search result from json";
             command.HelpOption("--help|-h|-?");
 
             var fullPathArgument = command.Argument("fullpath",
-                                   "Full file path for export");
+                                   "Full file path for import");
 
             var pathArgument = command.Argument("path",
-                "File path for export");
+                "File path for import");
 
             var fileNameArgument = command.Argument("filename",
-                       "File name for export");
+                       "File name for import");
 
             command.OnExecute(() =>
             {
-                options.Command = new ExportPeopleCommand(fullPathArgument.Value, pathArgument.Value, fileNameArgument.Value, options);
+                options.Command = new ImportPersonSearchesFromJsonAsyncCommand(fullPathArgument.Value, pathArgument.Value, fileNameArgument.Value, options);
 
                 return 0;
             });

@@ -1,7 +1,7 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using NameSearch.App.Commands;
 
-namespace NameSearch.App.CommandConfiguration
+namespace NameSearch.App.CommandConfigurations
 {
     /// <summary>
     /// Import Names Command Configuration

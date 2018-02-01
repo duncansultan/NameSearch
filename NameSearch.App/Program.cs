@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NameSearch.App.Factories;
 using NameSearch.Context;
 using NameSearch.Extensions;
 using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
+using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
 using StructureMap;
@@ -46,6 +49,14 @@ namespace NameSearch.App
                 var services = new ServiceCollection()
                     .AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true))
                     .AddDbContext<ApplicationDbContext>(optionsBuilder => optionsBuilder.UseSqlite("Data Source=blog.db"))
+                    .AddTransient<IMapper, IMapper>((ctx) =>
+                    {
+                        return MapperFactory.Get();
+                    })
+                    .AddTransient<JsonSerializerSettings, JsonSerializerSettings>((ctx) =>
+                    {
+                        return JsonSerializerSettingsFactory.Get();
+                    })
                     .AddScoped<IEntityFrameworkRepository, EntityFrameworkRepository>();
 
                 services.AddMvc();
@@ -63,6 +74,11 @@ namespace NameSearch.App
                     // Populate the container using the service collection
                     config.Populate(services);
                 });
+
+                //Set static instances
+                StaticServiceCollection.Repository = container.GetInstance<IEntityFrameworkRepository>();
+                StaticServiceCollection.Mapper = container.GetInstance<IMapper>();
+                StaticServiceCollection.SerializerSettings = container.GetInstance<JsonSerializerSettings>();
 
                 #endregion Dependency Injection Container
 
@@ -86,5 +102,34 @@ namespace NameSearch.App
                 Log.CloseAndFlush();
             }
         }
+    }
+
+    /// <summary>
+    /// Static class for services accessed in the CommandConfigurations
+    /// This is an anti-pattern
+    /// </summary>
+    public static class StaticServiceCollection
+    {
+        /// <summary>
+        /// Gets or sets the repository.
+        /// </summary>
+        /// <value>
+        /// The repository.
+        /// </value>
+        public static IEntityFrameworkRepository Repository { set; get; }
+        /// <summary>
+        /// Gets or sets the mapper.
+        /// </summary>
+        /// <value>
+        /// The mapper.
+        /// </value>
+        public static IMapper Mapper { set; get; }
+        /// <summary>
+        /// Gets or sets the serializer settings.
+        /// </summary>
+        /// <value>
+        /// The serializer settings.
+        /// </value>
+        public static JsonSerializerSettings SerializerSettings { set; get; }
     }
 }

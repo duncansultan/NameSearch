@@ -1,5 +1,4 @@
-﻿using McMaster.Extensions.CommandLineUtils;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NameSearch.Context;
 using NameSearch.Extensions;
@@ -15,7 +14,6 @@ namespace NameSearch.App
     /// <summary>
     /// Application Program
     /// </summary>
-    [HelpOption]
     public class Program
     {
         /// <summary>
@@ -24,19 +22,6 @@ namespace NameSearch.App
         /// <param name="args">The arguments.</param>
         /// <returns></returns>
         public static int Main(string[] args)
-            => CommandLineApplication.Execute<Program>(args);
-
-        #region Argument Properties
-
-        [Option(Description = "The subject")]
-        public string Subject { get; }
-
-        #endregion Argument Properties
-
-        /// <summary>
-        /// Called when [execute].
-        /// </summary>
-        private void OnExecute()
         {
             #region Configure Logging
 
@@ -60,7 +45,7 @@ namespace NameSearch.App
                 // add the framework services
                 var services = new ServiceCollection()
                     .AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true))
-                    .AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=blog.db"))
+                    .AddDbContext<ApplicationDbContext>(optionsBuilder => optionsBuilder.UseSqlite("Data Source=blog.db"))
                     .AddScoped<IEntityFrameworkRepository, EntityFrameworkRepository>();
 
                 services.AddMvc();
@@ -81,20 +66,15 @@ namespace NameSearch.App
 
                 #endregion Dependency Injection Container
 
-                var fullPath = DotNetExe.FullPathOrDefault();
+                var options = CommandLineOptions.Parse(args);
 
-                // allows y/n responses
-                Prompt.GetYesNo("Do you want to proceed?", false);
+                if (options?.Command == null)
+                {
+                    // RootCommand will have printed help
+                    return 1;
+                }
 
-                // masks input as '*'
-                Prompt.GetPassword("Password: ");
-
-                Prompt.GetString("Enter FileName here");
-
-                Console.ReadLine();
-                var subject = Subject ?? "world";
-                Console.WriteLine($"Hello {subject}!");
-                Console.ReadLine();
+                return options.Command.Run();
             }
             catch (Exception ex)
             {

@@ -18,7 +18,7 @@ namespace NameSearch.App.CommandConfigurations
             app.Command("greet", c => GreetCommandConfiguration.Configure(c, options));
             app.Command("exportpeople", c => ExportPeopleCommandConfiguration.Configure(c, options));
             app.Command("importnames", c => ImportNamesCommandConfiguration.Configure(c, options));
-            app.Command("importsearchresult", c => ImportPersonSearchesFromJsonAsyncCommandConfiguration.Configure(c, options));
+            app.Command("importsearchresult", c => ImportPersonSearchesCommandConfiguration.Configure(c, options));
             app.Command("search", c => SearchAsyncCommandConfiguration.Configure(c, options));
 
             app.OnExecute(() =>

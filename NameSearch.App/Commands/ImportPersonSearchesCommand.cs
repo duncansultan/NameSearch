@@ -14,7 +14,7 @@ namespace NameSearch.App.Commands
     /// Import Person Searches Command
     /// </summary>
     /// <seealso cref="NameSearch.App.Commands.Interfaces.ICommand" />
-    public class ImportPersonSearchesFromJsonAsyncCommand : ICommand
+    public class ImportPersonSearches : ICommand
     {
         /// <summary>
         /// The name
@@ -80,13 +80,13 @@ namespace NameSearch.App.Commands
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImportPersonSearchesFromJsonAsyncCommand" /> class.
+        /// Initializes a new instance of the <see cref="ImportPersonSearches" /> class.
         /// </summary>
         /// <param name="fullPath">The full path.</param>
         /// <param name="path">The path.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="options">The options.</param>
-        public ImportPersonSearchesFromJsonAsyncCommand(string fullPath, string path, string fileName, CommandLineOptions options)
+        public ImportPersonSearches(string fullPath, string path, string fileName, CommandLineOptions options)
         {
             _fullPath = fullPath;
             _path = path;

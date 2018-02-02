@@ -6,7 +6,7 @@ namespace NameSearch.App.CommandConfigurations
     /// <summary>
     /// Import Person Searches Command Configuration
     /// </summary>
-    public static class ImportPersonSearchesFromJsonAsyncCommandConfiguration
+    public static class ImportPersonSearchesCommandConfiguration
     {
         /// <summary>
         /// Configures the specified command.
@@ -29,7 +29,7 @@ namespace NameSearch.App.CommandConfigurations
 
             command.OnExecute(() =>
             {
-                options.Command = new ImportPersonSearchesFromJsonAsyncCommand(fullPathArgument.Value, pathArgument.Value, fileNameArgument.Value, options);
+                options.Command = new ImportPersonSearches(fullPathArgument.Value, pathArgument.Value, fileNameArgument.Value, options);
 
                 return 0;
             });

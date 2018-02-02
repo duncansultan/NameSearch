@@ -69,10 +69,12 @@ namespace NameSearch.App.Services
         #endregion Dependencies
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeopleFinder"/> class.
+        /// Initializes a new instance of the <see cref="PeopleFinder" /> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="findPersonController">The find person controller.</param>
+        /// <param name="serializerSettings">The serializer settings.</param>
+        /// <param name="mapper">The mapper.</param>
         /// <param name="export">The export.</param>
         public PeopleSearch(IEntityFrameworkRepository repository,
             IFindPersonController findPersonController,

@@ -16,17 +16,13 @@ namespace NameSearch.Utility
     /// <summary>
     /// Export Utility
     /// </summary>
+    /// <seealso cref="NameSearch.Utility.Interfaces.IExport" />
     public class Export : IExport
     {
         /// <summary>
         /// The CSV helper configuration
         /// </summary>
         private readonly Configuration CsvHelperConfiguration;
-
-        /// <summary>
-        /// The directory
-        /// </summary>
-        private readonly string Directory;
 
         /// <summary>
         /// The logger
@@ -36,21 +32,17 @@ namespace NameSearch.Utility
         /// <summary>
         /// Initializes a new instance of the <see cref="Export" /> class.
         /// </summary>
-        /// <param name="directory">The directory.</param>
         /// <param name="csvHelperConfiguration">The CSV helper configuration.</param>
-        public Export(string directory, Configuration csvHelperConfiguration)
+        public Export(Configuration csvHelperConfiguration)
         {
-            this.Directory = directory;
             this.CsvHelperConfiguration = csvHelperConfiguration;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Export" /> class.
         /// </summary>
-        /// <param name="directory">The directory.</param>
-        public Export(string directory)
+        public Export()
         {
-            this.Directory = directory;
             this.CsvHelperConfiguration = new Configuration() { QuoteAllFields = true };
         }
 
@@ -59,24 +51,21 @@ namespace NameSearch.Utility
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="records">The records.</param>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <param name="isAppend">if set to <c>true</c> [is append].</param>
-        public void ToCsv<T>(IEnumerable<T> records, string fileName, bool isAppend)
+        public void ToCsv<T>(IEnumerable<T> records, string fullPath, bool isAppend)
         {
             var log = logger.With("IEnumerable<T>", typeof(T))
                 .With("records", records.Count())
-                .With("fileName", fileName)
-                .With("Directory", Directory)
+                .With("fullPath", fullPath)
                 .With("isAppend", isAppend);
 
-            if (!fileName.EndsWith(".csv"))
+            if (!fullPath.EndsWith(".csv"))
             {
-                fileName = $"{fileName}.csv";
+                fullPath = $"{fullPath}.csv";
 
                 log.InformationEvent("ToCsv", "Invalid file extension, adding .csv extension");
             }
-
-            var fullPath = Path.Combine(Directory, fileName);
 
             log.With("fullPath", fullPath);
 
@@ -104,21 +93,18 @@ namespace NameSearch.Utility
         /// To the json.
         /// </summary>
         /// <param name="json">The json.</param>
-        /// <param name="fileName">Name of the file.</param>
-        public void ToJson(JObject json, string fileName)
+        /// <param name="fullPath">The full path.</param>
+        public void ToJson(JObject json, string fullPath)
         {
             var log = logger.With("tokens", json.Count)
-                            .With("fileName", fileName)
-                            .With("Directory", Directory);
+                            .With("fullPath", fullPath);
 
-            if (!fileName.EndsWith(".json"))
+            if (!fullPath.EndsWith(".json"))
             {
-                fileName = $"{fileName}.json";
+                fullPath = $"{fullPath}.json";
 
                 log.InformationEvent("ToJson", "Invalid file extension, adding .json extension");
             }
-
-            var fullPath = Path.Combine(Directory, fileName);
 
             log.With("fullPath", fullPath);
 
@@ -146,23 +132,20 @@ namespace NameSearch.Utility
         /// To the json asynchronous.
         /// </summary>
         /// <param name="json">The json.</param>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public async Task ToJsonAsync(JObject json, string fileName, CancellationToken cancellationToken)
+        public async Task ToJsonAsync(JObject json, string fullPath, CancellationToken cancellationToken)
         {
             var log = logger.With("tokens", json.Count)
-                            .With("fileName", fileName)
-                            .With("Directory", Directory);
+                            .With("fullPath", fullPath);
 
-            if (!fileName.EndsWith(".json"))
+            if (!fullPath.EndsWith(".json"))
             {
-                fileName = $"{fileName}.json";
+                fullPath = $"{fullPath}.json";
 
                 log.InformationEvent("ToJson", "Invalid file extension, adding .json extension");
             }
-
-            var fullPath = Path.Combine(Directory, fileName);
 
             log.With("fullPath", fullPath);
 
@@ -190,22 +173,18 @@ namespace NameSearch.Utility
         /// To the Txt.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <param name="fileName">Name of the file.</param>
-        /// <exception cref=""></exception>
-        public void ToTxt(string text, string fileName)
+        /// <param name="fullPath">The full path.</param>
+        public void ToTxt(string text, string fullPath)
         {
             var log = logger.With("length", text.Length)
-                .With("fileName", fileName)
-                .With("Directory", Directory);
+                .With("fullPath", fullPath);
 
-            if (!fileName.EndsWith(".txt"))
+            if (!fullPath.EndsWith(".txt"))
             {
-                fileName = $"{fileName}.txt";
+                fullPath = $"{fullPath}.txt";
 
                 log.InformationEvent("ToTxt", "Invalid file extension, adding .txt extension");
             }
-
-            var fullPath = Path.Combine(Directory, fileName);
 
             log.With("fullPath", fullPath);
 
@@ -232,22 +211,19 @@ namespace NameSearch.Utility
         /// To the txt asynchronous.
         /// </summary>
         /// <param name="text">The test.</param>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <returns></returns>
-        public async Task ToTxtAsync(string text, string fileName)
+        public async Task ToTxtAsync(string text, string fullPath)
         {
             var log = logger.With("length", text.Length)
-                .With("fileName", fileName)
-                .With("Directory", Directory);
+                .With("fullPath", fullPath);
 
-            if (!fileName.EndsWith(".txt"))
+            if (!fullPath.EndsWith(".txt"))
             {
-                fileName = $"{fileName}.txt";
+                fullPath = $"{fullPath}.txt";
 
                 log.InformationEvent("ToTxtAsync", "Invalid file extension, adding .txt extension");
             }
-
-            var fullPath = Path.Combine(Directory, fileName);
 
             log.With("fullPath", fullPath);
 

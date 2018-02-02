@@ -4,12 +4,15 @@ using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Serilog;
-using System.Linq;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace NameSearch.App.Services
 {
+    /// <summary>
+    /// Run File Imports and Exports
+    /// </summary>
     public class ImportExport
     {
         #region Dependencies
@@ -95,28 +98,29 @@ namespace NameSearch.App.Services
         /// <summary>
         /// Exports the people.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public void ExportPeople(string fileName)
+        /// <param name="fullPath">Name of the file.</param>
+        public void ExportPeople(string fullPath)
         {
             var people = PersonHelper.GetPeople();
-            Export.ToCsv(people, fileName, false);
+            Export.ToCsv(people, fullPath, false);
         }
 
         /// <summary>
         /// Imports the names.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        public long ImportNames(string fileName)
+        /// <param name="fullPath">Name of the file.</param>
+        /// <returns></returns>
+        public long ImportNames(string fullPath)
         {
-            var names = Import.FromCsv<string>(fileName);
-            var importId = NameHelper.Import(names, fileName);
+            var names = Import.FromCsv<string>(fullPath);
+            var importId = NameHelper.Import(names, fullPath);
             return importId;
         }
 
         /// <summary>
         /// Imports the person searches from json.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="folderPath">The folder path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         public async Task<int> ImportPersonSearchesFromJsonAsync(string fileName, CancellationToken cancellationToken)

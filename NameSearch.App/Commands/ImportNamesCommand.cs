@@ -94,8 +94,8 @@ namespace NameSearch.App.Commands
             _options = options;
 
             this.Repository = StaticServiceCollection.Repository;
-            this.Import = new Import(_path);
-            this.Export = new Export(_path);
+            this.Import = new Import();
+            this.Export = new Export();
             this.Mapper = MapperFactory.Get();
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
 

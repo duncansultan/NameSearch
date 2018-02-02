@@ -16,6 +16,7 @@ namespace NameSearch.Utility
     /// <summary>
     /// Import Utility
     /// </summary>
+    /// <seealso cref="NameSearch.Utility.Interfaces.IImport" />
     public class Import : IImport
     {
         /// <summary>
@@ -24,32 +25,24 @@ namespace NameSearch.Utility
         private readonly Configuration CsvHelperConfiguration;
 
         /// <summary>
-        /// The directory
-        /// </summary>
-        private readonly string Directory;
-
-        /// <summary>
         /// The logger
         /// </summary>
         private readonly ILogger logger = Log.Logger.ForContext<Import>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Import" /> class.
         /// </summary>
-        /// <param name="directory">The directory.</param>
         /// <param name="csvHelperConfiguration">The CSV helper configuration.</param>
-        public Import(string directory, Configuration csvHelperConfiguration)
+        public Import(Configuration csvHelperConfiguration)
         {
-            this.Directory = directory;
             this.CsvHelperConfiguration = csvHelperConfiguration;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Import" /> class.
         /// </summary>
-        /// <param name="directory">The directory.</param>
-        public Import(string directory)
+        public Import()
         {
-            this.Directory = directory;
             this.CsvHelperConfiguration = new Configuration() { QuoteAllFields = true };
         }
 
@@ -57,16 +50,13 @@ namespace NameSearch.Utility
         /// Froms the CSV.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <returns></returns>
-        /// <exception cref="FileNotFoundException"></exception>
-        public IEnumerable<T> FromCsv<T>(string fileName)
+        /// <exception cref="FileNotFoundException">FromCsv - File not found</exception>
+        public IEnumerable<T> FromCsv<T>(string fullPath)
         {
-            var log = logger.With("fileName", fileName)
-                .With("Directory", Directory)
+            var log = logger.With("fullPath", fullPath)
                 .With("IEnumerable<T>", typeof(T));
-
-            var fullPath = Path.Combine(Directory, fileName);
 
             log.With("fullPath", fullPath);
 
@@ -95,10 +85,10 @@ namespace NameSearch.Utility
         /// <summary>
         /// Froms the json.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <returns></returns>
-        /// <exception cref="FileNotFoundException"></exception>
-        public JObject FromJson(string fileName)
+        /// <exception cref="FileNotFoundException">FromJson - File not found</exception>
+        public JObject FromJson(string fullPath)
         {
             var log = logger.With("fileName", fileName)
                 .With("Directory", Directory);
@@ -132,16 +122,13 @@ namespace NameSearch.Utility
         /// <summary>
         /// Froms the json asynchronous.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        /// <exception cref="FileNotFoundException"></exception>
-        public async Task<JObject> FromJsonAsync(string fileName, CancellationToken cancellationToken)
+        /// <exception cref="FileNotFoundException">FromJsonAsync - File not found</exception>
+        public async Task<JObject> FromJsonAsync(string fullPath, CancellationToken cancellationToken)
         {
-            var log = logger.With("fileName", fileName)
-                .With("Directory", Directory);
-
-            var fullPath = Path.Combine(Directory, fileName);
+            var log = logger.With("fileName", fullPath);
 
             log.With("fullPath", fullPath);
 

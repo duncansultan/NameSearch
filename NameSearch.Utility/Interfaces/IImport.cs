@@ -14,23 +14,23 @@ namespace NameSearch.Utility.Interfaces
         /// Froms the CSV.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <returns></returns>
-        IEnumerable<T> FromCsv<T>(string fileName);
+        IEnumerable<T> FromCsv<T>(string fullPath);
 
         /// <summary>
         /// Froms the json.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <returns></returns>
-        JObject FromJson(string fileName);
+        JObject FromJson(string fullPath);
 
         /// <summary>
         /// Froms the json asynchronous.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fullPath">The full path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        Task<JObject> FromJsonAsync(string fileName, CancellationToken cancellationToken);
+        Task<JObject> FromJsonAsync(string fullPath, CancellationToken cancellationToken);
     }
 }

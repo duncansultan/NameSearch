@@ -123,16 +123,17 @@ namespace NameSearch.App.Services
         /// <param name="folderPath">The folder path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public async Task<int> ImportPersonSearchesFromJsonAsync(string fileName, CancellationToken cancellationToken)
+        public void ImportPersonSearches(string folderPath)
         {
-            var jObject = await Import.FromJsonAsync(fileName, cancellationToken);
+            foreach (string fullPath in Directory.EnumerateFiles(folderPath, "*.json", SearchOption.AllDirectories))
+            {
+                var jObject = Import.FromJson(fullPath);
 
-            var peopleSearchJobId = PersonSearchJobHelper.Create();
-            var personSearchResult = await PersonSearchResultHelper.ImportAsync(jObject, peopleSearchJobId);
-            var people = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
-            PersonSearchJobHelper.Complete(peopleSearchJobId);
-
-            return people.Count();
+                var peopleSearchJobId = PersonSearchJobHelper.Create();
+                var personSearchResult = PersonSearchResultHelper.Import(jObject, peopleSearchJobId);
+                var people = PersonSearchResultHelper.Process(personSearchResult);
+                PersonSearchJobHelper.Complete(peopleSearchJobId);
+            }
         }
     }
 }

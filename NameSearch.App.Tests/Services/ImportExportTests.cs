@@ -108,7 +108,7 @@ namespace NameSearch.App.Tests.Services
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
             // Act
-            var result = await ImportExport.ImportPersonSearchesFromJsonAsync(fileName, cancellationToken);
+            var result = await ImportExport.ImportPersonSearches(fileName, cancellationToken);
             // Assert
             Assert.IsType<int>(result);
             Assert.True(result > 0);

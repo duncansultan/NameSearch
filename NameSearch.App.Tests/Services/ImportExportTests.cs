@@ -101,17 +101,15 @@ namespace NameSearch.App.Tests.Services
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task ImportPersonSearchesFromJsonAsync_ValidFile_CreatePersonSearchResult()
+        public void ImportPersonSearchesFromJsonAsync_ValidFile_CreatePersonSearchResult()
         {
             // Arrange
             var fileName = "Import-Person-Search.json";
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
             // Act
-            var result = await ImportExport.ImportPersonSearches(fileName, cancellationToken);
+            ImportExport.ImportPersonSearches(fileName);
             // Assert
-            Assert.IsType<int>(result);
-            Assert.True(result > 0);
             //ToDo verify Mocks
         }
     }

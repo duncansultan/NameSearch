@@ -90,10 +90,7 @@ namespace NameSearch.Utility
         /// <exception cref="FileNotFoundException">FromJson - File not found</exception>
         public JObject FromJson(string fullPath)
         {
-            var log = logger.With("fileName", fileName)
-                .With("Directory", Directory);
-
-            var fullPath = Path.Combine(Directory, fileName);
+            var log = logger.With("fileName", fullPath);
 
             log.With("fullPath", fullPath);
 

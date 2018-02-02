@@ -6,7 +6,7 @@ namespace NameSearch.App.CommandConfigurations
     /// <summary>
     /// Search Command Configuration
     /// </summary>
-    public static class SearchAsyncCommandConfiguration
+    public static class SearchCommandConfiguration
     {
         /// <summary>
         /// Configures the specified command.
@@ -32,7 +32,7 @@ namespace NameSearch.App.CommandConfigurations
 
             command.OnExecute(() =>
             {
-                options.Command = new SearchAsyncCommand(cityArgument.Value, stateArgument.Value, zipArgument.Value, pathArgument.Value, options);
+                options.Command = new SearchCommand(cityArgument.Value, stateArgument.Value, zipArgument.Value, pathArgument.Value, options);
 
                 return 0;
             });

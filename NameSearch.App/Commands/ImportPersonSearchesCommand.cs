@@ -6,7 +6,6 @@ using NameSearch.Repository.Interfaces;
 using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
-using System;
 
 namespace NameSearch.App.Commands
 {
@@ -14,22 +13,12 @@ namespace NameSearch.App.Commands
     /// Import Person Searches Command
     /// </summary>
     /// <seealso cref="NameSearch.App.Commands.Interfaces.ICommand" />
-    public class ImportPersonSearches : ICommand
+    public class ImportPersonSearchesCommand : ICommand
     {
-        /// <summary>
-        /// The name
-        /// </summary>
-        private readonly string _fullPath;
-
         /// <summary>
         /// The path
         /// </summary>
         private readonly string _path;
-
-        /// <summary>
-        /// The file name
-        /// </summary>
-        private readonly string _fileName;
 
         /// <summary>
         /// The options
@@ -80,17 +69,13 @@ namespace NameSearch.App.Commands
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImportPersonSearches" /> class.
+        /// Initializes a new instance of the <see cref="ImportPersonSearchesCommand" /> class.
         /// </summary>
-        /// <param name="fullPath">The full path.</param>
         /// <param name="path">The path.</param>
-        /// <param name="fileName">Name of the file.</param>
         /// <param name="options">The options.</param>
-        public ImportPersonSearches(string fullPath, string path, string fileName, CommandLineOptions options)
+        public ImportPersonSearchesCommand(string path, CommandLineOptions options)
         {
-            _fullPath = fullPath;
             _path = path;
-            _fileName = fileName;
             _options = options;
 
             this.Repository = StaticServiceCollection.Repository;
@@ -108,9 +93,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            Console.WriteLine("Hello "
-                + (_fullPath != null ? _fullPath : "World")
-                + (_options.IsEnthousiastic ? "!!!" : "."));
+            this.ImportExport.ImportPersonSearches(_path);
 
             return 0;
         }

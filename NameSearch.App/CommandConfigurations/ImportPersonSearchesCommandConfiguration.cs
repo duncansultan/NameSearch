@@ -18,18 +18,12 @@ namespace NameSearch.App.CommandConfigurations
             command.Description = "Import search result from json";
             command.HelpOption("--help|-h|-?");
 
-            var fullPathArgument = command.Argument("fullpath",
-                                   "Full file path for import");
-
-            var pathArgument = command.Argument("path",
-                "File path for import");
-
-            var fileNameArgument = command.Argument("filename",
-                       "File name for import");
+            var folderPath = command.Argument("path",
+                "Folder path for import");
 
             command.OnExecute(() =>
             {
-                options.Command = new ImportPersonSearches(fullPathArgument.Value, pathArgument.Value, fileNameArgument.Value, options);
+                options.Command = new ImportPersonSearchesCommand(folderPath.Value, options);
 
                 return 0;
             });

@@ -19,6 +19,11 @@ namespace NameSearch.App
 
         public bool IsEnthousiastic { get; set; }
 
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="args">The arguments.</param>
+        /// <returns></returns>
         public static CommandLineOptions Parse(string[] args)
         {
             var options = new CommandLineOptions();

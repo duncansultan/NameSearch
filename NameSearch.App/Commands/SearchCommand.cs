@@ -3,11 +3,13 @@ using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Commands.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.App.Services;
+using NameSearch.Models.Domain;
 using NameSearch.Repository.Interfaces;
 using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
-using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NameSearch.App.Commands
 {
@@ -15,7 +17,7 @@ namespace NameSearch.App.Commands
     /// Search Command
     /// </summary>
     /// <seealso cref="NameSearch.App.Commands.Interfaces.ICommand" />
-    public class SearchAsyncCommand : ICommand
+    public class SearchCommand : ICommand
     {
         /// <summary>
         /// The city
@@ -89,13 +91,13 @@ namespace NameSearch.App.Commands
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchAsyncCommand" /> class.
+        /// Initializes a new instance of the <see cref="SearchCommand" /> class.
         /// </summary>
         /// <param name="city">The city.</param>
         /// <param name="state">The state.</param>
         /// <param name="zip">The zip.</param>
         /// <param name="options">The options.</param>
-        public SearchAsyncCommand(string city, string state, string zip, string path, CommandLineOptions options)
+        public SearchCommand(string city, string state, string zip, string path, CommandLineOptions options)
         {
             _city = city;
             _state = state;
@@ -117,11 +119,23 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            Console.WriteLine("Hello "
-                + (_city != null ? _city : "World")
-                + (_options.IsEnthousiastic ? "!!!" : "."));
+            var searchCriteria = SearchCriteriaFactory.Get(_city, _state, _zip);
+
+            using (var cancellationTokenSource = new CancellationTokenSource())
+            {
+                Task.Run(() => PeopleSearchTask(searchCriteria, cancellationTokenSource.Token));
+            }
 
             return 0;
         }
+
+        /// <summary>
+        /// Peoples the search task.
+        /// </summary>
+        /// <param name="searchCriteria">The search criteria.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        private async Task PeopleSearchTask(SearchCriteria searchCriteria, CancellationToken cancellationToken) 
+            => await this.PeopleSearch.SearchAsync(searchCriteria, cancellationToken);
     }
 }

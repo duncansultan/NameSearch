@@ -6,7 +6,6 @@ using NameSearch.Repository.Interfaces;
 using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
-using System;
 
 namespace NameSearch.App.Commands
 {
@@ -16,11 +15,6 @@ namespace NameSearch.App.Commands
     /// <seealso cref="NameSearch.App.Commands.Interfaces.ICommand" />
     public class ExportPeopleCommand : ICommand
     {
-        /// <summary>
-        /// The file name
-        /// </summary>
-        private readonly string _fileName;
-
         /// <summary>
         /// The name
         /// </summary>
@@ -83,14 +77,10 @@ namespace NameSearch.App.Commands
         /// Initializes a new instance of the <see cref="ExportPeopleCommand" /> class.
         /// </summary>
         /// <param name="fullPath">The full path.</param>
-        /// <param name="path">The path.</param>
-        /// <param name="fileName">Name of the file.</param>
         /// <param name="options">The options.</param>
-        public ExportPeopleCommand(string fullPath, string path, string fileName, CommandLineOptions options)
+        public ExportPeopleCommand(string fullPath, CommandLineOptions options)
         {
             _fullPath = fullPath;
-            _path = path;
-            _fileName = fileName;
             _options = options;
 
             this.Repository = StaticServiceCollection.Repository;
@@ -108,9 +98,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            Console.WriteLine("Hello "
-                + (_fullPath != null ? _fullPath : "World")
-                + (_options.IsEnthousiastic ? "!!!" : "."));
+            this.ImportExport.ExportPeople(_fullPath);
 
             return 0;
         }

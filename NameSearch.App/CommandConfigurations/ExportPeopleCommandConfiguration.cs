@@ -19,17 +19,11 @@ namespace NameSearch.App.CommandConfigurations
             command.HelpOption("--help|-h|-?");
 
             var fullPathArgument = command.Argument("fullpath",
-                                   "Full file path for export");
-
-            var pathArgument = command.Argument("path",
-                "File path for export");
-
-            var fileNameArgument = command.Argument("filename",
-                       "File name for export");
+                                   "Full file path for import");
 
             command.OnExecute(() =>
             {
-                options.Command = new ExportPeopleCommand(fullPathArgument.Value, pathArgument.Value, fileNameArgument.Value, options);
+                options.Command = new ExportPeopleCommand(fullPathArgument.Value, options);
 
                 return 0;
             });

@@ -21,15 +21,9 @@ namespace NameSearch.App.CommandConfigurations
             var fullPathArgument = command.Argument("fullpath",
                                    "Full file path for import");
 
-            var pathArgument = command.Argument("path",
-                "File path for import");
-
-            var fileNameArgument = command.Argument("filename",
-                       "File name for import");
-
             command.OnExecute(() =>
             {
-                options.Command = new ImportNamesCommand(fullPathArgument.Value, pathArgument.Value, fileNameArgument.Value, options);
+                options.Command = new ImportNamesCommand(fullPathArgument.Value, options);
 
                 return 0;
             });

@@ -4,9 +4,9 @@ using NameSearch.App.Commands;
 namespace NameSearch.App.CommandConfigurations
 {
     /// <summary>
-    /// Import Person Searches Command Configuration
+    /// Import Searches Command Configuration
     /// </summary>
-    public static class ImportPersonSearchesCommandConfiguration
+    public static class ImportSearchesCommandConfiguration
     {
         /// <summary>
         /// Configures the specified command.
@@ -23,7 +23,7 @@ namespace NameSearch.App.CommandConfigurations
 
             command.OnExecute(() =>
             {
-                options.Command = new ImportPersonSearchesCommand(folderPath.Value, options);
+                options.Command = new ImportSearchesCommand(folderPath.Value, options);
 
                 return 0;
             });

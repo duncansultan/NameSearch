@@ -10,10 +10,10 @@ using Newtonsoft.Json;
 namespace NameSearch.App.Commands
 {
     /// <summary>
-    /// Import Person Searches Command
+    /// Import Searches Command
     /// </summary>
     /// <seealso cref="NameSearch.App.Commands.Interfaces.ICommand" />
-    public class ImportPersonSearchesCommand : ICommand
+    public class ImportSearchesCommand : ICommand
     {
         /// <summary>
         /// The path
@@ -69,11 +69,11 @@ namespace NameSearch.App.Commands
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImportPersonSearchesCommand" /> class.
+        /// Initializes a new instance of the <see cref="ImportSearchesCommand" /> class.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="options">The options.</param>
-        public ImportPersonSearchesCommand(string path, CommandLineOptions options)
+        public ImportSearchesCommand(string path, CommandLineOptions options)
         {
             _path = path;
             _options = options;
@@ -93,7 +93,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            this.ImportExport.ImportPersonSearches(_path);
+            this.ImportExport.ImportSearches(_path);
 
             return 0;
         }

@@ -93,7 +93,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            this.ImportExport.ExportPeople(_fullPath);
+            this.ImportExport.ExportSearches(_fullPath);
 
             return 0;
         }

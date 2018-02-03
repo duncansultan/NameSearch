@@ -99,7 +99,7 @@ namespace NameSearch.App.Services
         /// Exports the people.
         /// </summary>
         /// <param name="fullPath">Name of the file.</param>
-        public void ExportPeople(string fullPath)
+        public void ExportSearches(string fullPath)
         {
             var people = PersonHelper.GetPeople();
             Export.ToCsv(people, fullPath, false);
@@ -123,7 +123,7 @@ namespace NameSearch.App.Services
         /// <param name="folderPath">The folder path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        public void ImportPersonSearches(string folderPath)
+        public void ImportSearches(string folderPath)
         {
             foreach (string fullPath in Directory.EnumerateFiles(folderPath, "*.json", SearchOption.AllDirectories))
             {

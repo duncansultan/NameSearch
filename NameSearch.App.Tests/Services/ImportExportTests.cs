@@ -75,7 +75,7 @@ namespace NameSearch.App.Tests.Services
             // Arrange
             var fileName = "Export-People-File.csv";
             // Act
-            ImportExport.ExportPeople(fileName);
+            ImportExport.ExportSearches(fileName);
             // Assert
             //ToDo MockPersonHelper.Verify(c => c.GetPeople().Result(It.IsAny<IEnumerable<Person>()));
             MockExport.Verify(c => c.ToCsv<Person>(It.IsAny<IEnumerable<Person>>(), It.Is<string>(x => x == fileName), It.IsAny<bool>()), Times.Once);
@@ -108,7 +108,7 @@ namespace NameSearch.App.Tests.Services
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
             // Act
-            ImportExport.ImportPersonSearches(fileName);
+            ImportExport.ImportSearches(fileName);
             // Assert
             //ToDo verify Mocks
         }

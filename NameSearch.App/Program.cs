@@ -32,7 +32,7 @@ namespace NameSearch.App
             //args = new string[2] { "exportpeople", @"C:\Users\dunca\Desktop\FindPeopleExport\export.csv" };
             //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\FindPeopleJSON" };
             //args = new string[2] { "importnames", @"C:\Users\dunca\Desktop\FindPeopleNames\names.csv" };
-            //args = new string[5] { "search", "dallas", "tx", "75093", @"C:\Users\dunca\Desktop\FindPeopleSearches" };
+            //args = new string[6] { "search", "10", "dallas", "tx", "75093", @"C:\Users\dunca\Desktop\FindPeopleSearches" };
 
             #endregion
 
@@ -93,6 +93,8 @@ namespace NameSearch.App
                 #endregion Dependency Injection Container
 
                 var options = CommandLineOptions.Parse(args);
+
+                log.InformationEvent("Main", "Run command {command} with arguments {args}", options?.Command, args);
 
                 if (options?.Command == null)
                 {

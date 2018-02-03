@@ -18,6 +18,9 @@ namespace NameSearch.App.CommandConfigurations
             command.Description = "Search for people";
             command.HelpOption("--help|-h|-?");
 
+            var maxRunsArgument = command.Argument("maxRuns",
+                                   "Maximum number of times to search");
+
             var cityArgument = command.Argument("city",
                                    "City to search");
 
@@ -32,7 +35,7 @@ namespace NameSearch.App.CommandConfigurations
 
             command.OnExecute(() =>
             {
-                options.Command = new SearchCommand(cityArgument.Value, stateArgument.Value, zipArgument.Value, pathArgument.Value, options);
+                options.Command = new SearchCommand(maxRunsArgument.Value, cityArgument.Value, stateArgument.Value, zipArgument.Value, pathArgument.Value, options);
 
                 return 0;
             });

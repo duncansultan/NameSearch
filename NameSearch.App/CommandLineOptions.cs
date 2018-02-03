@@ -17,8 +17,6 @@ namespace NameSearch.App
         /// </value>
         public ICommand Command { get; set; }
 
-        //public bool IsEnthousiastic { get; set; }
-
         /// <summary>
         /// Parses the specified arguments.
         /// </summary>
@@ -31,14 +29,10 @@ namespace NameSearch.App
             var app = new CommandLineApplication
             {
                 Name = "people-search",
-                FullName = ".NET Core Neat Console Starter"
+                FullName = "People Search Console"
             };
 
             app.HelpOption("-?|-h|--help");
-
-            //var enthousiasticSwitch = app.Option("-e|--enthousiastically",
-            //                              "Whether the app should be enthousiastic.",
-            //                              CommandOptionType.NoValue);
 
             RootCommandConfiguration.Configure(app, options);
 
@@ -48,8 +42,6 @@ namespace NameSearch.App
             {
                 return null;
             }
-
-            //options.IsEnthousiastic = enthousiasticSwitch.HasValue();
 
             return options;
         }

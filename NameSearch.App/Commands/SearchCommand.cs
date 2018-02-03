@@ -103,12 +103,16 @@ namespace NameSearch.App.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchCommand" /> class.
         /// </summary>
+        /// <param name="maxRunsText">The maximum runs text.</param>
         /// <param name="city">The city.</param>
         /// <param name="state">The state.</param>
         /// <param name="zip">The zip.</param>
+        /// <param name="path">The path.</param>
         /// <param name="options">The options.</param>
-        public SearchCommand(string city, string state, string zip, string path, CommandLineOptions options)
+        public SearchCommand(string maxRunsText, string city, string state, string zip, string path, CommandLineOptions options)
         {
+            int.TryParse(maxRunsText, out int maxRuns);
+            _maxRuns = maxRuns;
             _city = city;
             _state = state;
             _zip = zip;
@@ -147,7 +151,7 @@ namespace NameSearch.App.Commands
         /// <param name="searchCriteria">The search criteria.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        private async Task PeopleSearchTask(SearchCriteria searchCriteria, CancellationToken cancellationToken) 
+        private async Task PeopleSearchTask(SearchCriteria searchCriteria, CancellationToken cancellationToken)
             => await this.PeopleSearch.SearchAsync(searchCriteria, cancellationToken);
     }
 }

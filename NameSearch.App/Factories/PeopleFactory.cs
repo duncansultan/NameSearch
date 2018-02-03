@@ -46,7 +46,7 @@ namespace NameSearch.App.Factories
             {
                 FirstName = personEntity.FirstName,
                 LastName = personEntity.LastName,
-                Phone = personEntity.Phones?.FirstOrDefault().PhoneNumber,
+                Phone = personEntity.Phones?.FirstOrDefault()?.PhoneNumber,
                 AgeRange = personEntity.AgeRange
             };
         }

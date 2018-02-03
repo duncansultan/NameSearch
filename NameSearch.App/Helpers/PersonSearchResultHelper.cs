@@ -220,6 +220,7 @@ namespace NameSearch.App.Helpers
                 #region Map Model into Entity
 
                 var personEntity = Mapper.Map<Person>(person);
+                personEntity.PersonSearchResultId = personSearchResult.Id;
                 people.Add(personEntity);
 
                 log.With("Person", personEntity);

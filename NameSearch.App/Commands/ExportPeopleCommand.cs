@@ -25,11 +25,6 @@ namespace NameSearch.App.Commands
         /// </summary>
         private readonly CommandLineOptions _options;
 
-        /// <summary>
-        /// The path
-        /// </summary>
-        private readonly string _path;
-
         #region Dependencies
 
         /// <summary>

@@ -74,7 +74,7 @@ namespace NameSearch.Repository
             foreach (var includeProperty in includeProperties.Split
                 (new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                query = query.Include(includeProperty);
+                query = query.Include(includeProperty.Trim());
             }
 
             if (orderBy != null)

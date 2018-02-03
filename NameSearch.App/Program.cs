@@ -26,6 +26,16 @@ namespace NameSearch.App
         /// <returns></returns>
         public static int Main(string[] args)
         {
+            #region Test args for debugging
+
+            //args = new string[2] { "greet", "duncan"};
+            //args = new string[2] { "exportpeople", @"C:\Users\dunca\Desktop\FindPeopleExport\export.csv" };
+            //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\FindPeopleJSON" };
+            //args = new string[2] { "importnames", @"C:\Users\dunca\Desktop\FindPeopleNames\names.csv" };
+            //args = new string[5] { "search", "dallas", "tx", "75093", @"C:\Users\dunca\Desktop\FindPeopleSearches" };
+
+            #endregion
+
             #region Configure Logging
 
             Log.Logger = new LoggerConfiguration()

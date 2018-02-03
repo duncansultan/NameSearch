@@ -83,12 +83,13 @@ namespace NameSearch.App.Tests.Helpers
         public async Task SearchAsync_ValidInput_CreatePersonSearchResult()
         {
             // Arrange
+            var maxRuns = 1;
             var personSearchRequest = MockDataFactory.GetPersonSearchRequest();
 
             // Act
             var progress = new Progress<Models.Utility.ProgressReport>();
             var cancellationToken = new CancellationToken();
-            var result = await PersonSearchRequestHelper.SearchAsync(personSearchRequest, cancellationToken);
+            var result = await PersonSearchRequestHelper.SearchAsync(personSearchRequest, maxRuns, cancellationToken);
 
             // Assert
             Assert.IsType<PersonSearchResult>(result);

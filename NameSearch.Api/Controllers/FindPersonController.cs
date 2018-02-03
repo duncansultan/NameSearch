@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.Extensions;
 using Request = NameSearch.Models.Domain.Api.Request;
-using Response = NameSearch.Models.Domain.Api.Response;
 using Serilog;
 using NameSearch.Models.Domain.Api.Request.Interfaces;
 

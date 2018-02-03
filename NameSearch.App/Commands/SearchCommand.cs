@@ -20,6 +20,11 @@ namespace NameSearch.App.Commands
     public class SearchCommand : ICommand
     {
         /// <summary>
+        /// The maximum runs
+        /// </summary>
+        private readonly int _maxRuns;
+
+        /// <summary>
         /// The city
         /// </summary>
         private readonly string _city;
@@ -88,6 +93,11 @@ namespace NameSearch.App.Commands
         /// </summary>
         private readonly PeopleSearch PeopleSearch;
 
+        /// <summary>
+        /// The search wait ms
+        /// </summary>
+        private readonly int SearchWaitMs;
+
         #endregion
 
         /// <summary>
@@ -109,8 +119,10 @@ namespace NameSearch.App.Commands
             this.Export = new Export();
             this.Mapper = MapperFactory.Get();
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
+            //ToDo: Get from AppConfig
+            this.SearchWaitMs = 60000;
 
-            this.PeopleSearch = new PeopleSearch(Repository, FindPersonController, SerializerSettings, Mapper, Export);
+            this.PeopleSearch = new PeopleSearch(Repository, FindPersonController, SerializerSettings, Mapper, Export, SearchWaitMs);
         }
 
         /// <summary>
@@ -119,7 +131,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            var searchCriteria = SearchCriteriaFactory.Get(_city, _state, _zip);
+            var searchCriteria = SearchCriteriaFactory.Get(_maxRuns, _city, _state, _zip);
 
             using (var cancellationTokenSource = new CancellationTokenSource())
             {

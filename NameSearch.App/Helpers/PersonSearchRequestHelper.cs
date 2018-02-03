@@ -87,12 +87,12 @@ namespace NameSearch.App.Helpers
         /// <summary>
         /// Searches the specified person.
         /// </summary>
-        /// <param name="person">The person.</param>
-        /// <param name="personSearchJobId">The person search job identifier.</param>
+        /// <param name="personSearchRequest">The person search request.</param>
+        /// <param name="searchWaitMs">The search wait in ms.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">person</exception>
-        public async Task<PersonSearchResult> SearchAsync(PersonSearchRequest personSearchRequest, CancellationToken cancellationToken)
+        public async Task<PersonSearchResult> SearchAsync(PersonSearchRequest personSearchRequest, int searchWaitMs, CancellationToken cancellationToken)
         {
             if (personSearchRequest == null)
             {
@@ -111,8 +111,10 @@ namespace NameSearch.App.Helpers
                 log.DebugEvent("Search", "Mapped PersonSearchRequest entity to Person domain model after {ms}ms", stopwatch.ElapsedMilliseconds);
 
                 #region Execute Find Person request
-
+                
                 var result = await FindPersonController.GetFindPerson(person);
+
+                await Task.Delay(searchWaitMs);
 
                 log.With("Person", person)
                     .InformationEvent("Search", "Executed Find Person request after {ms}ms", stopwatch.ElapsedMilliseconds);
@@ -128,8 +130,6 @@ namespace NameSearch.App.Helpers
                 await this.Export.ToJsonAsync(jObject, $"SearchJob-{personSearchRequest.Id}-{person.Name}", cancellationToken);
 
                 #endregion Save Response to JSON text file
-
-                //todo
 
                 #region Create PersonSearchResult Entity
 

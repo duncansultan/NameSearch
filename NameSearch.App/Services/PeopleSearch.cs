@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Helpers;
+using NameSearch.Extensions;
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using NameSearch.Repository.Interfaces;
@@ -20,11 +21,6 @@ namespace NameSearch.App.Services
     public class PeopleSearch
     {
         #region Dependencies
-
-        /// <summary>
-        /// The export
-        /// </summary>
-        private readonly IExport Export;
 
         /// <summary>
         /// The find person controller
@@ -66,6 +62,11 @@ namespace NameSearch.App.Services
         /// </summary>
         private readonly JsonSerializerSettings SerializerSettings;
 
+        /// <summary>
+        /// The search wait ms
+        /// </summary>
+        private readonly int SearchWaitMs;
+
         #endregion Dependencies
 
         /// <summary>
@@ -76,16 +77,20 @@ namespace NameSearch.App.Services
         /// <param name="serializerSettings">The serializer settings.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="export">The export.</param>
+        /// <param name="searchWaitMs">The search wait ms.</param>
         public PeopleSearch(IEntityFrameworkRepository repository,
             IFindPersonController findPersonController,
             JsonSerializerSettings serializerSettings,
             IMapper mapper,
-            IExport export)
+            IExport export,
+            int searchWaitMs)
         {
             this.Repository = repository;
             this.FindPersonController = findPersonController;
             this.SerializerSettings = serializerSettings;
             this.Mapper = mapper;
+
+            this.SearchWaitMs = searchWaitMs;
 
             this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, findPersonController, serializerSettings, mapper, export);
             this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, serializerSettings, mapper);
@@ -110,11 +115,21 @@ namespace NameSearch.App.Services
             var peopleSearchJobId = PersonSearchJobHelper.CreateWithRequests(searchCriteria, names);
             var personSearchRequests = PersonSearchRequestHelper.Get(peopleSearchJobId);
 
+            int runs = 0;
             foreach (var personSearchRequest in personSearchRequests)
             {
-                //ToDo: Add Logging and Progress Updates Here
-                var personSearchResult = await PersonSearchRequestHelper.SearchAsync(personSearchRequest, cancellationToken);
-                var person = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
+                if (runs > searchCriteria.MaxRuns)
+                {
+                    logger.InformationEvent("SearchAsync", "Search stopped after exceeding maximum of {maxRuns}", searchCriteria.MaxRuns);
+                    break;
+                }
+
+                var personSearchResult = await PersonSearchRequestHelper.SearchAsync(personSearchRequest, SearchWaitMs, cancellationToken);
+
+                logger.InformationEvent("SearchAsync", "Search number {run} returned {numberOfResults} results", runs, personSearchResult.NumberOfResults);
+
+                var people = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
+                runs++;
             }
 
             PersonSearchJobHelper.Complete(peopleSearchJobId);

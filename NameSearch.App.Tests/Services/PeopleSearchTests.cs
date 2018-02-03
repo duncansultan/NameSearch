@@ -62,8 +62,9 @@ namespace NameSearch.App.Tests.Services
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
             this.Mapper = MapperFactory.Get();
             this.MockExport = MockExportFactory.Get();
+            var searchWaitMs = 60000;
 
-            this.PeopleSearch = new PeopleSearch(MockRepository.Object, MockFindPersonController.Object, SerializerSettings, Mapper, MockExport.Object);
+            this.PeopleSearch = new PeopleSearch(MockRepository.Object, MockFindPersonController.Object, SerializerSettings, Mapper, MockExport.Object, searchWaitMs);
         }
 
         /// <summary>

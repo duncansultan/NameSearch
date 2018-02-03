@@ -18,7 +18,7 @@ namespace NameSearch.App.Commands
         {
             Console.WriteLine("Hello "
                 + (_name != null ? _name : "World")
-                + (_options.IsEnthousiastic ? "!!!" : "."));
+                + (true ? "!!!" : "."));
 
             return 0;
         }

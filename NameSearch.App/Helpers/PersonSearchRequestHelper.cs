@@ -11,6 +11,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,6 +53,9 @@ namespace NameSearch.App.Helpers
         /// The serializer settings
         /// </summary>
         private readonly JsonSerializerSettings SerializerSettings;
+
+        private readonly string ResultOutputPath;
+
         #endregion Dependencies
 
         /// <summary>
@@ -64,13 +68,15 @@ namespace NameSearch.App.Helpers
             IFindPersonController findPersonController,
             JsonSerializerSettings serializerSettings,
             IMapper mapper,
-            IExport export)
+            IExport export,
+            string resultOutputPath)
         {
             this.Repository = repository;
             this.SerializerSettings = serializerSettings;
             this.FindPersonController = findPersonController;
             this.Mapper = mapper;
             this.Export = export;
+            this.ResultOutputPath = resultOutputPath;
         }
 
         /// <summary>

@@ -62,9 +62,10 @@ namespace NameSearch.App.Tests.Services
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
             this.Mapper = MapperFactory.Get();
             this.MockExport = MockExportFactory.Get();
+            var resultOutputPath = "";
             var searchWaitMs = 60000;
 
-            this.PeopleSearch = new PeopleSearch(MockRepository.Object, MockFindPersonController.Object, SerializerSettings, Mapper, MockExport.Object, searchWaitMs);
+            this.PeopleSearch = new PeopleSearch(MockRepository.Object, MockFindPersonController.Object, SerializerSettings, Mapper, MockExport.Object, resultOutputPath, searchWaitMs);
         }
 
         /// <summary>
@@ -76,10 +77,11 @@ namespace NameSearch.App.Tests.Services
         {
             // Arrange
             var searchCriteria = MockDataFactory.GetTestSearchCriteria();
+            var names = MockDataFactory.GetNames();
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
             // Act
-            var result = await PeopleSearch.SearchAsync(searchCriteria, cancellationToken);
+            var result = await PeopleSearch.SearchAsync(searchCriteria, names, cancellationToken);
             // Assert
             Assert.IsType<bool>(result);
             Assert.True(result);

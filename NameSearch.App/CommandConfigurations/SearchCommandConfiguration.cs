@@ -18,24 +18,27 @@ namespace NameSearch.App.CommandConfigurations
             command.Description = "Search for people";
             command.HelpOption("--help|-h|-?");
 
-            var maxRunsArgument = command.Argument("maxRuns",
-                                   "Maximum number of times to search");
-
             var cityArgument = command.Argument("city",
-                                   "City to search");
+                "City to search");
 
             var stateArgument = command.Argument("state",
-                       "State to search");
+                "State to search");
 
             var zipArgument = command.Argument("zip",
-                       "Zip to search");
+                "Zip to search");
 
-            var pathArgument = command.Argument("path",
-                       "Tempfile path");
+            var namesFilePath = command.Argument("namesFilePath",
+                "File path for Search Names text file");
+
+            var resultOutputPath = command.Argument("resultOutputPath",
+                "Folder path for Search Results output");
+
+            var maxRunsArgument = command.Argument("maxRuns",
+                "Maximum number of times to search");
 
             command.OnExecute(() =>
             {
-                options.Command = new SearchCommand(maxRunsArgument.Value, cityArgument.Value, stateArgument.Value, zipArgument.Value, pathArgument.Value, options);
+                options.Command = new SearchCommand(maxRunsArgument.Value, cityArgument.Value, stateArgument.Value, zipArgument.Value, namesFilePath.Value, resultOutputPath.Value, options);
 
                 return 0;
             });

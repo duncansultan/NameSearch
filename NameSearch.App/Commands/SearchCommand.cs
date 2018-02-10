@@ -43,9 +43,14 @@ namespace NameSearch.App.Commands
         private readonly string _zip;
 
         /// <summary>
-        /// The path
+        /// The names file path
         /// </summary>
-        private readonly string _path;
+        private readonly string _namesFilePath;
+
+        /// <summary>
+        /// The result output path
+        /// </summary>
+        private readonly string _resultOutputPath;
 
         /// <summary>
         /// The options
@@ -123,27 +128,36 @@ namespace NameSearch.App.Commands
         /// <param name="city">The city.</param>
         /// <param name="state">The state.</param>
         /// <param name="zip">The zip.</param>
-        /// <param name="path">The path.</param>
+        /// <param name="namesFilePath">The names text file path.</param>
+        /// <param name="resultOutputPath">The temporary path.</param>
         /// <param name="options">The options.</param>
-        public SearchCommand(string maxRunsText, string city, string state, string zip, string path, CommandLineOptions options)
+        public SearchCommand(string maxRunsText, string city, string state, string zip, string namesFilePath, string resultOutputPath, CommandLineOptions options)
         {
             int.TryParse(maxRunsText, out int maxRuns);
             _maxRuns = maxRuns;
             _city = city;
             _state = state;
             _zip = zip;
-            _path = path;
+            _namesFilePath = namesFilePath;
+            _resultOutputPath = resultOutputPath;
             _options = options;
 
             this.Repository = Program.Repository;
             this.Configuration = Program.Configuration;
+            this.FindPersonController = new FindPersonController(this.Configuration);
+            this.Import = new Import();
             this.Export = new Export();
             this.Mapper = MapperFactory.Get();
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
-            //ToDo: Get from AppConfig
-            this.SearchWaitMs = 60000;
 
-            this.PeopleSearch = new PeopleSearch(Repository, FindPersonController, SerializerSettings, Mapper, Export, SearchWaitMs);
+            
+            //Default Value
+            this.SearchWaitMs = 60000;
+            var waitMs = Configuration.GetValue<string>("SearchSettings:WaitMs");
+            int.TryParse(waitMs, out this.SearchWaitMs);
+            
+
+            this.PeopleSearch = new PeopleSearch(Repository, FindPersonController, SerializerSettings, Mapper, Export, _resultOutputPath, SearchWaitMs);
         }
 
         /// <summary>
@@ -152,11 +166,16 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
+            var cancelAfterMs = 600000;
+
             var searchCriteria = SearchCriteriaFactory.Get(_maxRuns, _city, _state, _zip);
 
-            using (var cancellationTokenSource = new CancellationTokenSource())
+            var names = Import.FromTxt(_namesFilePath);
+
+            using (var cancellationTokenSource = new CancellationTokenSource(cancelAfterMs))
             {
-                Task.Run(() => PeopleSearchTask(searchCriteria, cancellationTokenSource.Token));
+                var token = cancellationTokenSource.Token;
+                Task.Run(() => PeopleSearchTask(searchCriteria, names, token));
             }
 
             return 0;
@@ -168,7 +187,7 @@ namespace NameSearch.App.Commands
         /// <param name="searchCriteria">The search criteria.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        private async Task PeopleSearchTask(SearchCriteria searchCriteria, CancellationToken cancellationToken)
-            => await this.PeopleSearch.SearchAsync(searchCriteria, cancellationToken);
+        private async Task PeopleSearchTask(SearchCriteria searchCriteria, IEnumerable<string> names, CancellationToken cancellationToken)
+            => await this.PeopleSearch.SearchAsync(searchCriteria, names, cancellationToken);
     }
 }

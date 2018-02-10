@@ -3,13 +3,12 @@ using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Helpers;
 using NameSearch.Extensions;
 using NameSearch.Models.Domain;
-using NameSearch.Models.Entities;
 using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Serilog;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -67,6 +66,11 @@ namespace NameSearch.App.Services
         /// </summary>
         private readonly int SearchWaitMs;
 
+        /// <summary>
+        /// The result output path
+        /// </summary>
+        private readonly string ResultOutputPath;
+
         #endregion Dependencies
 
         /// <summary>
@@ -77,22 +81,24 @@ namespace NameSearch.App.Services
         /// <param name="serializerSettings">The serializer settings.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="export">The export.</param>
+        /// <param name="resultOutputPath">The result output path.</param>
         /// <param name="searchWaitMs">The search wait ms.</param>
         public PeopleSearch(IEntityFrameworkRepository repository,
             IFindPersonController findPersonController,
             JsonSerializerSettings serializerSettings,
             IMapper mapper,
             IExport export,
+            string resultOutputPath,
             int searchWaitMs)
         {
             this.Repository = repository;
             this.FindPersonController = findPersonController;
             this.SerializerSettings = serializerSettings;
             this.Mapper = mapper;
-
             this.SearchWaitMs = searchWaitMs;
+            this.ResultOutputPath = resultOutputPath;
 
-            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, findPersonController, serializerSettings, mapper, export);
+            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, findPersonController, serializerSettings, mapper, export, this.ResultOutputPath);
             this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, serializerSettings, mapper);
             this.PersonSearchJobHelper = new PersonSearchJobHelper(repository, mapper);
         }
@@ -101,17 +107,17 @@ namespace NameSearch.App.Services
         /// Searches the specified search criteria.
         /// </summary>
         /// <param name="searchCriteria">The search criteria.</param>
+        /// <param name="names">The names.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">searchCriteria</exception>
-        public async Task<bool> SearchAsync(SearchCriteria searchCriteria, CancellationToken cancellationToken)
+        public async Task<bool> SearchAsync(SearchCriteria searchCriteria, IEnumerable<string> names, CancellationToken cancellationToken)
         {
             if (searchCriteria == null)
             {
                 throw new ArgumentNullException(nameof(searchCriteria));
             }
-            var nameImport = Repository.GetFirst<NameImport>(orderBy: o => o.OrderByDescending(y => y.Id));
-            var names = nameImport.Names.Select(x => x.Value).ToList();
+
             var peopleSearchJobId = PersonSearchJobHelper.CreateWithRequests(searchCriteria, names);
             var personSearchRequests = PersonSearchRequestHelper.Get(peopleSearchJobId);
 

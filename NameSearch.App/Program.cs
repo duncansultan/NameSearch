@@ -102,7 +102,12 @@ namespace NameSearch.App
                     return 1;
                 }
 
-                return options.Command.Run();
+                var result = options.Command.Run();
+
+                // Allow users to see output.  Prevent console closing on its own
+                Console.ReadLine();
+
+                return result;
             }
             catch (Exception ex)
             {

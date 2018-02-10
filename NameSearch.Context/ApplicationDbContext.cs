@@ -89,20 +89,6 @@ namespace NameSearch.Context
         /// </value>
         public DbSet<Phone> Phones { get; set; }
         /// <summary>
-        /// Gets or sets the names.
-        /// </summary>
-        /// <value>
-        /// The names.
-        /// </value>
-        public DbSet<Name> Names { get; set; }
-        /// <summary>
-        /// Gets or sets the name imports.
-        /// </summary>
-        /// <value>
-        /// The name imports.
-        /// </value>
-        public DbSet<NameImport> NameImports { get; set; }
-        /// <summary>
         /// Gets or sets the person search jobs.
         /// </summary>
         /// <value>
@@ -141,8 +127,6 @@ namespace NameSearch.Context
             //Filter Inactive Records
             modelBuilder.Entity<Address>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Associate>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<Name>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<NameImport>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Person>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<PersonSearchRequest>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<PersonSearchResult>().HasQueryFilter(p => p.IsActive);
@@ -171,11 +155,6 @@ namespace NameSearch.Context
             //    .HasOne(a => a.PersonSearchResult)
             //    .WithOne(p => p.Person)
             //    .IsRequired(false);
-
-            //modelBuilder.Entity<NameImport>()
-            //    .HasMany(a => a.Names)
-            //    .WithOne(p => p.NameImport)
-            //    .IsRequired(true);
 
             //modelBuilder.Entity<PersonSearchJob>()
             //    .HasMany(a => a.PersonSearchResults)

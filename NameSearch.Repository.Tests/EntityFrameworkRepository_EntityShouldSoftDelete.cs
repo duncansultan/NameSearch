@@ -63,44 +63,6 @@ namespace NameSearch.Repository.Tests
             Assert.NotNull(associate.ModifiedDateTime);
             Assert.True(associate.ModifiedDateTime.Value.Date == DateTime.Today);
         }
-
-        /// <summary>
-        /// Deletes the name.
-        /// </summary>
-        [Fact]
-        public void DeleteName()
-        {
-            //Arrange
-            var name = Repository.GetFirst<Name>();
-
-            //Act
-            Repository.Delete(name);
-            Repository.Save();
-
-            //Assert
-            Assert.False(name.IsActive);
-            Assert.NotNull(name.ModifiedDateTime);
-            Assert.True(name.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Deletes the name import.
-        /// </summary>
-        [Fact]
-        public void DeleteNameImport()
-        {
-            //Arrange
-            var nameImport = Repository.GetFirst<NameImport>();
-
-            //Act
-            Repository.Delete(nameImport);
-            Repository.Save();
-
-            //Assert
-            Assert.False(nameImport.IsActive);
-            Assert.NotNull(nameImport.ModifiedDateTime);
-            Assert.True(nameImport.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
         /// <summary>
         /// Deletes the person.
         /// </summary>

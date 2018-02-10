@@ -26,59 +26,6 @@ namespace NameSearch.Repository.Tests
         }
 
         /// <summary>
-        /// Creates the name import.
-        /// </summary>
-        [Fact]
-        public void CreateNameImport()
-        {
-            //Arrange
-            //Act
-            var nameImport = MockDataFactory.GetNameImport();
-            Repository.Create(nameImport);
-            Repository.Save();
-
-            var savedNameImport = Repository.GetFirst<NameImport>(x => x.Id == nameImport.Id);
-
-            //Assert
-            Assert.Equal(nameImport.Id, savedNameImport.Id);
-        }
-
-        /// <summary>
-        /// Creates the name import with names.
-        /// </summary>
-        [Fact]
-        public void CreateNameImportWithNames()
-        {
-            //Arrange
-            var nameImport = MockDataFactory.GetNameImport();
-            Repository.Create(nameImport);
-            Repository.Save();
-
-            //Act
-            var names = MockDataFactory.GetNames(nameImport.Id);
-            foreach (var name in names)
-            {
-                Repository.Create(name);
-                Repository.Save();
-            }
-
-            var savedNameImport = Repository.GetFirst<NameImport>(x => x.Id == nameImport.Id);
-            var savedNames = Repository.Get<Name>(x => x.NameImportId == nameImport.Id);
-
-            //Assert
-            Assert.Equal(nameImport.Id, savedNameImport.Id);
-            Assert.Equal(nameImport.FileName, savedNameImport.FileName);
-            Assert.Equal(names.Count(), savedNames.Count());
-            Assert.Equal(names.Count(), savedNameImport.Names.Count());
-
-            foreach (var savedName in savedNames)
-            {
-                var anyName = names.Any(x => x.Id == savedName.Id);
-                Assert.True(anyName);
-            }
-        }
-
-        /// <summary>
         /// Creates the person search job.
         /// </summary>
         [Fact]

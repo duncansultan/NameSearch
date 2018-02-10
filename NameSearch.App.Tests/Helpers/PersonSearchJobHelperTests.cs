@@ -78,7 +78,7 @@ namespace NameSearch.App.Tests.Helpers
         {
             // Arrange
             var criteria = MockDataFactory.GetTestSearchCriteria();
-            var names = MockDataFactory.GetTestNames();
+            var names = MockDataFactory.GetNames();
             // Act
             var result = PeopleSearchJobHelper.CreateWithRequests(criteria, names);
             // Assert

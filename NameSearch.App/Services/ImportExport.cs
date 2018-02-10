@@ -38,11 +38,6 @@ namespace NameSearch.App.Services
         private readonly IMapper Mapper;
 
         /// <summary>
-        /// The people search name helper
-        /// </summary>
-        private readonly NameHelper NameHelper;
-
-        /// <summary>
         /// The people search person helper
         /// </summary>
         private readonly PersonHelper PersonHelper;
@@ -92,7 +87,6 @@ namespace NameSearch.App.Services
             this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, serializerSettings, mapper);
             this.PersonSearchJobHelper = new PersonSearchJobHelper(repository, mapper);
             this.PersonHelper = new PersonHelper(repository, mapper);
-            this.NameHelper = new NameHelper(repository, mapper);
         }
 
         /// <summary>
@@ -103,18 +97,6 @@ namespace NameSearch.App.Services
         {
             var people = PersonHelper.GetPeople();
             Export.ToCsv(people, fullPath, false);
-        }
-
-        /// <summary>
-        /// Imports the names.
-        /// </summary>
-        /// <param name="fullPath">Name of the file.</param>
-        /// <returns></returns>
-        public long ImportNames(string fullPath)
-        {
-            var names = Import.FromCsv<string>(fullPath);
-            var importId = NameHelper.Import(names, fullPath);
-            return importId;
         }
 
         /// <summary>

@@ -13,17 +13,6 @@ namespace NameSearch.Repository.Tests.Mocks
         /// <param name="repository">The repository.</param>
         public static void Build(IEntityFrameworkRepository repository)
         {
-            var nameImport = MockDataFactory.GetNameImport();
-            repository.Create(nameImport);
-            repository.Save();
-
-            var names = MockDataFactory.GetNames(nameImport.Id);
-            foreach (var name in names)
-            {
-                repository.Create(name);
-                repository.Save();
-            }
-
             var personSearchJob = MockDataFactory.GetPersonSearchJob();
             repository.Create(personSearchJob);
             repository.Save();

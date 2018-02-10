@@ -54,7 +54,8 @@ namespace NameSearch.App.Tests.Helpers
 
             var serializerSettings = JsonSerializerSettingsFactory.Get();
             var mapper = MapperFactory.Get();
-            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(MockRepository.Object, MockFindPersonController.Object, serializerSettings, mapper, MockExport.Object);
+            var resultOutputPath = "";
+            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(MockRepository.Object, MockFindPersonController.Object, serializerSettings, mapper, MockExport.Object, resultOutputPath);
         }
 
         /// <summary>

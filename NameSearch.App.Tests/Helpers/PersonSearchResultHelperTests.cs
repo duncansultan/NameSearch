@@ -42,18 +42,17 @@ namespace NameSearch.App.Tests.Helpers
         }
 
         /// <summary>
-        /// Imports the asynchronous valid input create person search result.
+        /// Imports the valid input create person search result.
         /// </summary>
-        /// <returns></returns>
         [Fact]
-        public async Task ImportAsync_ValidInput_CreatePersonSearchResult()
+        public void Import_ValidInput_CreatePersonSearchResult()
         {
             //Arrange
             var jObject = MockDataFactory.GetExampleJObject();
             var personSearchJobId = MockDataFactory.GetPersonSearchJob().Id;
 
             //Act
-            var result = await PersonSearchResultHelper.ImportAsync(jObject, personSearchJobId);
+            var result = PersonSearchResultHelper.Import(jObject, personSearchJobId);
 
             //Assert
             Assert.IsType<PersonSearchResult>(result);
@@ -65,11 +64,10 @@ namespace NameSearch.App.Tests.Helpers
         }
 
         /// <summary>
-        /// Processes the asynchronous valid input create person.
+        /// Processes the valid input create person.
         /// </summary>
-        /// <returns></returns>
         [Fact]
-        public async Task ProcessAsync_ValidInput_CreatePerson()
+        public void Process_ValidInput_CreatePerson()
         {
             //Arrange
             var personSearchResult = MockDataFactory.GetPersonSearchResult();
@@ -77,7 +75,7 @@ namespace NameSearch.App.Tests.Helpers
             var cancellationToken = cancellationTokenSource.Token;
 
             //Act
-            var result = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
+            var result = PersonSearchResultHelper.Process(personSearchResult);
 
             //Assert
             Assert.IsAssignableFrom<IEnumerable<Person>>(result);

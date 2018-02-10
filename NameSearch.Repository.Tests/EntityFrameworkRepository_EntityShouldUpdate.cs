@@ -73,45 +73,6 @@ namespace NameSearch.Repository.Tests
             Assert.NotNull(associate.ModifiedDateTime);
             Assert.True(associate.ModifiedDateTime.Value.Date == DateTime.Today);
         }
-
-        /// <summary>
-        /// Updates the name.
-        /// </summary>
-        [Fact]
-        public void UpdateName()
-        {
-            //Arrange
-            var name = Repository.GetFirst<Name>();
-            name.Value = $"Updated-{name.Value}";
-            name.Description = $"Updated-{name.Description}";
-
-            //Act
-            Repository.Update(name);
-            Repository.Save();
-
-            //Assert
-            Assert.NotNull(name.ModifiedDateTime);
-            Assert.True(name.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
-        /// Updates the name import.
-        /// </summary>
-        [Fact]
-        public void UpdateNameImport()
-        {
-            //Arrange
-            var nameImport = Repository.GetFirst<NameImport>();
-            nameImport.FileName = $"Updated-{nameImport.FileName}";
-
-            //Act
-            Repository.Update(nameImport);
-            Repository.Save();
-
-            //Assert
-            Assert.NotNull(nameImport.ModifiedDateTime);
-            Assert.True(nameImport.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
         /// <summary>
         /// Updates the person.
         /// </summary>

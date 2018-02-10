@@ -21,7 +21,6 @@ namespace NameSearch.App.Tests.Mocks
         {
             var MockRepository = new Mock<IEntityFrameworkRepository>();
             //Config Mock
-            MockRepository.Setup(x => x.GetFirst<NameImport>(null, It.IsAny<Func<System.Linq.IQueryable<NameImport>, System.Linq.IOrderedQueryable<NameImport>>>(), null)).Returns(MockDataFactory.GetNameImport(It.IsAny<long>()));
             MockRepository.Setup(x => x.GetFirst<PersonSearchJob>(null, null, null)).Returns(MockDataFactory.GetPersonSearchJob());
             MockRepository.Setup(x => x.GetFirst<PersonSearchJob>(It.IsAny<Expression<Func<PersonSearchJob, bool>>>(), null, null)).Returns(MockDataFactory.GetPersonSearchJob());
             MockRepository.Setup(x => x.GetFirst<PersonSearchJob>(It.IsAny<Expression<Func<PersonSearchJob, bool>>>(), null, It.IsAny<string>())).Returns(MockDataFactory.GetPersonSearchJob());

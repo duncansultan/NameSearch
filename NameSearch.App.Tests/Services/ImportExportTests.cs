@@ -82,21 +82,6 @@ namespace NameSearch.App.Tests.Services
         }
 
         /// <summary>
-        /// Imports the names valid file create name records.
-        /// </summary>
-        [Fact]
-        public void ImportNames_ValidFile_CreateNameRecords()
-        {
-            // Arrange
-            var fileName = "Import-Names-File.csv";
-            // Act
-            var result = ImportExport.ImportNames(fileName);
-            // Assert
-            Assert.IsType<long>(result);
-            //ToDo NameHelper.Verify(c => c.Import().Result(It.IsAny<IEnumerable<Person>()));
-        }
-
-        /// <summary>
         /// Imports the person searches from json asynchronous valid file create person search result.
         /// </summary>
         /// <returns></returns>

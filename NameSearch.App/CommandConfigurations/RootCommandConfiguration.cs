@@ -17,7 +17,6 @@ namespace NameSearch.App.CommandConfigurations
         {
             app.Command("greet", c => GreetCommandConfiguration.Configure(c, options));
             app.Command("exportpeople", c => ExportPeopleCommandConfiguration.Configure(c, options));
-            app.Command("importnames", c => ImportNamesCommandConfiguration.Configure(c, options));
             app.Command("importsearches", c => ImportSearchesCommandConfiguration.Configure(c, options));
             app.Command("search", c => SearchCommandConfiguration.Configure(c, options));
 

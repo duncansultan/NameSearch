@@ -103,56 +103,6 @@ namespace NameSearch.Repository.Tests.Mocks
         }
 
         /// <summary>
-        /// Gets the name import.
-        /// </summary>
-        /// <returns></returns>
-        public static NameImport GetNameImport()
-        {
-            return new NameImport
-            {
-                FileName = $"NameImportTest-{DateTime.Now}.csv"
-            };
-        }
-
-        /// <summary>
-        /// Gets the names.
-        /// </summary>
-        /// <param name="nameImportId">The name import identifier.</param>
-        /// <returns></returns>
-        public static List<Name> GetNames(long nameImportId)
-        {
-            return new List<Name>
-            {
-                new Name
-                {
-                    NameImportId = nameImportId,
-                    Value = "Mwangi",
-                    Description = "Kenya"
-                },
-                new Name
-                { NameImportId = nameImportId,
-                    Value = "Omondi",
-                    Description = "Kenya"
-                },
-                new Name
-                { NameImportId = nameImportId,
-                    Value = "Ndunde",
-                    Description = "Kenya"
-                },
-                new Name
-                { NameImportId = nameImportId,
-                    Value = "Twshibwabwa",
-                    Description = "Congo"
-                },
-                new Name
-                { NameImportId = nameImportId,
-                    Value = "Nihobontige",
-                    Description = "Rwanda"
-                }
-            };
-        }
-
-        /// <summary>
         /// Gets the person.
         /// </summary>
         /// <param name="personSearchResultId">The person search result identifier.</param>

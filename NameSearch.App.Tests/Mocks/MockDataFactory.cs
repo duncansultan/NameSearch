@@ -73,20 +73,6 @@ namespace NameSearch.App.Tests.Mocks
         }
 
         /// <summary>
-        /// Gets the name import.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        public static NameImport GetNameImport(long id)
-        {
-            return new NameImport()
-            {
-                Id = id,
-                Names = GetTestSearchNames()
-            };
-        }
-
-        /// <summary>
         /// Gets the person search job.
         /// </summary>
         /// <returns></returns>
@@ -168,28 +154,6 @@ namespace NameSearch.App.Tests.Mocks
             return personEntity;
         }
 
-        /// <summary>
-        /// Gets the test search names.
-        /// </summary>
-        /// <returns></returns>
-        public static List<Models.Entities.Name> GetTestSearchNames()
-        {
-            var people = new List<Models.Entities.Name>
-            {
-                new Models.Entities.Name
-                {
-                    Id = 1,
-                    Value = "Mwangi",
-                    Description = "Kenya",
-                    IsActive = true,
-                    ModifiedDateTime = DateTime.Now,
-                    NameImportId = 1,
-                    CreatedDateTime = DateTime.Now
-                }
-            };
-            return people;
-        }
-
         #endregion Entities
 
         #region Domain
@@ -226,15 +190,6 @@ namespace NameSearch.App.Tests.Mocks
         }
 
         /// <summary>
-        /// Gets the test names.
-        /// </summary>
-        /// <returns></returns>
-        public static List<string> GetTestNames()
-        {
-            return GetTestSearchNames().Select(x => x.Value).ToList();
-        }
-
-        /// <summary>
         /// Gets the test people.
         /// </summary>
         /// <returns></returns>
@@ -267,6 +222,20 @@ namespace NameSearch.App.Tests.Mocks
                 City = "Raleigh",
                 State = "NC",
                 Country = "USA"
+            };
+        }
+
+        /// <summary>
+        /// Gets the names.
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetNames()
+        {
+            return new List<string>
+            {
+                "Mwangi",
+                "Omondi",
+                "Kimani"
             };
         }
 

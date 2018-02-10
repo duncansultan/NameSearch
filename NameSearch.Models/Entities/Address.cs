@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
@@ -135,18 +136,18 @@ namespace NameSearch.Models.Entities
         public override bool Equals(Address other)
         {
             if (other == null) return false;
-            return string.Equals(ExternalId, other.ExternalId) &&
-                string.Equals(LocationType, other.LocationType) &&
-                string.Equals(Address1, other.Address1) &&
-                string.Equals(Address2, other.Address2) &&
-                string.Equals(City, other.City) &&
-                string.Equals(State, other.State) &&
-                string.Equals(Zip, other.Zip) &&
-                string.Equals(Plus4, other.Plus4) &&
-                string.Equals(Country, other.Country) &&
-                Latitude == other.Latitude &&
-                Longitude == other.Longitude &&
-                Accuracy == other.Accuracy &&
+            return string.Equals(ExternalId, other.ExternalId, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(LocationType, other.LocationType, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Address1, other.Address1, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Address2, other.Address2, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(City, other.City, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(State, other.State, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Zip, other.Zip, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Plus4, other.Plus4, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Country, other.Country, StringComparison.CurrentCultureIgnoreCase) &&
+                double.Equals(Latitude, other.Latitude) &&
+                double.Equals(Longitude, other.Longitude) &&
+                string.Equals(Accuracy, other.Accuracy, StringComparison.CurrentCultureIgnoreCase) &&
                 IsCurrent == other.IsCurrent &&
                 IsHistorical == other.IsHistorical &&
                 PersonId == other.PersonId;

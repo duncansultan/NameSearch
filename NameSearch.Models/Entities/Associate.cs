@@ -1,4 +1,5 @@
 ﻿using NameSearch.Models.Entities.Abstracts;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NameSearch.Models.Entities
@@ -50,9 +51,9 @@ namespace NameSearch.Models.Entities
         public override bool Equals(Associate other)
         {
             if (other == null) return false;
-            return string.Equals(ExternalId, other.ExternalId) &&
-                string.Equals(Name, other.Name) &&
-                string.Equals(Relation, other.Relation) &&
+            return string.Equals(ExternalId, other.ExternalId, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                string.Equals(Relation, other.Relation, StringComparison.InvariantCultureIgnoreCase) &&
                 PersonId == other.PersonId;
         }
 

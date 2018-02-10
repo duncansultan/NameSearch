@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
@@ -73,11 +74,11 @@ namespace NameSearch.Models.Entities
         {
             if (other == null) return false;
             return PersonSearchRequestId == other.PersonSearchRequestId &&
-                HttpStatusCode == other.HttpStatusCode &&
+                int.Equals(HttpStatusCode, other.HttpStatusCode) &&
                 NumberOfResults == other.NumberOfResults &&
-                string.Equals(Warnings, other.Warnings) &&
-                string.Equals(Error, other.Error) &&
-                string.Equals(Data, other.Data) &&
+                string.Equals(Warnings, other.Warnings, StringComparison.InvariantCultureIgnoreCase) &&
+                string.Equals(Error, other.Error, StringComparison.InvariantCultureIgnoreCase) &&
+                string.Equals(Data, other.Data, StringComparison.InvariantCultureIgnoreCase) &&
                 (People ?? new List<Person>()).Equals(other.People);
         }
 

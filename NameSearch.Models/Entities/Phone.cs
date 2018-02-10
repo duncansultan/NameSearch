@@ -1,4 +1,5 @@
 ﻿using NameSearch.Models.Entities.Abstracts;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NameSearch.Models.Entities
@@ -43,8 +44,8 @@ namespace NameSearch.Models.Entities
         public override bool Equals(Phone other)
         {
             if (other == null) return false;
-            return string.Equals(ExternalId, other.ExternalId) &&
-                string.Equals(PhoneNumber, other.PhoneNumber) &&
+            return string.Equals(ExternalId, other.ExternalId, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(PhoneNumber, other.PhoneNumber, StringComparison.CurrentCultureIgnoreCase) &&
                 PersonId == other.PersonId;
         }
 

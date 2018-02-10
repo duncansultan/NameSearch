@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
@@ -94,12 +95,12 @@ namespace NameSearch.Models.Entities
         {
             if (other == null) return false;
             return PersonSearchJobId == other.PersonSearchJobId &&
-                string.Equals(Name, other.Name) &&
-                string.Equals(Address1, other.Address1) &&
-                string.Equals(Address2, other.Address2) &&
-                string.Equals(State, other.State) &&
-                string.Equals(Zip, other.Zip) &&
-                string.Equals(Country, other.Country) &&
+                string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                string.Equals(Address1, other.Address1, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Address2, other.Address2, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(State, other.State, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Zip, other.Zip, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(Country, other.Country, StringComparison.CurrentCultureIgnoreCase) &&
                 IsProcessed == other.IsProcessed &&
                 (PersonSearchResults ?? new List<PersonSearchResult>()).Equals(other.PersonSearchResults);
         }

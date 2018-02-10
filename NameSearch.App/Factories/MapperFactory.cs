@@ -41,6 +41,8 @@ namespace NameSearch.App.Factories
                     .ForMember(x => x.Zip, m => m.MapFrom(a => a.PostalCode))
                     .ForMember(x => x.Plus4, m => m.MapFrom(a => a.Zip4))
                     .ForMember(x => x.Country, m => m.MapFrom(a => a.CountryCode))
+                    .ForMember(x => x.Longitude, m => m.MapFrom(a => a.LatLong.Longitude))
+                    .ForMember(x => x.Latitude, m => m.MapFrom(a => a.LatLong.Latitude))
                     .ReverseMap();
                 cfg.CreateMap<Models.Domain.Api.Response.Associate, Models.Entities.Associate>()
                     .ForMember(x => x.Id, opt => opt.Ignore())

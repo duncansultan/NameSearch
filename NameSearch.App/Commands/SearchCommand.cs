@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using NameSearch.Api.Controllers;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Commands.Interfaces;
 using NameSearch.App.Factories;
@@ -8,6 +10,7 @@ using NameSearch.Repository.Interfaces;
 using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,6 +55,11 @@ namespace NameSearch.App.Commands
         #region Dependencies
 
         /// <summary>
+        /// The import
+        /// </summary>
+        private readonly IImport Import;
+
+        /// <summary>
         /// The export
         /// </summary>
         private readonly IExport Export;
@@ -71,6 +79,14 @@ namespace NameSearch.App.Commands
         /// The repository.
         /// </value>
         public IEntityFrameworkRepository Repository { get; set; }
+
+        /// <summary>
+        /// Gets or sets the configuration.
+        /// </summary>
+        /// <value>
+        /// The configuration.
+        /// </value>
+        public IConfiguration Configuration { get; set; }
 
         /// <summary>
         /// The serializer settings
@@ -119,7 +135,8 @@ namespace NameSearch.App.Commands
             _path = path;
             _options = options;
 
-            this.Repository = StaticServiceCollection.Repository;
+            this.Repository = Program.Repository;
+            this.Configuration = Program.Configuration;
             this.Export = new Export();
             this.Mapper = MapperFactory.Get();
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();

@@ -78,7 +78,7 @@ namespace NameSearch.App.Commands
             _path = path;
             _options = options;
 
-            this.Repository = StaticServiceCollection.Repository;
+            this.Repository = Program.Repository;
             this.Import = new Import();
             this.Export = new Export();
             this.Mapper = MapperFactory.Get();

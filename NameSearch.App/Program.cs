@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NameSearch.App.Factories;
 using NameSearch.Context;
@@ -11,6 +12,7 @@ using Serilog;
 using Serilog.Events;
 using StructureMap;
 using System;
+using System.IO;
 
 namespace NameSearch.App
 {
@@ -19,6 +21,35 @@ namespace NameSearch.App
     /// </summary>
     public class Program
     {
+        /// <summary>
+        /// Gets or sets the repository.
+        /// </summary>
+        /// <value>
+        /// The repository.
+        /// </value>
+        public static IEntityFrameworkRepository Repository { set; get; }
+        /// <summary>
+        /// Gets or sets the configuration.
+        /// </summary>
+        /// <value>
+        /// The configuration.
+        /// </value>
+        public static IConfiguration Configuration { set; get; }
+        /// <summary>
+        /// Gets or sets the mapper.
+        /// </summary>
+        /// <value>
+        /// The mapper.
+        /// </value>
+        public static IMapper Mapper { set; get; }
+        /// <summary>
+        /// Gets or sets the serializer settings.
+        /// </summary>
+        /// <value>
+        /// The serializer settings.
+        /// </value>
+        public static JsonSerializerSettings SerializerSettings { set; get; }
+
         /// <summary>
         /// Main application entry point.
         /// </summary>
@@ -32,7 +63,7 @@ namespace NameSearch.App
             //args = new string[2] { "exportpeople", @"C:\Users\dunca\Desktop\FindPeopleExport\export.csv" };
             //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\FindPeopleJSON" };
             //args = new string[2] { "importnames", @"C:\Users\dunca\Desktop\FindPeopleNames\names.csv" };
-            //args = new string[6] { "search", "10", "dallas", "tx", "75093", @"C:\Users\dunca\Desktop\FindPeopleSearches" };
+            args = new string[7] { "search", "", "NC", "", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\SwahiliNames.A.csv", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch", "100" };
 
             #endregion
 
@@ -52,6 +83,12 @@ namespace NameSearch.App
 
             try
             {
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json");
+
+                Configuration = builder.Build();
+
                 #region Dependency Injection Container
 
                 // use Dependency injection in console app https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/
@@ -86,9 +123,9 @@ namespace NameSearch.App
                 });
 
                 //Set static instances
-                StaticServiceCollection.Repository = container.GetInstance<IEntityFrameworkRepository>();
-                StaticServiceCollection.Mapper = container.GetInstance<IMapper>();
-                StaticServiceCollection.SerializerSettings = container.GetInstance<JsonSerializerSettings>();
+                Repository = container.GetInstance<IEntityFrameworkRepository>();
+                Mapper = container.GetInstance<IMapper>();
+                SerializerSettings = container.GetInstance<JsonSerializerSettings>();
 
                 #endregion Dependency Injection Container
 
@@ -119,34 +156,5 @@ namespace NameSearch.App
                 Log.CloseAndFlush();
             }
         }
-    }
-
-    /// <summary>
-    /// Static class for services accessed in the CommandConfigurations
-    /// This is an anti-pattern
-    /// </summary>
-    public static class StaticServiceCollection
-    {
-        /// <summary>
-        /// Gets or sets the repository.
-        /// </summary>
-        /// <value>
-        /// The repository.
-        /// </value>
-        public static IEntityFrameworkRepository Repository { set; get; }
-        /// <summary>
-        /// Gets or sets the mapper.
-        /// </summary>
-        /// <value>
-        /// The mapper.
-        /// </value>
-        public static IMapper Mapper { set; get; }
-        /// <summary>
-        /// Gets or sets the serializer settings.
-        /// </summary>
-        /// <value>
-        /// The serializer settings.
-        /// </value>
-        public static JsonSerializerSettings SerializerSettings { set; get; }
     }
 }

@@ -4,6 +4,7 @@ using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
 using Serilog;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NameSearch.App.Helpers
 {
@@ -59,7 +60,9 @@ namespace NameSearch.App.Helpers
                 people.AddRange(peopleConversion);
             }
 
-            return people;
+            var distinctPeople = people.Distinct().ToList();
+
+            return distinctPeople;
         }
     }
 }

@@ -128,7 +128,7 @@ namespace NameSearch.App.Services
 
                 logger.InformationEvent("SearchAsync", "Search number {run} returned {numberOfResults} results", runs, personSearchResult.NumberOfResults);
 
-                var people = await PersonSearchResultHelper.ProcessAsync(personSearchResult, cancellationToken);
+                var people = PersonSearchResultHelper.Process(personSearchResult);
                 runs++;
             }
 

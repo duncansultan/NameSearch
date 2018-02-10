@@ -127,7 +127,8 @@ namespace NameSearch.App.Helpers
 
                 #region Save Response to JSON text file
 
-                await this.Export.ToJsonAsync(jObject, $"SearchJob-{personSearchRequest.Id}-{person.Name}", cancellationToken);
+                var fullPath = Path.Combine(this.ResultOutputPath, $"SearchJob-{personSearchRequest.Id}-{person.Name}");
+                await this.Export.ToJsonAsync(jObject, fullPath, cancellationToken);
 
                 #endregion Save Response to JSON text file
 

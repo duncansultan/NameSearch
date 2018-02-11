@@ -96,26 +96,6 @@ namespace NameSearch.Repository.Tests
         }
 
         /// <summary>
-        /// Updates the person search job.
-        /// </summary>
-        [Fact]
-        public void UpdatePersonSearchJob()
-        {
-            //Arrange
-            var personSearchJob = Repository.GetFirst<PersonSearchJob>();
-            personSearchJob.IsProcessed = !personSearchJob.IsProcessed;
-            personSearchJob.IsSuccessful = !personSearchJob.IsSuccessful;
-
-            //Act
-            Repository.Update(personSearchJob);
-            Repository.Save();
-
-            //Assert
-            Assert.NotNull(personSearchJob.ModifiedDateTime);
-            Assert.True(personSearchJob.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
         /// Updates the phone.
         /// </summary>
         [Fact]

@@ -1,5 +1,6 @@
 ﻿using NameSearch.App.Factories;
 using NameSearch.App.Tests.Mocks;
+using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using System.Net;
 using Xunit;
@@ -18,17 +19,16 @@ namespace NameSearch.App.Tests.Factories
         public void Create_ValidInput_ReturnSearchResult()
         {
             // Arrange
-            var personSearchRequestId = MockDataFactory.GetPersonSearchRequest().Id;
+            var search = new Search();
             var httpStatusCode = (int)HttpStatusCode.OK;
             var jObject = MockDataFactory.GetExampleJObject();
 
             // Act
-            var result = PersonSearchResultFactory.Create(personSearchRequestId, httpStatusCode, jObject);
+            var result = PersonSearchResultFactory.Create(search, httpStatusCode, jObject);
 
             // Assert
-            Assert.IsType<PersonSearchResult>(result);
+            Assert.IsType<PersonSearch>(result);
             Assert.NotNull(result);
-            Assert.Equal(personSearchRequestId, result.PersonSearchRequestId);
             Assert.Equal(httpStatusCode, result.HttpStatusCode);
             Assert.Equal(jObject.ToString(), result.Data);
         }

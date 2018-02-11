@@ -26,121 +26,18 @@ namespace NameSearch.Repository.Tests
         }
 
         /// <summary>
-        /// Creates the person search job.
-        /// </summary>
-        [Fact]
-        public void CreatePersonSearchJob()
-        {
-            //Arrange
-            //Act
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id);
-
-            //Assert
-            Assert.Equal(personSearchJob.Id, savedPersonSearchJob.Id);
-        }
-        /// <summary>
-        /// Creates the person search job with requests.
-        /// </summary>
-        [Fact]
-        public void CreatePersonSearchJobWithRequests()
-        {
-            //Arrange
-            //Act
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var personSearchRequests = MockDataFactory.GetPersonSearchRequests(personSearchJob.Id);
-            foreach (var personSearchRequest in personSearchRequests)
-            {
-                Repository.Create(personSearchRequest);
-                Repository.Save();
-            }
-
-            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id, includeProperties: "PersonSearchRequests");
-            var savedPersonSearchRequests = Repository.Get<PersonSearchRequest>(x => x.PersonSearchJobId == personSearchJob.Id);
-
-            //Assert
-            Assert.Equal(personSearchJob.Id, savedPersonSearchJob.Id);
-            Assert.Equal(personSearchRequests.Count(), savedPersonSearchRequests.Count());
-            Assert.Equal(personSearchJob.PersonSearchRequests.Count(), savedPersonSearchJob.PersonSearchRequests.Count());
-
-            foreach (var savedName in savedPersonSearchRequests)
-            {
-                var anyName = personSearchRequests.Any(x => x.Id == savedName.Id);
-                Assert.True(anyName);
-            }
-        }
-
-        /// <summary>
-        /// Creates the person search job with requests.
-        /// </summary>
-        [Fact]
-        public void CreatePersonSearchJobWithRequestsAndResults()
-        {
-            //Arrange
-            //Act
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var personSearchRequests = MockDataFactory.GetPersonSearchRequests(personSearchJob.Id);
-            foreach (var personSearchRequest in personSearchRequests)
-            {
-                Repository.Create(personSearchRequest);
-                Repository.Save();
-            }
-
-            foreach (var personSearchRequest in personSearchRequests)
-            {
-                var personSearchResults = MockDataFactory.GetPersonSearchResults(personSearchRequest.Id);
-
-                foreach (var personSearchResult in personSearchResults)
-                {
-                    Repository.Create(personSearchResult);
-                    Repository.Save();
-                }
-            }
-
-            var savedPersonSearchJob = Repository.GetFirst<PersonSearchJob>(x => x.Id == personSearchJob.Id, includeProperties: "PersonSearchRequests");
-            var savedPersonSearchRequests = Repository.Get<PersonSearchRequest>(x => x.PersonSearchJobId == personSearchJob.Id, includeProperties: "PersonSearchResults");
-
-            //Assert
-            Assert.Equal(personSearchJob.Id, savedPersonSearchJob.Id);
-            Assert.Equal(personSearchRequests.Count(), savedPersonSearchRequests.Count());
-            Assert.Equal(personSearchJob.PersonSearchRequests.Count(), savedPersonSearchJob.PersonSearchRequests.Count());
-
-            foreach (var savedName in savedPersonSearchRequests)
-            {
-                var anyName = personSearchRequests.Any(x => x.Id == savedName.Id);
-                Assert.True(anyName);
-            }
-        }
-        /// <summary>
         /// Creates the person with addresses.
         /// </summary>
         [Fact]
         public void CreatePersonWithAddresses()
         {
             //Arrange
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
-            Repository.Create(personSearchRequest);
-            Repository.Save();
-
-            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
-            Repository.Create(personSearchResult);
+            var personSearch = MockDataFactory.GetPersonSearch();
+            Repository.Create(personSearch);
             Repository.Save();
 
             //Act
-            var person = MockDataFactory.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearch.Id);
             Repository.Create(person);
             Repository.Save();
 
@@ -177,20 +74,12 @@ namespace NameSearch.Repository.Tests
         public void CreatePersonWithAssociates()
         {
             //Arrange
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
-            Repository.Create(personSearchRequest);
-            Repository.Save();
-
-            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
-            Repository.Create(personSearchResult);
+            var personSearch = MockDataFactory.GetPersonSearch();
+            Repository.Create(personSearch);
             Repository.Save();
 
             //Act
-            var person = MockDataFactory.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearch.Id);
             Repository.Create(person);
             Repository.Save();
 
@@ -227,20 +116,12 @@ namespace NameSearch.Repository.Tests
         public void CreatePersonWithPhones()
         {
             //Arrange
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            Repository.Create(personSearchJob);
-            Repository.Save();
-
-            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
-            Repository.Create(personSearchRequest);
-            Repository.Save();
-
-            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
-            Repository.Create(personSearchResult);
+            var personSearch = MockDataFactory.GetPersonSearch();
+            Repository.Create(personSearch);
             Repository.Save();
 
             //Act
-            var person = MockDataFactory.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearch.Id);
             Repository.Create(person);
             Repository.Save();
 

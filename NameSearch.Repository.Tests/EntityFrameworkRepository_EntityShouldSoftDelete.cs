@@ -83,25 +83,6 @@ namespace NameSearch.Repository.Tests
         }
 
         /// <summary>
-        /// Deletes the person search job.
-        /// </summary>
-        [Fact]
-        public void DeletePersonSearchJob()
-        {
-            //Arrange
-            var personSearchJob = Repository.GetFirst<PersonSearchJob>();
-
-            //Act
-            Repository.Delete(personSearchJob);
-            Repository.Save();
-
-            //Assert
-            Assert.False(personSearchJob.IsActive);
-            Assert.NotNull(personSearchJob.ModifiedDateTime);
-            Assert.True(personSearchJob.ModifiedDateTime.Value.Date == DateTime.Today);
-        }
-
-        /// <summary>
         /// Deletes the phone.
         /// </summary>
         [Fact]

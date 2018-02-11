@@ -6,20 +6,12 @@ using NameSearch.Models.Entities.Abstracts;
 namespace NameSearch.Models.Entities
 {
     /// <summary>
-    /// Search Request Entity
+    /// Search Transaction Entity
     /// </summary>
-    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.PersonSearchRequest}" />
+    /// <seealso cref="NameSearch.Models.Entities.Abstracts.EntityBase{NameSearch.Models.Entities.PersonSearch}" />
     /// <inheritdoc />
-    public class PersonSearchRequest : EntityBase<PersonSearchRequest>
+    public class PersonSearch : EntityBase<PersonSearch>
     {
-        /// <summary>
-        /// Gets or sets the search job identifier.
-        /// </summary>
-        /// <value>
-        /// The search job identifier.
-        /// </value>
-        [ForeignKey("PersonSearchJobForeignKey")]
-        public long PersonSearchJobId { get; set; }
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
@@ -77,12 +69,47 @@ namespace NameSearch.Models.Entities
         /// </value>
         public bool IsProcessed { get; set; }
         /// <summary>
-        /// Gets or sets the person search results.
+        /// Gets or sets the HTTP response.
         /// </summary>
         /// <value>
-        /// The person search results.
+        /// The HTTP response.
         /// </value>
-        public List<PersonSearchResult> PersonSearchResults { get; set; }
+        public int? HttpStatusCode { get; set; }
+        /// <summary>
+        /// Gets or sets the number of results.
+        /// </summary>
+        /// <value>
+        /// The number of results.
+        /// </value>
+        public int NumberOfResults { get; set; }
+        /// <summary>
+        /// Gets or sets the warnings.
+        /// </summary>
+        /// <value>
+        /// The warnings.
+        /// </value>
+        public string Warnings { get; set; }
+        /// <summary>
+        /// Gets or sets the error.
+        /// </summary>
+        /// <value>
+        /// The error.
+        /// </value>
+        public string Error { get; set; }
+        /// <summary>
+        /// Gets or sets the json data.
+        /// </summary>
+        /// <value>
+        /// The json data.
+        /// </value>
+        public string Data { get; set; }
+        /// <summary>
+        /// Gets or sets the people.
+        /// </summary>
+        /// <value>
+        /// The people.
+        /// </value>
+        public List<Person> People { get; set; }
 
         #region Equality
 
@@ -91,18 +118,22 @@ namespace NameSearch.Models.Entities
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public override bool Equals(PersonSearchRequest other)
+        public override bool Equals(PersonSearch other)
         {
             if (other == null) return false;
-            return PersonSearchJobId == other.PersonSearchJobId &&
-                string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase) &&
+            return string.Equals(Name, other.Name, StringComparison.InvariantCultureIgnoreCase) &&
                 string.Equals(Address1, other.Address1, StringComparison.CurrentCultureIgnoreCase) &&
                 string.Equals(Address2, other.Address2, StringComparison.CurrentCultureIgnoreCase) &&
                 string.Equals(State, other.State, StringComparison.CurrentCultureIgnoreCase) &&
                 string.Equals(Zip, other.Zip, StringComparison.CurrentCultureIgnoreCase) &&
                 string.Equals(Country, other.Country, StringComparison.CurrentCultureIgnoreCase) &&
                 IsProcessed == other.IsProcessed &&
-                (PersonSearchResults ?? new List<PersonSearchResult>()).Equals(other.PersonSearchResults);
+                int.Equals(HttpStatusCode, other.HttpStatusCode) &&
+                NumberOfResults == other.NumberOfResults &&
+                string.Equals(Warnings, other.Warnings, StringComparison.InvariantCultureIgnoreCase) &&
+                string.Equals(Error, other.Error, StringComparison.InvariantCultureIgnoreCase) &&
+                string.Equals(Data, other.Data, StringComparison.InvariantCultureIgnoreCase) &&
+                (People ?? new List<Person>()).Equals(other.People);
         }
 
         /// <summary>
@@ -117,7 +148,7 @@ namespace NameSearch.Models.Entities
             if (obj is null) return false;
             if (this is null) return false;
             if (obj.GetType() != GetType()) return false;
-            return Equals(obj as PersonSearchResult);
+            return Equals(obj as PersonSearch);
         }
 
         /// <summary>

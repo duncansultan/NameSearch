@@ -4,6 +4,7 @@ using NameSearch.App.Factories;
 using NameSearch.App.Helpers;
 using NameSearch.App.Services;
 using NameSearch.App.Tests.Mocks;
+using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
@@ -59,24 +60,6 @@ namespace NameSearch.App.Tests.Helpers
         }
 
         /// <summary>
-        /// Gets the valid input return person search requests.
-        /// </summary>
-        [Fact]
-        public void Get_ValidInput_ReturnPersonSearchRequests()
-        {
-            // Arrange
-            var personSearchJobId = MockDataFactory.GetPersonSearchJob().Id;
-
-            // Act
-            var result = PersonSearchRequestHelper.Get(personSearchJobId);
-
-            // Assert
-            Assert.IsAssignableFrom<IEnumerable<PersonSearchRequest>>(result);
-            Assert.NotNull(result);
-            MockRepository.Verify(c => c.Get<PersonSearchRequest>(It.IsAny<Expression<Func<PersonSearchRequest, bool>>>(), null, null, null, null), Times.Once);
-        }
-
-        /// <summary>
         /// Searches the asynchronous valid input create person search result.
         /// </summary>
         /// <returns></returns>
@@ -85,18 +68,16 @@ namespace NameSearch.App.Tests.Helpers
         {
             // Arrange
             var maxRuns = 1;
-            var personSearchRequest = MockDataFactory.GetPersonSearchRequest();
 
             // Act
-            var progress = new Progress<Models.Utility.ProgressReport>();
             var cancellationToken = new CancellationToken();
-            var result = await PersonSearchRequestHelper.SearchAsync(personSearchRequest, maxRuns, cancellationToken);
+            var search = new Search();
+            var result = await PersonSearchRequestHelper.SearchAsync(search, maxRuns, cancellationToken);
 
             // Assert
-            Assert.IsType<PersonSearchResult>(result);
+            Assert.IsType<PersonSearch>(result);
 
-            MockRepository.Verify(c => c.Update(It.IsAny<PersonSearchRequest>()), Times.Once);
-            MockRepository.Verify(c => c.Create(It.IsAny<PersonSearchResult>()), Times.Once);
+            MockRepository.Verify(c => c.Create(It.IsAny<PersonSearch>()), Times.Once);
             MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(2));
             MockFindPersonController.Verify(c => c.GetFindPerson(It.IsAny<Models.Domain.Api.Request.Person>()), Times.Once);
             MockExport.Verify(c => c.ToJsonAsync(It.IsAny<JObject>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);

@@ -37,11 +37,6 @@ namespace NameSearch.App.Services
         private readonly IMapper Mapper;
 
         /// <summary>
-        /// The people search job helper
-        /// </summary>
-        private readonly PersonSearchJobHelper PersonSearchJobHelper;
-
-        /// <summary>
         /// The people search request helper
         /// </summary>
         private readonly PersonSearchRequestHelper PersonSearchRequestHelper;
@@ -100,45 +95,40 @@ namespace NameSearch.App.Services
 
             this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, findPersonController, serializerSettings, mapper, export, this.ResultOutputPath);
             this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, serializerSettings, mapper);
-            this.PersonSearchJobHelper = new PersonSearchJobHelper(repository, mapper);
         }
 
         /// <summary>
         /// Searches the specified search criteria.
         /// </summary>
         /// <param name="searchCriteria">The search criteria.</param>
-        /// <param name="names">The names.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">searchCriteria</exception>
-        public async Task<bool> SearchAsync(SearchCriteria searchCriteria, IEnumerable<string> names, CancellationToken cancellationToken)
+        public async Task<bool> SearchAsync(IEnumerable<Search> searches, CancellationToken cancellationToken)
         {
-            if (searchCriteria == null)
+            //ToDo Pass in a list of Search Criteria complete with names and loop through taht
+            if (searches == null)
             {
-                throw new ArgumentNullException(nameof(searchCriteria));
+                throw new ArgumentNullException(nameof(searches));
             }
 
-            var peopleSearchJobId = PersonSearchJobHelper.CreateWithRequests(searchCriteria, names);
-            var personSearchRequests = PersonSearchRequestHelper.Get(peopleSearchJobId);
-
+            //todo loop by names
             int runs = 0;
-            foreach (var personSearchRequest in personSearchRequests)
+            foreach (var search in searches)
             {
-                if (runs > searchCriteria.MaxRuns)
+                if (runs > search.Criteria.MaxRuns)
                 {
-                    logger.InformationEvent("SearchAsync", "Search stopped after exceeding maximum of {maxRuns}", searchCriteria.MaxRuns);
+                    logger.InformationEvent("SearchAsync", "Search stopped after exceeding maximum of {maxRuns}", search.Criteria.MaxRuns);
                     break;
                 }
 
-                var personSearchResult = await PersonSearchRequestHelper.SearchAsync(personSearchRequest, SearchWaitMs, cancellationToken);
+                var personSearch = await PersonSearchRequestHelper.SearchAsync(search, SearchWaitMs, cancellationToken);
 
-                logger.InformationEvent("SearchAsync", "Search number {run} returned {numberOfResults} results", runs, personSearchResult.NumberOfResults);
+                logger.InformationEvent("SearchAsync", "Search number {run} returned {numberOfResults} results", runs, personSearch.NumberOfResults);
 
-                var people = PersonSearchResultHelper.Process(personSearchResult);
+                var people = PersonSearchResultHelper.Process(personSearch);
                 runs++;
             }
-
-            PersonSearchJobHelper.Complete(peopleSearchJobId);
 
             return true;
         }

@@ -73,56 +73,12 @@ namespace NameSearch.App.Tests.Mocks
         }
 
         /// <summary>
-        /// Gets the person search job.
-        /// </summary>
-        /// <returns></returns>
-        public static Models.Entities.PersonSearchJob GetPersonSearchJob()
-        {
-            var personSearchJob = new PersonSearchJob();
-            personSearchJob.PersonSearchRequests = GetPersonSearchRequests();
-            return personSearchJob;
-        }
-
-        /// <summary>
-        /// Gets the person search request.
-        /// </summary>
-        /// <returns></returns>
-        public static Models.Entities.PersonSearchRequest GetPersonSearchRequest()
-        {
-            return new PersonSearchRequest
-            {
-                Id = 1,
-                PersonSearchJobId = 1,
-                Name = "Omondi",
-                Address1 = "123 Smith Rd",
-                Address2 = "456",
-                City = "Dallas",
-                State = "TX",
-                Zip = "81201",
-                Country = "USA"
-            };
-        }
-
-        /// <summary>
-        /// Gets the person search requests.
-        /// </summary>
-        /// <returns></returns>
-        public static List<Models.Entities.PersonSearchRequest> GetPersonSearchRequests()
-        {
-            var personSearchRequest = new List<PersonSearchRequest>
-            {
-                GetPersonSearchRequest()
-            };
-            return personSearchRequest;
-        }
-
-        /// <summary>
         /// Gets the person search result.
         /// </summary>
         /// <returns></returns>
-        public static Models.Entities.PersonSearchResult GetPersonSearchResult()
+        public static Models.Entities.PersonSearch GetPersonSearchResult()
         {
-            return new PersonSearchResult
+            return new PersonSearch
             {
                 Data = GetExampleJsonData(),
                 HttpStatusCode = 200,
@@ -134,9 +90,9 @@ namespace NameSearch.App.Tests.Mocks
         /// Gets the person search results.
         /// </summary>
         /// <returns></returns>
-        public static List<Models.Entities.PersonSearchResult> GetPersonSearchResults()
+        public static List<Models.Entities.PersonSearch> GetPersonSearchResults()
         {
-            var personSearchResults = new List<PersonSearchResult>
+            var personSearchResults = new List<PersonSearch>
             {
                 GetPersonSearchResult()
             };
@@ -237,6 +193,12 @@ namespace NameSearch.App.Tests.Mocks
                 "Omondi",
                 "Kimani"
             };
+        }
+
+        //todo set this up with proper data
+        public static List<Search> GetSearches()
+        {
+            return new List<Search>();
         }
 
         #endregion Domain

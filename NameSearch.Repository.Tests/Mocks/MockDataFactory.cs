@@ -111,7 +111,7 @@ namespace NameSearch.Repository.Tests.Mocks
         {
             return new Person
             {
-                PersonSearchResultId = personSearchResultId,
+                PersonSearchId = personSearchResultId,
                 FirstName = "Duncan",
                 LastName = "Sultan",
                 Alias = "Sultan of Swing",
@@ -120,89 +120,13 @@ namespace NameSearch.Repository.Tests.Mocks
         }
 
         /// <summary>
-        /// Gets the person search job.
-        /// </summary>
-        /// <returns></returns>
-        public static PersonSearchJob GetPersonSearchJob()
-        {
-            return new PersonSearchJob();
-        }
-
-        /// <summary>
-        /// Gets the person search request.
-        /// </summary>
-        /// <param name="personSearchJobId">The person search job identifier.</param>
-        /// <returns></returns>
-        public static PersonSearchRequest GetPersonSearchRequest(long personSearchJobId)
-        {
-            return new PersonSearchRequest
-            {
-                PersonSearchJobId = personSearchJobId,
-                Name = "John Adams",
-                Address1 = "123 Smith",
-                Address2 = "5555",
-                City = "Plano",
-                State = "TX",
-                Zip = "77777",
-                Country = "US"
-            };
-        }
-
-        /// <summary>
-        /// Gets the person search requests.
-        /// </summary>
-        /// <param name="personSearchJobId">The person search job identifier.</param>
-        /// <returns></returns>
-        public static List<PersonSearchRequest> GetPersonSearchRequests(long personSearchJobId)
-        {
-            return new List<PersonSearchRequest>
-            {
-               new PersonSearchRequest
-                {
-                    PersonSearchJobId = personSearchJobId,
-                    Name = "John Adams",
-                    Address1 = "123 Smith",
-                    Address2 = "5555",
-                    City = "Plano",
-                    State  = "TX",
-                    Zip  = "77777",
-                    Country  = "US"
-                },
-                new PersonSearchRequest
-                {
-                    PersonSearchJobId = personSearchJobId,
-                    Name = "John Williamson",
-                    Address1 = "999 South St",
-                    Address2 = "12",
-                    City = "Fort Worth",
-                    State  = "TX",
-                    Zip  = "72277",
-                    Country  = "US"
-                },
-                new PersonSearchRequest
-                {
-                    PersonSearchJobId = personSearchJobId,
-                    Name = "John Hancock",
-                    Address1 = "456 Oak Dr",
-                    Address2 = "",
-                    City = "Denton",
-                    State  = "TX",
-                    Zip  = "77767",
-                    Country  = "US"
-                }
-            };
-        }
-
-        /// <summary>
         /// Gets the person search result.
         /// </summary>
-        /// <param name="personSearchRequestId">The person search job identifier.</param>
         /// <returns></returns>
-        public static PersonSearchResult GetPersonSearchResult(long personSearchRequestId)
+        public static PersonSearch GetPersonSearch()
         {
-            return new PersonSearchResult
+            return new PersonSearch
             {
-                PersonSearchRequestId = personSearchRequestId,
                 Data = GetExampleJsonData(),
                 Error = null,
                 Warnings = "Missing Input Name",
@@ -216,32 +140,29 @@ namespace NameSearch.Repository.Tests.Mocks
         /// </summary>
         /// <param name="personSearchRequestId">The person search job identifier.</param>
         /// <returns></returns>
-        public static List<PersonSearchResult> GetPersonSearchResults(long personSearchRequestId)
+        public static List<PersonSearch> GetPersonSearchResults(long personSearchRequestId)
         {
-            return new List<PersonSearchResult>
+            return new List<PersonSearch>
             {
-               new PersonSearchResult
+               new PersonSearch
                 {
-                    PersonSearchRequestId = personSearchRequestId,
-                    Data = GetExampleJsonData(),
+                      Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Missing Input Name",
                     HttpStatusCode = 200,
                     NumberOfResults = 1
                 },
-                new PersonSearchResult
+                new PersonSearch
                 {
-                    PersonSearchRequestId = personSearchRequestId,
-                    Data = GetExampleJsonData(),
+                                        Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Missing Input Address",
                     HttpStatusCode = 200,
                     NumberOfResults = 1
                 },
-                new PersonSearchResult
+                new PersonSearch
                 {
-                    PersonSearchRequestId = personSearchRequestId,
-                    Data = GetExampleJsonData(),
+                      Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Partial Address",
                     HttpStatusCode = 200,
@@ -249,7 +170,7 @@ namespace NameSearch.Repository.Tests.Mocks
                 }
             };
         }
-       
+
         /// <summary>
         /// Gets the phones.
         /// </summary>

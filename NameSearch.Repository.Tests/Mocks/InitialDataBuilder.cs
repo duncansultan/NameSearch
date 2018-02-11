@@ -13,19 +13,11 @@ namespace NameSearch.Repository.Tests.Mocks
         /// <param name="repository">The repository.</param>
         public static void Build(IEntityFrameworkRepository repository)
         {
-            var personSearchJob = MockDataFactory.GetPersonSearchJob();
-            repository.Create(personSearchJob);
+            var personSearch = MockDataFactory.GetPersonSearch();
+            repository.Create(personSearch);
             repository.Save();
 
-            var personSearchRequest = MockDataFactory.GetPersonSearchRequest(personSearchJob.Id);
-            repository.Create(personSearchRequest);
-            repository.Save();
-
-            var personSearchResult = MockDataFactory.GetPersonSearchResult(personSearchRequest.Id);
-            repository.Create(personSearchResult);
-            repository.Save();
-
-            var person = MockDataFactory.GetPerson(personSearchResult.Id);
+            var person = MockDataFactory.GetPerson(personSearch.Id);
             repository.Create(person);
             repository.Save();
 

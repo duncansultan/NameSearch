@@ -11,6 +11,7 @@ using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -149,12 +150,12 @@ namespace NameSearch.App.Commands
             this.Mapper = MapperFactory.Get();
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
 
-            
+
             //Default Value
             this.SearchWaitMs = 60000;
             var waitMs = Configuration.GetValue<string>("SearchSettings:WaitMs");
             int.TryParse(waitMs, out this.SearchWaitMs);
-            
+
 
             this.PeopleSearch = new PeopleSearch(Repository, FindPersonController, SerializerSettings, Mapper, Export, _resultOutputPath, SearchWaitMs);
         }
@@ -167,14 +168,14 @@ namespace NameSearch.App.Commands
         {
             var cancelAfterMs = 600000;
 
-            var searchCriteria = SearchCriteriaFactory.Get(_maxRuns, _city, _state, _zip);
-
             var names = Import.FromTxt(_namesFilePath);
+            var searchCriteria = SearchCriteriaFactory.Get(_maxRuns, _city, _state, _zip);
+            var searches = SearchesFactory.Get(searchCriteria, names);
 
             using (var cancellationTokenSource = new CancellationTokenSource(cancelAfterMs))
             {
                 var token = cancellationTokenSource.Token;
-                Task.Run(() => PeopleSearchTask(searchCriteria, names, token));
+                Task.Run(() => PeopleSearchTask(searches, token));
             }
 
             return 0;
@@ -183,10 +184,9 @@ namespace NameSearch.App.Commands
         /// <summary>
         /// Peoples the search task.
         /// </summary>
-        /// <param name="searchCriteria">The search criteria.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        private async Task PeopleSearchTask(SearchCriteria searchCriteria, IEnumerable<string> names, CancellationToken cancellationToken)
-            => await this.PeopleSearch.SearchAsync(searchCriteria, names, cancellationToken);
+        private async Task PeopleSearchTask(IEnumerable<Search> searches, CancellationToken cancellationToken)
+            => await this.PeopleSearch.SearchAsync(searches, cancellationToken);
     }
 }

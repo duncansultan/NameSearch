@@ -59,11 +59,10 @@ namespace NameSearch.App
         {
             #region Test args for debugging
 
-            //args = new string[2] { "greet", "duncan"};
-            //args = new string[2] { "exportpeople", @"C:\Users\dunca\Desktop\FindPeopleExport\export.csv" };
-            //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\FindPeopleJSON" };
+            //args = new string[2] { "exportpeople", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\export.csv" };
+            //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\export.csv" };
             //args = new string[2] { "importnames", @"C:\Users\dunca\Desktop\FindPeopleNames\names.csv" };
-            args = new string[7] { "search", "", "NC", "", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\SwahiliNames.A.csv", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch", "100" };
+            //args = new string[7] { "search", "", "NC", "", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\SwahiliNames.A.csv", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch", "100" };
 
             #endregion
 

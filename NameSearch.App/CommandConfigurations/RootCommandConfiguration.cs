@@ -15,7 +15,6 @@ namespace NameSearch.App.CommandConfigurations
         /// <param name="options">The options.</param>
         public static void Configure(CommandLineApplication app, CommandLineOptions options)
         {
-            app.Command("greet", c => GreetCommandConfiguration.Configure(c, options));
             app.Command("exportpeople", c => ExportPeopleCommandConfiguration.Configure(c, options));
             app.Command("importsearches", c => ImportSearchesCommandConfiguration.Configure(c, options));
             app.Command("search", c => SearchCommandConfiguration.Configure(c, options));

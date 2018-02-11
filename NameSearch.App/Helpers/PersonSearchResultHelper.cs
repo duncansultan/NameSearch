@@ -133,6 +133,7 @@ namespace NameSearch.App.Helpers
             var log = logger.With("personSearchResult", personSearchResult);
 
             var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             #region Deserialize JSON into Model
 

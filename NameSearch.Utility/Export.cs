@@ -86,7 +86,7 @@ namespace NameSearch.Utility
                 csv.WriteRecords(records);
             }
 
-            log.InformationEvent("ToCsv", "Saved {records} records successfully", records.Count());
+            log.InformationEvent("ToCsv", "Saved {records} records successfully to file {fullPath}", records.Count(), fullPath);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace NameSearch.Utility
                 json.WriteTo(writer);
             }
 
-            log.InformationEvent("ToJson", "Saved JSON with {tokens} tokens successfully", json.Count);
+            log.InformationEvent("ToJson", "Saved JSON with {tokens} tokens successfully to file {fullPath}", json.Count, fullPath);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace NameSearch.Utility
                 await json.WriteToAsync(writer, cancellationToken);
             }
 
-            log.InformationEvent("ToJsonAsync", "Saved JSON with {tokens} tokens successfully", json.Count);
+            log.InformationEvent("ToJsonAsync", "Saved JSON with {tokens} tokens successfully to file {fullPath}", json.Count,fullPath);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace NameSearch.Utility
                 textWriter.Write(text);
             }
 
-            log.InformationEvent("ToTxt", "Saved {records} text characters successfully", text.Length);
+            log.InformationEvent("ToTxt", "Saved {records} text characters successfully to file {fullPath}", text.Length, fullPath);
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace NameSearch.Utility
                 await textWriter.WriteAsync(text);
             }
 
-            log.InformationEvent("ToTxtAsync", "Saved {records} text characters successfully", text.Length);
+            log.InformationEvent("ToTxtAsync", "Saved {records} text characters successfully to file {fullPath}", text.Length, fullPath);
         }
 
         /// <summary>

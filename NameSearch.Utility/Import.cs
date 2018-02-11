@@ -64,12 +64,14 @@ namespace NameSearch.Utility
 
             if (!fileExists)
             {
-                log.ErrorEvent("FromJson", "File not found");
+                log.ErrorEvent("FromTxt", "File not found");
 
-                throw new FileNotFoundException("FromJson - File not found", fullPath);
+                throw new FileNotFoundException("FromTxt - File not found", fullPath);
             }
 
             var textLines = File.ReadAllLines(fullPath).ToList();
+
+            log.InformationEvent("FromTxt", "Imported {lines} lines successfully from file {fullPath}", textLines.Count(), fullPath);
 
             return textLines;
         }
@@ -93,12 +95,14 @@ namespace NameSearch.Utility
 
             if (!fileExists)
             {
-                log.ErrorEvent("FromJson", "File not found");
+                log.ErrorEvent("FromTxtAsync", "File not found");
 
-                throw new FileNotFoundException("FromJson - File not found", fullPath);
+                throw new FileNotFoundException("FromTxtAsync - File not found", fullPath);
             }
 
             var textLines = (await File.ReadAllLinesAsync(fullPath, cancellationToken)).ToList();
+
+            log.InformationEvent("FromTxtAsync", "Imported {lines} lines successfully from file {fullPath}", textLines.Count(), fullPath);
 
             return textLines;
         }
@@ -133,7 +137,7 @@ namespace NameSearch.Utility
             {
                 var records = csv.GetRecords<T>();
 
-                log.InformationEvent("FromCsv", "Imported {rows} rows successfully", records.Count());
+                log.InformationEvent("FromCsv", "Imported {rows} rows successfully from file {fullPath}", records.Count(), fullPath);
 
                 return records;
             }
@@ -167,7 +171,7 @@ namespace NameSearch.Utility
             {
                 JObject jObject = (JObject)JToken.ReadFrom(reader);
 
-                log.InformationEvent("FromJson", "Imported JObject with {tokens} tokens successfully", jObject.Count);
+                log.InformationEvent("FromJson", "Imported JObject with {tokens} tokens successfully from file {fullPath}", jObject.Count, fullPath);
 
                 return jObject;
             }
@@ -202,7 +206,7 @@ namespace NameSearch.Utility
             {
                 JObject jObject = (JObject)await JToken.ReadFromAsync(reader, cancellationToken);
 
-                log.InformationEvent("FromJsonAsync", "Imported JObject with {tokens} tokens successfully", jObject.Count);
+                log.InformationEvent("FromJsonAsync", "Imported JObject with {tokens} tokens successfully from file {fullPath}", jObject.Count, fullPath);
 
                 return jObject;
             }

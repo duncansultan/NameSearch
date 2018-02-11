@@ -140,19 +140,20 @@ namespace NameSearch.App
 
                 var result = options.Command.Run();
 
-                // Allow users to see output.  Prevent console closing on its own
-                Console.ReadLine();
-
                 return result;
             }
             catch (Exception ex)
             {
-                log.FatalEvent(ex, "Fatal Application Failure", null);
+                log.FatalEvent(ex, "Main", "Fatal Application Failure with message {message}", ex.Message);
                 throw;
             }
             finally
             {
+                log.InformationEvent("Main", "Application Ending");
                 Log.CloseAndFlush();
+
+                // Allow users to see output.  Prevent console closing on its own
+                Console.ReadLine();
             }
         }
     }

@@ -91,7 +91,7 @@ namespace NameSearch.Api.Controllers
 
             log.With("apiResponse", apiResponse);
 
-            log.InformationEvent("GetFindPerson", "Request completed in {ms}ms with HTTP Status Code {statusCode}", apiResponse.StatusCode, stopwatch.ElapsedMilliseconds);
+            log.InformationEvent("GetFindPerson", "Request completed in {ms}ms with HTTP Status Code {statusCode}", stopwatch.ElapsedMilliseconds, apiResponse.StatusCode);
 
             return apiResponse;
         }

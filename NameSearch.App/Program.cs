@@ -61,18 +61,20 @@ namespace NameSearch.App
 
             //args = new string[2] { "exportpeople", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\export.csv" };
             //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\export.csv" };
-            //args = new string[2] { "importnames", @"C:\Users\dunca\Desktop\FindPeopleNames\names.csv" };
             //args = new string[7] { "search", "", "NC", "", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\SwahiliNames.A.csv", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch", "100" };
 
             #endregion
 
             #region Configure Logging
 
+            var logsFolder = Path.Combine(Environment.CurrentDirectory, "logs");
+            Directory.CreateDirectory(logsFolder);
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
-                .WriteTo.RollingFile("namesearch-{Date}.log")
+                .WriteTo.RollingFile("logs/namesearch-{Date}.log")
                 .WriteTo.Console()
                 .CreateLogger();
 

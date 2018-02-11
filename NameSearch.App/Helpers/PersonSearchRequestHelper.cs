@@ -166,7 +166,7 @@ namespace NameSearch.App.Helpers
                 #region Save Entity to Database
 
                 Repository.Create(personSearchResult);
-                await Repository.SaveAsync();
+                Repository.Save();
 
                 #endregion Save Entity to Database
 
@@ -174,7 +174,7 @@ namespace NameSearch.App.Helpers
 
                 personSearchRequest.IsProcessed = true;
                 Repository.Update(personSearchRequest);
-                await Repository.SaveAsync();
+                Repository.Save();
 
                 #endregion Update PersonSearchRequest
 

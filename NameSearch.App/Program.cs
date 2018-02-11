@@ -51,6 +51,16 @@ namespace NameSearch.App
         public static JsonSerializerSettings SerializerSettings { set; get; }
 
         /// <summary>
+        /// The search results directory
+        /// </summary>
+        public static string SearchResultsDirectory;
+
+        /// <summary>
+        /// The export directory
+        /// </summary>
+        public static string ExportDirectory;
+
+        /// <summary>
         /// Main application entry point.
         /// </summary>
         /// <param name="args">The arguments.</param>
@@ -59,9 +69,9 @@ namespace NameSearch.App
         {
             #region Test args for debugging
 
-            //args = new string[2] { "exportpeople", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\export.csv" };
+            //args = new string[2] { "exportpeople" };
             //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\export.csv" };
-            //args = new string[7] { "search", "", "NC", "", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\SwahiliNames.A.csv", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch", "100" };
+            //args = new string[7] { "search", "", "NC", "", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\SwahiliNames.A.csv", "100" };
 
             #endregion
 
@@ -89,6 +99,16 @@ namespace NameSearch.App
                     .AddJsonFile("appsettings.json");
 
                 Configuration = builder.Build();
+
+                #region Create Directories
+
+                ExportDirectory = Path.Combine(Environment.CurrentDirectory, "Exports");
+                Directory.CreateDirectory(ExportDirectory);
+
+                SearchResultsDirectory = Path.Combine(Environment.CurrentDirectory, "SearchResults");
+                Directory.CreateDirectory(SearchResultsDirectory);
+
+                #endregion
 
                 #region Dependency Injection Container
 

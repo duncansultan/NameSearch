@@ -23,7 +23,7 @@ namespace NameSearch.App.CommandConfigurations
 
             command.OnExecute(() =>
             {
-                options.Command = new ExportPeopleCommand(fullPathArgument.Value, options);
+                options.Command = new ExportPeopleCommand(options);
 
                 return 0;
             });

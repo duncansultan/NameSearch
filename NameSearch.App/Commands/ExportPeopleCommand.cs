@@ -6,6 +6,8 @@ using NameSearch.Repository.Interfaces;
 using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
+using System;
+using System.IO;
 
 namespace NameSearch.App.Commands
 {
@@ -71,11 +73,9 @@ namespace NameSearch.App.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportPeopleCommand" /> class.
         /// </summary>
-        /// <param name="fullPath">The full path.</param>
         /// <param name="options">The options.</param>
-        public ExportPeopleCommand(string fullPath, CommandLineOptions options)
+        public ExportPeopleCommand(CommandLineOptions options)
         {
-            _fullPath = fullPath;
             _options = options;
 
             this.Repository = Program.Repository;
@@ -83,6 +83,8 @@ namespace NameSearch.App.Commands
             this.Export = new Export();
             this.Mapper = MapperFactory.Get();
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
+
+            _fullPath = Path.Combine(Program.ExportDirectory, $"PeopleExport-{DateTime.Now}.csv");
 
             this.ImportExport = new ImportExport(Repository, SerializerSettings, Mapper, Import, Export);
         }

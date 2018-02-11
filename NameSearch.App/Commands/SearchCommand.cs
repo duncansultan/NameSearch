@@ -129,9 +129,8 @@ namespace NameSearch.App.Commands
         /// <param name="state">The state.</param>
         /// <param name="zip">The zip.</param>
         /// <param name="namesFilePath">The names text file path.</param>
-        /// <param name="resultOutputPath">The temporary path.</param>
         /// <param name="options">The options.</param>
-        public SearchCommand(string maxRunsText, string city, string state, string zip, string namesFilePath, string resultOutputPath, CommandLineOptions options)
+        public SearchCommand(string maxRunsText, string city, string state, string zip, string namesFilePath, CommandLineOptions options)
         {
             int.TryParse(maxRunsText, out int maxRuns);
             _maxRuns = maxRuns;
@@ -139,7 +138,7 @@ namespace NameSearch.App.Commands
             _state = state;
             _zip = zip;
             _namesFilePath = namesFilePath;
-            _resultOutputPath = resultOutputPath;
+            _resultOutputPath = Program.SearchResultsDirectory;
             _options = options;
 
             this.Repository = Program.Repository;

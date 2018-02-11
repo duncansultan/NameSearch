@@ -38,7 +38,7 @@ namespace NameSearch.App.CommandConfigurations
 
             command.OnExecute(() =>
             {
-                options.Command = new SearchCommand(maxRunsArgument.Value, cityArgument.Value, stateArgument.Value, zipArgument.Value, namesFilePath.Value, resultOutputPath.Value, options);
+                options.Command = new SearchCommand(maxRunsArgument.Value, cityArgument.Value, stateArgument.Value, zipArgument.Value, namesFilePath.Value, options);
 
                 return 0;
             });

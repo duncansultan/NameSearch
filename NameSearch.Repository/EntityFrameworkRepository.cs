@@ -282,7 +282,7 @@ namespace NameSearch.Repository
                         try
                         {
                             var result = Context.SaveChanges();
-                            logger.DebugEvent("Save", "Result {result}", result);
+                            logger.DebugEvent("Save", " {result} entities affected", result);
                         }
                         catch (DbUpdateConcurrencyException ex)
                         {

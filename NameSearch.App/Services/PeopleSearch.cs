@@ -1,14 +1,19 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
+using NameSearch.Api.Controllers;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.App.Factories;
 using NameSearch.App.Helpers;
 using NameSearch.Extensions;
 using NameSearch.Models.Domain;
 using NameSearch.Repository.Interfaces;
+using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,9 +27,19 @@ namespace NameSearch.App.Services
         #region Dependencies
 
         /// <summary>
+        /// The export
+        /// </summary>
+        private readonly IExport Export;
+
+        /// <summary>
         /// The find person controller
         /// </summary>
         private readonly IFindPersonController FindPersonController;
+
+        /// <summary>
+        /// The import
+        /// </summary>
+        private readonly IImport Import;
 
         /// <summary>
         /// The logger
@@ -37,12 +52,19 @@ namespace NameSearch.App.Services
         private readonly IMapper Mapper;
 
         /// <summary>
+        /// The people search person helper
+        /// </summary>
+        private readonly PersonHelper PersonHelper;
+
+        private readonly IConfiguration Configuration;
+
+        /// <summary>
         /// The people search request helper
         /// </summary>
         private readonly PersonSearchRequestHelper PersonSearchRequestHelper;
 
         /// <summary>
-        /// The people search result helper
+        /// The person search result helper
         /// </summary>
         private readonly PersonSearchResultHelper PersonSearchResultHelper;
 
@@ -52,19 +74,14 @@ namespace NameSearch.App.Services
         private readonly IEntityFrameworkRepository Repository;
 
         /// <summary>
-        /// The serializer settings
-        /// </summary>
-        private readonly JsonSerializerSettings SerializerSettings;
-
-        /// <summary>
         /// The search wait ms
         /// </summary>
         private readonly int SearchWaitMs;
 
         /// <summary>
-        /// The result output path
+        /// The serializer settings
         /// </summary>
-        private readonly string ResultOutputPath;
+        private readonly JsonSerializerSettings SerializerSettings;
 
         #endregion Dependencies
 
@@ -72,29 +89,59 @@ namespace NameSearch.App.Services
         /// Initializes a new instance of the <see cref="PeopleFinder" /> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        /// <param name="findPersonController">The find person controller.</param>
-        /// <param name="serializerSettings">The serializer settings.</param>
-        /// <param name="mapper">The mapper.</param>
-        /// <param name="export">The export.</param>
-        /// <param name="resultOutputPath">The result output path.</param>
-        /// <param name="searchWaitMs">The search wait ms.</param>
+        /// <param name="configuration">The configuration.</param>
         public PeopleSearch(IEntityFrameworkRepository repository,
-            IFindPersonController findPersonController,
-            JsonSerializerSettings serializerSettings,
-            IMapper mapper,
-            IExport export,
-            string resultOutputPath,
-            int searchWaitMs)
+            IConfiguration configuration)
         {
             this.Repository = repository;
-            this.FindPersonController = findPersonController;
-            this.SerializerSettings = serializerSettings;
-            this.Mapper = mapper;
-            this.SearchWaitMs = searchWaitMs;
-            this.ResultOutputPath = resultOutputPath;
+            this.Configuration = configuration;
 
-            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, findPersonController, serializerSettings, mapper, export, this.ResultOutputPath);
-            this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, serializerSettings, mapper);
+            this.SerializerSettings = JsonSerializerSettingsFactory.Get();
+            this.Mapper = MapperFactory.Get();
+            this.Export = new Export();
+            this.Import = new Import();
+            this.FindPersonController = new FindPersonController(this.Configuration);
+
+            this.SearchWaitMs = 60000;
+            var waitMs = Configuration.GetValue<string>("SearchSettings:WaitMs");
+            int.TryParse(waitMs, out this.SearchWaitMs);
+
+            this.PersonHelper = new PersonHelper(repository);
+            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, this.FindPersonController, this.SerializerSettings, this.Mapper, this.Export);
+            this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, this.Mapper, this.SerializerSettings);
+        }
+
+        /// <summary>
+        /// Exports the people.
+        /// </summary>
+        /// <param name="fullPath">Name of the file.</param>
+        public void ExportToCsv(string fullPath)
+        {
+            var people = PersonHelper.GetPeople();
+            Export.ToCsv(people, fullPath, false);
+        }
+
+        /// <summary>
+        /// Imports the searches.
+        /// </summary>
+        /// <param name="folderPath">The folder path.</param>
+        public void ImportSearches(string folderPath)
+        {
+            foreach (string fullPath in Directory.EnumerateFiles(folderPath, "*.json", SearchOption.AllDirectories))
+            {
+                var fileName = Path.GetFileName(fullPath);
+                var jObject = Import.FromJson(fullPath);
+                var personSearch = PersonSearchResultHelper.Import(fileName, jObject);
+            }
+        }
+
+        /// <summary>
+        /// Processes the results.
+        /// </summary>
+        /// <param name="reprocess">if set to <c>true</c> [reprocess].</param>
+        public void ProcessResults(bool reprocess = false)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -104,29 +151,25 @@ namespace NameSearch.App.Services
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">searchCriteria</exception>
-        public async Task<bool> SearchAsync(IEnumerable<Search> searches, CancellationToken cancellationToken)
+        public async Task<bool> SearchAsync(IEnumerable<Search> searches, string resultOutputPath, CancellationToken cancellationToken)
         {
-            //ToDo Pass in a list of Search Criteria complete with names and loop through taht
             if (searches == null)
             {
                 throw new ArgumentNullException(nameof(searches));
             }
 
-            //todo loop by names
             int runs = 0;
             foreach (var search in searches)
             {
-                if (runs > search.Criteria.MaxRuns)
+                if (runs > search.MaxRuns)
                 {
-                    logger.InformationEvent("SearchAsync", "Search stopped after exceeding maximum of {maxRuns}", search.Criteria.MaxRuns);
+                    logger.InformationEvent("SearchAsync", "Search stopped after exceeding maximum of {maxRuns}", search.MaxRuns);
                     break;
                 }
 
-                var personSearch = await PersonSearchRequestHelper.SearchAsync(search, SearchWaitMs, cancellationToken);
+                var personSearch = await PersonSearchRequestHelper.SearchAsync(search, resultOutputPath, SearchWaitMs, cancellationToken);
 
                 logger.InformationEvent("SearchAsync", "Search number {run} returned {numberOfResults} results", runs, personSearch.NumberOfResults);
-
-                var people = PersonSearchResultHelper.Process(personSearch);
                 runs++;
             }
 

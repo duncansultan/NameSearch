@@ -1,20 +1,18 @@
 ﻿using NameSearch.App.Commands.Interfaces;
 using NameSearch.App.Services;
-using System;
-using System.IO;
 
 namespace NameSearch.App.Commands
 {
     /// <summary>
-    /// Export People Command
+    /// Import Searches Command
     /// </summary>
     /// <seealso cref="NameSearch.App.Commands.Interfaces.ICommand" />
-    public class ExportPeopleCommand : ICommand
+    public class ImportSearchesCommand : ICommand
     {
         /// <summary>
-        /// The name
+        /// The path
         /// </summary>
-        private readonly string _fullPath;
+        private readonly string _path;
 
         /// <summary>
         /// The options
@@ -31,14 +29,14 @@ namespace NameSearch.App.Commands
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExportPeopleCommand" /> class.
+        /// Initializes a new instance of the <see cref="ImportSearchesCommand" /> class.
         /// </summary>
+        /// <param name="path">The path.</param>
         /// <param name="options">The options.</param>
-        public ExportPeopleCommand(CommandLineOptions options)
+        public ImportSearchesCommand(string path, CommandLineOptions options)
         {
+            _path = path;
             _options = options;
-
-            _fullPath = Path.Combine(Program.ExportDirectory, $"PeopleExport-{DateTime.Now}.csv");
 
             this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
@@ -49,7 +47,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            this.PeopleSearch.ExportToCsv(_fullPath);
+            this.PeopleSearch.ImportSearches(_path);
 
             return 0;
         }

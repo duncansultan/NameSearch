@@ -1,16 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
-using NameSearch.Api.Controllers;
-using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.App.Builders;
-using NameSearch.App.Commands.Interfaces;
+﻿using NameSearch.App.Commands.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.App.Services;
 using NameSearch.Models.Domain;
-using NameSearch.Repository.Interfaces;
 using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

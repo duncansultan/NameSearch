@@ -1,26 +1,18 @@
-﻿using AutoMapper;
-using NameSearch.Api.Controllers;
-using NameSearch.App.Builders;
-using NameSearch.App.Commands.Interfaces;
-using NameSearch.App.Factories;
+﻿using NameSearch.App.Commands.Interfaces;
 using NameSearch.App.Services;
-using NameSearch.Repository.Interfaces;
-using NameSearch.Utility;
-using NameSearch.Utility.Interfaces;
-using Newtonsoft.Json;
 
 namespace NameSearch.App.Commands
 {
     /// <summary>
-    /// Import Searches Command
+    /// Process Search Results Command
     /// </summary>
     /// <seealso cref="NameSearch.App.Commands.Interfaces.ICommand" />
-    public class ImportSearchesCommand : ICommand
+    public class ProcessResultsCommand : ICommand
     {
         /// <summary>
-        /// The path
+        /// The is reprocess
         /// </summary>
-        private readonly string _path;
+        private readonly bool _isReprocess;
 
         /// <summary>
         /// The options
@@ -37,15 +29,13 @@ namespace NameSearch.App.Commands
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ImportSearchesCommand" /> class.
+        /// Initializes a new instance of the <see cref="ProcessResultsCommand"/> class.
         /// </summary>
-        /// <param name="path">The path.</param>
+        /// <param name="isReprocess">if set to <c>true</c> [is reprocess].</param>
         /// <param name="options">The options.</param>
-        public ImportSearchesCommand(string path, CommandLineOptions options)
+        public ProcessResultsCommand(bool isReprocess, CommandLineOptions options)
         {
-            _path = path;
-            _options = options;
-
+            this._isReprocess = isReprocess;
             this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
 
@@ -55,7 +45,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            this.PeopleSearch.ImportSearches(_path);
+            this.PeopleSearch.ProcessResults(_isReprocess);
 
             return 0;
         }

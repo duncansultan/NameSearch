@@ -70,9 +70,10 @@ namespace NameSearch.App
         {
             #region Test args for debugging
 
-            //args = new string[2] { "exportpeople" };
+            //args = new string[1] { "exportpeople" };
             //args = new string[2] { "importsearches", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\export.csv" };
             //args = new string[7] { "search", "", "NC", "", @"C:\Users\dunca\Desktop\RaleighSwahiliNamesSearch\SwahiliNames.A.csv", "100" };
+            //args = new string[2] { "processresults" "false" };
 
             #endregion
 

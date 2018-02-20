@@ -94,7 +94,7 @@ namespace NameSearch.Context
         /// <value>
         /// The person search results.
         /// </value>
-        public DbSet<PersonSearch> PersonSearchResults { get; set; }
+        public DbSet<PersonSearch> PersonSearches { get; set; }
 
         /// <summary>
         /// Override this method to further configure the model that was discovered by convention from the entity types

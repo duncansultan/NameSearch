@@ -19,7 +19,7 @@ namespace NameSearch.App.Tests.Factories
         public void Get_ValidInput_ReturnPeople()
         {
             // Arrange
-            var personEntity = MockDataFactory.GetTestPerson();
+            var personEntity = MockDataFactory.GetPerson();
             // Act
             var result = PeopleFactory.Get(personEntity).ToList();
             // Assert

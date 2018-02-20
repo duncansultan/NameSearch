@@ -19,15 +19,6 @@ namespace NameSearch.App.Commands
         /// </summary>
         private readonly CommandLineOptions _options;
 
-        #region Dependencies
-
-        /// <summary>
-        /// The import export
-        /// </summary>
-        private readonly PeopleSearch PeopleSearch;
-
-        #endregion
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessResultsCommand"/> class.
         /// </summary>
@@ -35,17 +26,18 @@ namespace NameSearch.App.Commands
         /// <param name="options">The options.</param>
         public ProcessResultsCommand(bool isReprocess, CommandLineOptions options)
         {
+            _options = options;
+
             this._isReprocess = isReprocess;
-            this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
 
         /// <summary>
         /// Runs this instance.
         /// </summary>
         /// <returns></returns>
-        public int Run()
+        public int Run(IPeopleSearchService peopleSearchService)
         {
-            this.PeopleSearch.ProcessResults(_isReprocess);
+            peopleSearchService.ProcessResults(_isReprocess);
 
             return 0;
         }

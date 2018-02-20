@@ -1,5 +1,6 @@
 ﻿using McMaster.Extensions.CommandLineUtils;
 using NameSearch.App.Commands.Interfaces;
+using NameSearch.App.Services;
 
 namespace NameSearch.App.Commands
 {
@@ -27,7 +28,7 @@ namespace NameSearch.App.Commands
         /// Runs this instance.
         /// </summary>
         /// <returns></returns>
-        public int Run()
+        public int Run(IPeopleSearchService peopleSearchService)
         {
             _app.ShowHelp();
 

@@ -76,7 +76,7 @@ namespace NameSearch.App.Tests.Mocks
         /// Gets the person search result.
         /// </summary>
         /// <returns></returns>
-        public static Models.Entities.PersonSearch GetPersonSearchResult()
+        public static PersonSearch GetPersonSearch()
         {
             return new PersonSearch
             {
@@ -90,11 +90,11 @@ namespace NameSearch.App.Tests.Mocks
         /// Gets the person search results.
         /// </summary>
         /// <returns></returns>
-        public static List<Models.Entities.PersonSearch> GetPersonSearchResults()
+        public static List<PersonSearch> GetPersonSearches()
         {
             var personSearchResults = new List<PersonSearch>
             {
-                GetPersonSearchResult()
+                GetPersonSearch()
             };
             return personSearchResults;
         }
@@ -103,11 +103,39 @@ namespace NameSearch.App.Tests.Mocks
         /// Gets the test person.
         /// </summary>
         /// <returns></returns>
-        public static Models.Entities.Person GetTestPerson()
+        public static Models.Entities.Person GetPerson()
         {
-            var personEntity = new Models.Entities.Person();
-            personEntity.Addresses = GetAddresses();
-            return personEntity;
+            return new Models.Entities.Person
+            {
+                Addresses = GetAddresses(),
+                //Phones = GetPhones(),
+                //Associates = GetAssociates()
+            };
+        }
+
+        public static List<Models.Entities.Person> GetPeople()
+        {
+            return new List<Models.Entities.Person>()
+            {
+                new Models.Entities.Person
+                {
+                    Addresses = GetAddresses(),
+                    //Phones = GetPhones(),
+                    //Associates = GetAssociates()
+                },
+                new Models.Entities.Person
+                {
+                    Addresses = GetAddresses(),
+                    //Phones = GetPhones(),
+                    //Associates = GetAssociates()
+                },
+                new Models.Entities.Person
+                {
+                    Addresses = GetAddresses(),
+                    //Phones = GetPhones(),
+                    //Associates = GetAssociates()
+                }
+            };
         }
 
         #endregion Entities
@@ -195,10 +223,47 @@ namespace NameSearch.App.Tests.Mocks
             };
         }
 
-        //todo set this up with proper data
+        /// <summary>
+        /// Gets the search.
+        /// </summary>
+        /// <returns></returns>
+        public static Search GetSearch()
+        {
+            return new Search
+            {
+                Name = "Mwangi",
+                MaxRuns = 10,
+                Criteria = GetTestSearchCriteria()
+            };
+        }
+
+        /// <summary>
+        /// Gets the searches.
+        /// </summary>
+        /// <returns></returns>
         public static List<Search> GetSearches()
         {
-            return new List<Search>();
+            return new List<Search>
+            {
+                new Search
+                {
+                    Name = "Mwangi",
+                    MaxRuns = 10,
+                    Criteria = GetTestSearchCriteria()
+                },
+                new Search
+                {
+                    Name = "Omondi",
+                    MaxRuns = 10,
+                    Criteria = GetTestSearchCriteria()
+                },
+                new Search
+                {
+                    Name = "Kimani",
+                    MaxRuns = 10,
+                    Criteria = GetTestSearchCriteria()
+                }
+            };
         }
 
         #endregion Domain

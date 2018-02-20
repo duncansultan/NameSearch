@@ -61,6 +61,15 @@ namespace NameSearch.App.Factories
                     .ForMember(x => x.ModifiedDateTime, opt => opt.Ignore())
                     .ForMember(x => x.PhoneNumber, m => m.MapFrom(a => a.PhoneNumber))
                     .ReverseMap();
+                cfg.CreateMap<Models.Domain.Search, Models.Domain.Api.Request.Person>()
+                    .ForMember(x => x.Name, m => m.MapFrom(a => a.Name))
+                    .ForMember(x => x.Address1, m => m.MapFrom(a => a.Criteria.Address1))
+                    .ForMember(x => x.Address2, m => m.MapFrom(a => a.Criteria.Address2))
+                    .ForMember(x => x.City, m => m.MapFrom(a => a.Criteria.City))
+                    .ForMember(x => x.State, m => m.MapFrom(a => a.Criteria.State))
+                    .ForMember(x => x.Zip, m => m.MapFrom(a => a.Criteria.Zip))
+                    .ForMember(x => x.Country, m => m.MapFrom(a => a.Criteria.Country))
+                    .ReverseMap();
             });
 
             var mapper = new Mapper(config);

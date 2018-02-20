@@ -21,15 +21,6 @@ namespace NameSearch.App.Commands
         /// </summary>
         private readonly CommandLineOptions _options;
 
-        #region Dependencies
-
-        /// <summary>
-        /// The import export
-        /// </summary>
-        private readonly PeopleSearch PeopleSearch;
-
-        #endregion
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportPeopleCommand" /> class.
         /// </summary>
@@ -39,17 +30,15 @@ namespace NameSearch.App.Commands
             _options = options;
 
             _fullPath = Path.Combine(Program.ExportDirectory, $"PeopleExport-{DateTime.Now}.csv");
-
-            this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
 
         /// <summary>
         /// Runs this instance.
         /// </summary>
         /// <returns></returns>
-        public int Run()
+        public int Run(IPeopleSearchService peopleSearchService)
         {
-            this.PeopleSearch.ExportToCsv(_fullPath);
+            peopleSearchService.ExportToCsv(_fullPath);
 
             return 0;
         }

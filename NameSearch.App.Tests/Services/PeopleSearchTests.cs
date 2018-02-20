@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.App.Builders;
 using NameSearch.App.Factories;
 using NameSearch.App.Services;
 using NameSearch.App.Tests.Mocks;
 using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -44,7 +45,7 @@ namespace NameSearch.App.Tests.Services
         /// <summary>
         /// The people search
         /// </summary>
-        private readonly PeopleSearch PeopleSearch;
+        private readonly PeopleSearchService PeopleSearch;
 
         /// <summary>
         /// The serializer settings
@@ -63,9 +64,13 @@ namespace NameSearch.App.Tests.Services
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
             this.Mapper = MapperFactory.Get();
             this.MockExport = MockExportFactory.Get();
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false)
+                .Build();
 
             //todo
-            this.PeopleSearch = new PeopleSearch(MockRepository.Object, null);
+            //this.PeopleSearch = new PeopleSearchService(MockRepository.Object, configuration, this.MockFindPersonController.Object);
         }
 
         /// <summary>

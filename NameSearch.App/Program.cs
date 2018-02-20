@@ -2,12 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NameSearch.App.Builders;
+using NameSearch.Api.Controllers;
+using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Factories;
+using NameSearch.App.Helpers;
+using NameSearch.App.Helpers.Interfaces;
+using NameSearch.App.Services;
 using NameSearch.Context;
 using NameSearch.Extensions;
 using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
+using NameSearch.Utility;
+using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using Serilog;
 using Serilog.Events;
@@ -22,35 +28,6 @@ namespace NameSearch.App
     /// </summary>
     public class Program
     {
-        /// <summary>
-        /// Gets or sets the repository.
-        /// </summary>
-        /// <value>
-        /// The repository.
-        /// </value>
-        public static IEntityFrameworkRepository Repository { set; get; }
-        /// <summary>
-        /// Gets or sets the configuration.
-        /// </summary>
-        /// <value>
-        /// The configuration.
-        /// </value>
-        public static IConfiguration Configuration { set; get; }
-        /// <summary>
-        /// Gets or sets the mapper.
-        /// </summary>
-        /// <value>
-        /// The mapper.
-        /// </value>
-        public static IMapper Mapper { set; get; }
-        /// <summary>
-        /// Gets or sets the serializer settings.
-        /// </summary>
-        /// <value>
-        /// The serializer settings.
-        /// </value>
-        public static JsonSerializerSettings SerializerSettings { set; get; }
-
         /// <summary>
         /// The search results directory
         /// </summary>
@@ -100,7 +77,7 @@ namespace NameSearch.App
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json");
 
-                Configuration = builder.Build();
+                var configuration = builder.Build();
 
                 #region Create Directories
 
@@ -117,6 +94,7 @@ namespace NameSearch.App
                 // use Dependency injection in console app https://andrewlock.net/using-dependency-injection-in-a-net-core-console-application/
                 // add the framework services
                 var services = new ServiceCollection()
+                    .AddSingleton<IConfiguration>(configuration)
                     .AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true))
                     .AddDbContext<ApplicationDbContext>(optionsBuilder => optionsBuilder.UseSqlite("Data Source=blog.db"))
                     .AddTransient<IMapper, IMapper>((ctx) =>
@@ -127,6 +105,13 @@ namespace NameSearch.App
                     {
                         return JsonSerializerSettingsFactory.Get();
                     })
+                    .AddTransient<IExport, Export>()
+                    .AddTransient<IImport, Import>()
+                    .AddTransient<IFindPersonController, FindPersonController>()
+                    .AddTransient<IPersonHelper, PersonHelper>()
+                    .AddTransient<IPersonSearchRequestHelper, PersonSearchRequestHelper>()
+                    .AddTransient<IPersonSearchResultHelper, PersonSearchResultHelper>()
+                    .AddTransient<IPeopleSearchService, PeopleSearchService>()
                     .AddScoped<IEntityFrameworkRepository, EntityFrameworkRepository>();
 
                 services.AddMvc();
@@ -145,10 +130,9 @@ namespace NameSearch.App
                     config.Populate(services);
                 });
 
-                //Set static instances
-                Repository = container.GetInstance<IEntityFrameworkRepository>();
-                Mapper = container.GetInstance<IMapper>();
-                SerializerSettings = container.GetInstance<JsonSerializerSettings>();
+                var peopleSearchService = container.GetInstance<IPeopleSearchService>();
+
+                log.DebugEvent("Main", "Dependency Injection Container configuration complete");
 
                 #endregion Dependency Injection Container
 
@@ -162,7 +146,7 @@ namespace NameSearch.App
                     return 1;
                 }
 
-                var result = options.Command.Run();
+                var result = options.Command.Run(peopleSearchService);
 
                 return result;
             }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
-using NameSearch.App.Builders;
 using NameSearch.App.Factories;
+using NameSearch.App.Helpers.Interfaces;
 using NameSearch.Extensions;
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
@@ -21,7 +21,7 @@ namespace NameSearch.App.Helpers
     /// <summary>
     /// Run Person Search
     /// </summary>
-    public class PersonSearchRequestHelper
+    public class PersonSearchRequestHelper : IPersonSearchRequestHelper
     {
         #region Dependencies
 
@@ -48,7 +48,7 @@ namespace NameSearch.App.Helpers
         /// <summary>
         /// The person search result builder
         /// </summary>
-        private readonly PersonSearchResultBuilder PersonSearchResultBuilder;
+        private readonly PersonSearchResultFactory PersonSearchResultBuilder;
 
         /// <summary>
         /// The repository
@@ -79,7 +79,7 @@ namespace NameSearch.App.Helpers
             this.FindPersonController = findPersonController;
             this.Mapper = mapper;
             this.Export = export;
-            this.PersonSearchResultBuilder = new PersonSearchResultBuilder(serializerSettings);
+            this.PersonSearchResultBuilder = new PersonSearchResultFactory(serializerSettings);
         }
 
         /// <summary>

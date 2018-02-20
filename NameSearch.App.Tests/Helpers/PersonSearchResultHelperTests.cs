@@ -55,17 +55,17 @@ namespace NameSearch.App.Tests.Helpers
             Assert.IsType<PersonSearch>(result);
             Assert.NotNull(result);
             MockRepository.Verify(c => c.Create(It.IsAny<PersonSearch>()), Times.Once);
-            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(3));
+            MockRepository.Verify(c => c.Save(), Times.Once);
         }
 
         /// <summary>
         /// Processes the valid input create person.
         /// </summary>
         [Fact]
-        public void Process_ValidInput_CreatePerson()
+        public void Process_ValidInput_ConvertSearchesToPeople()
         {
             //Arrange
-            var personSearch = MockDataFactory.GetPersonSearchResult();
+            var personSearch = MockDataFactory.GetPersonSearch();
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
 
@@ -75,7 +75,7 @@ namespace NameSearch.App.Tests.Helpers
             //Assert
             Assert.IsAssignableFrom<IEnumerable<Person>>(result);
             MockRepository.Verify(c => c.Create(It.IsAny<Person>()), Times.Exactly(result.Count()));
-            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(result.Count()));
+            MockRepository.Verify(c => c.Save(), Times.Once);
         }
     }
 }

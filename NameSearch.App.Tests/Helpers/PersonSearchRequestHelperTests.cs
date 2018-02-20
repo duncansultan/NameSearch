@@ -62,19 +62,19 @@ namespace NameSearch.App.Tests.Helpers
         public async Task SearchAsync_ValidInput_CreatePersonSearchResult()
         {
             // Arrange
-            var resultOutputPath = "";
+            var resultOutputPath = @"C:\MockOutputPath\";
             var searchWaitMs = 6000;
 
             // Act
             var cancellationToken = new CancellationToken();
-            var search = new Search();
+            var search = MockDataFactory.GetSearch();
             var result = await PersonSearchRequestHelper.SearchAsync(search, resultOutputPath, searchWaitMs, cancellationToken);
 
             // Assert
             Assert.IsType<PersonSearch>(result);
 
             MockRepository.Verify(c => c.Create(It.IsAny<PersonSearch>()), Times.Once);
-            MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(2));
+            MockRepository.Verify(c => c.Save(), Times.Once);
             MockFindPersonController.Verify(c => c.GetFindPerson(It.IsAny<Models.Domain.Api.Request.Person>()), Times.Once);
             MockExport.Verify(c => c.ToJsonAsync(It.IsAny<JObject>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
         }

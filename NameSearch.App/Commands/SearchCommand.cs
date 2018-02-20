@@ -54,11 +54,6 @@ namespace NameSearch.App.Commands
         #region Dependencies
 
         /// <summary>
-        /// The people search
-        /// </summary>
-        private readonly PeopleSearch PeopleSearch;
-
-        /// <summary>
         /// The import
         /// </summary>
         private readonly IImport Import;
@@ -86,14 +81,13 @@ namespace NameSearch.App.Commands
             _options = options;
 
             this.Import = new Import();
-            this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
 
         /// <summary>
         /// Runs this instance.
         /// </summary>
         /// <returns></returns>
-        public int Run()
+        public int Run(IPeopleSearchService peopleSearchService)
         {
             var cancelAfterMs = 600000;
 
@@ -104,7 +98,7 @@ namespace NameSearch.App.Commands
             using (var cancellationTokenSource = new CancellationTokenSource(cancelAfterMs))
             {
                 var token = cancellationTokenSource.Token;
-                Task.Run(() => PeopleSearchTask(searches, _resultOutputPath, token));
+                Task.Run(() => PeopleSearchTask(peopleSearchService, searches, _resultOutputPath, token));
             }
 
             return 0;
@@ -113,11 +107,12 @@ namespace NameSearch.App.Commands
         /// <summary>
         /// Peoples the search task.
         /// </summary>
+        /// <param name="peopleSearchService">The people search service.</param>
         /// <param name="searches">The searches.</param>
         /// <param name="resultOutputPath">The result output path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        private async Task PeopleSearchTask(IEnumerable<Search> searches, string resultOutputPath, CancellationToken cancellationToken)
-            => await this.PeopleSearch.SearchAsync(searches, resultOutputPath, cancellationToken);
+        private async Task PeopleSearchTask(IPeopleSearchService peopleSearchService, IEnumerable<Search> searches, string resultOutputPath, CancellationToken cancellationToken)
+            => await peopleSearchService.SearchAsync(searches, resultOutputPath, cancellationToken);
     }
 }

@@ -2,12 +2,12 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace NameSearch.App.Builders
+namespace NameSearch.App.Factories
 {
     /// <summary>
     /// Factory to Create Search Result Entity from JObject
     /// </summary>
-    public class PersonSearchResultBuilder
+    public class PersonSearchResultFactory
     {
         /// <summary>
         /// The serializer settings
@@ -15,10 +15,10 @@ namespace NameSearch.App.Builders
         private JsonSerializerSettings SerializerSettings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PersonSearchResultBuilder"/> class.
+        /// Initializes a new instance of the <see cref="PersonSearchResultFactory"/> class.
         /// </summary>
         /// <param name="serializerSettings">The serializer settings.</param>
-        public PersonSearchResultBuilder(JsonSerializerSettings serializerSettings)
+        public PersonSearchResultFactory(JsonSerializerSettings serializerSettings)
         {
             this.SerializerSettings = serializerSettings;
         }

@@ -19,15 +19,6 @@ namespace NameSearch.App.Commands
         /// </summary>
         private readonly CommandLineOptions _options;
 
-        #region Dependencies
-
-        /// <summary>
-        /// The import export
-        /// </summary>
-        private readonly PeopleSearch PeopleSearch;
-
-        #endregion
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportSearchesCommand" /> class.
         /// </summary>
@@ -37,17 +28,15 @@ namespace NameSearch.App.Commands
         {
             _path = path;
             _options = options;
-
-            this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
 
         /// <summary>
         /// Runs this instance.
         /// </summary>
         /// <returns></returns>
-        public int Run()
+        public int Run(IPeopleSearchService peopleSearchService)
         {
-            this.PeopleSearch.ImportSearches(_path);
+            peopleSearchService.ImportSearches(_path);
 
             return 0;
         }

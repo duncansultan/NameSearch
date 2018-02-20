@@ -1,4 +1,5 @@
 ﻿using NameSearch.App.Factories;
+using NameSearch.App.Helpers.Interfaces;
 using NameSearch.Repository.Interfaces;
 using Serilog;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace NameSearch.App.Helpers
     /// <summary>
     /// Person Helper
     /// </summary>
-    public class PersonHelper
+    public class PersonHelper : IPersonHelper
     {
         #region Dependencies
 

@@ -1,7 +1,5 @@
-﻿using NameSearch.App.Builders;
-using NameSearch.App.Factories;
+﻿using NameSearch.App.Factories;
 using NameSearch.App.Tests.Mocks;
-using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using System.Net;
 using Xunit;
@@ -11,17 +9,17 @@ namespace NameSearch.App.Tests.Factories
     /// <summary>
     /// Unit tests for PersonSearchResultBuilder
     /// </summary>
-    public class PersonSearchResultBuilderTests
+    public class PersonSearchResultFactoryTests
     {
         /// <summary>
         /// The person search result builder
         /// </summary>
-        private readonly PersonSearchResultBuilder PersonSearchResultBuilder;
+        private readonly PersonSearchResultFactory PersonSearchResultBuilder;
 
-        public PersonSearchResultBuilderTests()
+        public PersonSearchResultFactoryTests()
         {
             var serializerSettings = JsonSerializerSettingsFactory.Get();
-            this.PersonSearchResultBuilder = new PersonSearchResultBuilder(serializerSettings);
+            this.PersonSearchResultBuilder = new PersonSearchResultFactory(serializerSettings);
         }
 
         /// <summary>
@@ -31,7 +29,7 @@ namespace NameSearch.App.Tests.Factories
         public void Create_ValidInput_ReturnSearchResult()
         {
             // Arrange
-            var search = new Search();
+            var search = MockDataFactory.GetSearch();
             var httpStatusCode = (int)HttpStatusCode.OK;
             var jObject = MockDataFactory.GetExampleJObject();
 

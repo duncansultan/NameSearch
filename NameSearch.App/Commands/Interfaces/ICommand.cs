@@ -1,4 +1,6 @@
-﻿namespace NameSearch.App.Commands.Interfaces
+﻿using NameSearch.App.Services;
+
+namespace NameSearch.App.Commands.Interfaces
 {
     /// <summary>
     /// Console Application Command Interface
@@ -9,6 +11,6 @@
         /// Runs this instance.
         /// </summary>
         /// <returns></returns>
-        int Run();
+        int Run(IPeopleSearchService peopleSearchService);
     }
 }

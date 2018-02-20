@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using NameSearch.App.Builders;
+using NameSearch.App.Factories;
+using NameSearch.App.Helpers.Interfaces;
 using NameSearch.Extensions;
 using NameSearch.Models.Entities;
 using NameSearch.Repository.Interfaces;
@@ -13,9 +14,9 @@ using System.Diagnostics;
 namespace NameSearch.App.Helpers
 {
     /// <summary>
-    /// Run Person Search
+    /// Person Search Result Helper
     /// </summary>
-    public class PersonSearchResultHelper
+    public class PersonSearchResultHelper : IPersonSearchResultHelper
     {
         #region Dependencies
 
@@ -30,14 +31,14 @@ namespace NameSearch.App.Helpers
         private readonly IMapper Mapper;
 
         /// <summary>
-        /// The person entities builder
+        /// The person entities factory
         /// </summary>
-        private readonly PersonEntitiesBuilder PersonEntitiesBuilder;
+        private readonly PersonEntitiesFactory PersonEntitiesFactory;
 
         /// <summary>
-        /// The person search result builder
+        /// The person search result factory
         /// </summary>
-        private readonly PersonSearchResultBuilder PersonSearchResultBuilder;
+        private readonly PersonSearchResultFactory PersonSearchResultFactory;
 
         /// <summary>
         /// The repository
@@ -64,8 +65,8 @@ namespace NameSearch.App.Helpers
             this.Repository = repository;
             this.SerializerSettings = serializerSettings;
             this.Mapper = mapper;
-            this.PersonEntitiesBuilder = new PersonEntitiesBuilder(mapper, serializerSettings);
-            this.PersonSearchResultBuilder = new PersonSearchResultBuilder(serializerSettings);
+            this.PersonEntitiesFactory = new PersonEntitiesFactory(mapper, serializerSettings);
+            this.PersonSearchResultFactory = new PersonSearchResultFactory(serializerSettings);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace NameSearch.App.Helpers
 
             #region Create PersonSearchResult Entity
 
-            var personSearch = PersonSearchResultBuilder.Create(fileName, jObject);
+            var personSearch = PersonSearchResultFactory.Create(fileName, jObject);
 
             log.With("PersonSearchResult", personSearch);
 
@@ -119,7 +120,7 @@ namespace NameSearch.App.Helpers
         /// <param name="personSearch">The person search result.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">personSearch</exception>
-        public IEnumerable<Models.Entities.Person> Process(PersonSearch personSearch)
+        public IEnumerable<Person> Process(PersonSearch personSearch)
         {
             if (personSearch == null)
             {
@@ -132,7 +133,7 @@ namespace NameSearch.App.Helpers
 
             stopwatch.Start();
 
-            var personEntities = PersonEntitiesBuilder.Get(personSearch);
+            var personEntities = PersonEntitiesFactory.Get(personSearch);
 
             log.DebugEvent("Process", "Converted PersonSearch to PersonEntities after {ms}ms", stopwatch.ElapsedMilliseconds);
 
@@ -150,7 +151,7 @@ namespace NameSearch.App.Helpers
         /// </summary>
         /// <param name="personEntities">The person entities.</param>
         /// <exception cref="ArgumentNullException">personEntities</exception>
-        private void SavePeople(IEnumerable<Models.Entities.Person> personEntities)
+        private void SavePeople(IEnumerable<Person> personEntities)
         {
             if (personEntities == null)
             {

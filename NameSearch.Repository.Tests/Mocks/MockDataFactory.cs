@@ -1,5 +1,4 @@
 ﻿using NameSearch.Models.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace NameSearch.Repository.Tests.Mocks
@@ -109,13 +108,18 @@ namespace NameSearch.Repository.Tests.Mocks
         /// <returns></returns>
         public static Person GetPerson(long personSearchResultId)
         {
+            var id = 100;
             return new Person
             {
+                Id = id,
                 PersonSearchId = personSearchResultId,
                 FirstName = "Duncan",
                 LastName = "Sultan",
                 Alias = "Sultan of Swing",
-                AgeRange = "22-33"
+                AgeRange = "22-33",
+                Associates = GetAssociates(id),
+                Addresses = GetAddresses(id),
+                Phones = GetPhones(id)
             };
         }
 
@@ -127,6 +131,12 @@ namespace NameSearch.Repository.Tests.Mocks
         {
             return new PersonSearch
             {
+                Name = "Smith",
+                Address1 = "123 Smith Rd",
+                Address2 = "1234",
+                City = "Plano",
+                State = "TX",
+                Zip = "75093",
                 Data = GetExampleJsonData(),
                 Error = null,
                 Warnings = "Missing Input Name",
@@ -136,17 +146,22 @@ namespace NameSearch.Repository.Tests.Mocks
         }
 
         /// <summary>
-        /// Gets the person search results.
+        /// Gets the person searches.
         /// </summary>
-        /// <param name="personSearchRequestId">The person search job identifier.</param>
+        /// <param name="personSearchRequestId">The person search request identifier.</param>
         /// <returns></returns>
-        public static List<PersonSearch> GetPersonSearchResults(long personSearchRequestId)
+        public static List<PersonSearch> GetPersonSearches(long personSearchRequestId)
         {
             return new List<PersonSearch>
             {
                new PersonSearch
                 {
-                      Data = GetExampleJsonData(),
+                    Address1 = "123 Smith Rd",
+                    Address2 = "1234",
+                    City = "Plano",
+                    State = "TX",
+                    Zip = "75093",
+                    Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Missing Input Name",
                     HttpStatusCode = 200,
@@ -154,7 +169,12 @@ namespace NameSearch.Repository.Tests.Mocks
                 },
                 new PersonSearch
                 {
-                                        Data = GetExampleJsonData(),
+                    Address1 = "456 Oak St",
+                    Address2 = "1234",
+                    City = "Austin",
+                    State = "TX",
+                    Zip = "12346",
+                    Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Missing Input Address",
                     HttpStatusCode = 200,
@@ -162,7 +182,12 @@ namespace NameSearch.Repository.Tests.Mocks
                 },
                 new PersonSearch
                 {
-                      Data = GetExampleJsonData(),
+                    Address1 = "999 Cr 111",
+                    Address2 = "1234",
+                    City = "Wylie",
+                    State = "TX",
+                    Zip = "75090",
+                    Data = GetExampleJsonData(),
                     Error = null,
                     Warnings = "Partial Address",
                     HttpStatusCode = 200,

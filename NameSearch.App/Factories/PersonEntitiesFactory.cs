@@ -3,12 +3,12 @@ using NameSearch.Models.Entities;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace NameSearch.App.Builders
+namespace NameSearch.App.Factories
 {
     /// <summary>
-    /// Person Entities Builder
+    /// Person Entities Factory
     /// </summary>
-    public class PersonEntitiesBuilder
+    public class PersonEntitiesFactory
     {
         /// <summary>
         /// The mapper
@@ -25,7 +25,7 @@ namespace NameSearch.App.Builders
         /// </summary>
         /// <param name="mapper">The mapper.</param>
         /// <param name="serializerSettings">The serializer settings.</param>
-        public PersonEntitiesBuilder(IMapper mapper, JsonSerializerSettings serializerSettings)
+        public PersonEntitiesFactory(IMapper mapper, JsonSerializerSettings serializerSettings)
         {
             this.Mapper = mapper;
             this.SerializerSettings = serializerSettings;

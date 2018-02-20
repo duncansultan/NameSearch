@@ -4,6 +4,7 @@ using NameSearch.Api.Controllers;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.App.Helpers;
+using NameSearch.App.Helpers.Interfaces;
 using NameSearch.Extensions;
 using NameSearch.Models.Domain;
 using NameSearch.Repository.Interfaces;
@@ -22,7 +23,7 @@ namespace NameSearch.App.Services
     /// <summary>
     /// Run Searches to Find People
     /// </summary>
-    public class PeopleSearch
+    public class PeopleSearchService : IPeopleSearchService
     {
         #region Dependencies
 
@@ -44,44 +45,32 @@ namespace NameSearch.App.Services
         /// <summary>
         /// The logger
         /// </summary>
-        private readonly ILogger logger = Log.Logger.ForContext<PeopleSearch>();
-
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper Mapper;
+        private readonly ILogger logger = Log.Logger.ForContext<PeopleSearchService>();
 
         /// <summary>
         /// The people search person helper
         /// </summary>
-        private readonly PersonHelper PersonHelper;
+        private readonly IPersonHelper PersonHelper;
 
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly IConfiguration Configuration;
 
         /// <summary>
         /// The people search request helper
         /// </summary>
-        private readonly PersonSearchRequestHelper PersonSearchRequestHelper;
+        private readonly IPersonSearchRequestHelper PersonSearchRequestHelper;
 
         /// <summary>
         /// The person search result helper
         /// </summary>
-        private readonly PersonSearchResultHelper PersonSearchResultHelper;
-
-        /// <summary>
-        /// The repository
-        /// </summary>
-        private readonly IEntityFrameworkRepository Repository;
+        private readonly IPersonSearchResultHelper PersonSearchResultHelper;
 
         /// <summary>
         /// The search wait ms
         /// </summary>
         private readonly int SearchWaitMs;
-
-        /// <summary>
-        /// The serializer settings
-        /// </summary>
-        private readonly JsonSerializerSettings SerializerSettings;
 
         #endregion Dependencies
 
@@ -90,25 +79,27 @@ namespace NameSearch.App.Services
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="configuration">The configuration.</param>
-        public PeopleSearch(IEntityFrameworkRepository repository,
-            IConfiguration configuration)
+        /// <param name="findPersonController">The find person controller.</param>
+        public PeopleSearchService(IConfiguration configuration, 
+            IFindPersonController findPersonController,
+            IPersonHelper personHelper,
+            IPersonSearchRequestHelper personSearchRequestHelper,
+            IPersonSearchResultHelper personSearchResultHelper,
+            IExport export,
+            IImport import)
         {
-            this.Repository = repository;
             this.Configuration = configuration;
+            this.FindPersonController = findPersonController;
+            this.Export = export;
+            this.Import = import;
 
-            this.SerializerSettings = JsonSerializerSettingsFactory.Get();
-            this.Mapper = MapperFactory.Get();
-            this.Export = new Export();
-            this.Import = new Import();
-            this.FindPersonController = new FindPersonController(this.Configuration);
+            this.PersonHelper = personHelper;
+            this.PersonSearchRequestHelper = personSearchRequestHelper;
+            this.PersonSearchResultHelper = personSearchResultHelper;
 
             this.SearchWaitMs = 60000;
             var waitMs = Configuration.GetValue<string>("SearchSettings:WaitMs");
             int.TryParse(waitMs, out this.SearchWaitMs);
-
-            this.PersonHelper = new PersonHelper(repository);
-            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(repository, this.FindPersonController, this.SerializerSettings, this.Mapper, this.Export);
-            this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, this.Mapper, this.SerializerSettings);
         }
 
         /// <summary>

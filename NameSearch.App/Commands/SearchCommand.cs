@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using NameSearch.Api.Controllers;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.App.Builders;
 using NameSearch.App.Commands.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.App.Services;
@@ -11,7 +12,6 @@ using NameSearch.Utility;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,64 +61,14 @@ namespace NameSearch.App.Commands
         #region Dependencies
 
         /// <summary>
-        /// The import
-        /// </summary>
-        private readonly IImport Import;
-
-        /// <summary>
-        /// The export
-        /// </summary>
-        private readonly IExport Export;
-
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        /// <value>
-        /// The mapper.
-        /// </value>
-        public IMapper Mapper { get; set; }
-
-        /// <summary>
-        /// The repository
-        /// </summary>
-        /// <value>
-        /// The repository.
-        /// </value>
-        public IEntityFrameworkRepository Repository { get; set; }
-
-        /// <summary>
-        /// Gets or sets the configuration.
-        /// </summary>
-        /// <value>
-        /// The configuration.
-        /// </value>
-        public IConfiguration Configuration { get; set; }
-
-        /// <summary>
-        /// The serializer settings
-        /// </summary>
-        /// <value>
-        /// The serializer settings.
-        /// </value>
-        public JsonSerializerSettings SerializerSettings { get; set; }
-
-        /// <summary>
-        /// Gets or sets the find person controller.
-        /// </summary>
-        /// <value>
-        /// The find person controller.
-        /// </value>
-        public IFindPersonController FindPersonController { get; set; }
-
-        /// <summary>
         /// The people search
         /// </summary>
         private readonly PeopleSearch PeopleSearch;
 
         /// <summary>
-        /// The search wait ms
+        /// The import
         /// </summary>
-        private readonly int SearchWaitMs;
+        private readonly IImport Import;
 
         #endregion
 
@@ -142,22 +92,8 @@ namespace NameSearch.App.Commands
             _resultOutputPath = Program.SearchResultsDirectory;
             _options = options;
 
-            this.Repository = Program.Repository;
-            this.Configuration = Program.Configuration;
-            this.FindPersonController = new FindPersonController(this.Configuration);
             this.Import = new Import();
-            this.Export = new Export();
-            this.Mapper = MapperFactory.Get();
-            this.SerializerSettings = JsonSerializerSettingsFactory.Get();
-
-
-            //Default Value
-            this.SearchWaitMs = 60000;
-            var waitMs = Configuration.GetValue<string>("SearchSettings:WaitMs");
-            int.TryParse(waitMs, out this.SearchWaitMs);
-
-
-            this.PeopleSearch = new PeopleSearch(Repository, FindPersonController, SerializerSettings, Mapper, Export, _resultOutputPath, SearchWaitMs);
+            this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
 
         /// <summary>
@@ -169,13 +105,13 @@ namespace NameSearch.App.Commands
             var cancelAfterMs = 600000;
 
             var names = Import.FromTxt(_namesFilePath);
-            var searchCriteria = SearchCriteriaFactory.Get(_maxRuns, _city, _state, _zip);
-            var searches = SearchesFactory.Get(searchCriteria, names);
+            var searchCriteria = SearchCriteriaFactory.Get(_city, _state, _zip);
+            var searches = SearchesFactory.Get(searchCriteria, names, _maxRuns);
 
             using (var cancellationTokenSource = new CancellationTokenSource(cancelAfterMs))
             {
                 var token = cancellationTokenSource.Token;
-                Task.Run(() => PeopleSearchTask(searches, token));
+                Task.Run(() => PeopleSearchTask(searches, _resultOutputPath, token));
             }
 
             return 0;
@@ -184,9 +120,11 @@ namespace NameSearch.App.Commands
         /// <summary>
         /// Peoples the search task.
         /// </summary>
+        /// <param name="searches">The searches.</param>
+        /// <param name="resultOutputPath">The result output path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        private async Task PeopleSearchTask(IEnumerable<Search> searches, CancellationToken cancellationToken)
-            => await this.PeopleSearch.SearchAsync(searches, cancellationToken);
+        private async Task PeopleSearchTask(IEnumerable<Search> searches, string resultOutputPath, CancellationToken cancellationToken)
+            => await this.PeopleSearch.SearchAsync(searches, resultOutputPath, cancellationToken);
     }
 }

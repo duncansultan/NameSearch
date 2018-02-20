@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.App.Builders;
 using NameSearch.App.Factories;
 using NameSearch.App.Services;
 using NameSearch.App.Tests.Mocks;
@@ -62,10 +63,9 @@ namespace NameSearch.App.Tests.Services
             this.SerializerSettings = JsonSerializerSettingsFactory.Get();
             this.Mapper = MapperFactory.Get();
             this.MockExport = MockExportFactory.Get();
-            var resultOutputPath = "";
-            var searchWaitMs = 60000;
 
-            this.PeopleSearch = new PeopleSearch(MockRepository.Object, MockFindPersonController.Object, SerializerSettings, Mapper, MockExport.Object, resultOutputPath, searchWaitMs);
+            //todo
+            this.PeopleSearch = new PeopleSearch(MockRepository.Object, null);
         }
 
         /// <summary>
@@ -77,10 +77,11 @@ namespace NameSearch.App.Tests.Services
         {
             // Arrange
             var searches = MockDataFactory.GetSearches();
+            var resultOutputPath = "";
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
             // Act
-            var result = await PeopleSearch.SearchAsync(searches, cancellationToken);
+            var result = await PeopleSearch.SearchAsync(searches, resultOutputPath, cancellationToken);
             // Assert
             Assert.IsType<bool>(result);
             Assert.True(result);

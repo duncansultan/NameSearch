@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using NameSearch.App.Factories;
+using NameSearch.App.Builders;
 using NameSearch.Extensions;
-using NameSearch.Models.Domain;
-using NameSearch.Models.Domain.Api.Response.Interfaces;
 using NameSearch.Models.Entities;
 using NameSearch.Repository.Interfaces;
 using Newtonsoft.Json;
@@ -11,7 +9,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace NameSearch.App.Helpers
 {
@@ -33,6 +30,16 @@ namespace NameSearch.App.Helpers
         private readonly IMapper Mapper;
 
         /// <summary>
+        /// The person entities builder
+        /// </summary>
+        private readonly PersonEntitiesBuilder PersonEntitiesBuilder;
+
+        /// <summary>
+        /// The person search result builder
+        /// </summary>
+        private readonly PersonSearchResultBuilder PersonSearchResultBuilder;
+
+        /// <summary>
         /// The repository
         /// </summary>
         private readonly IEntityFrameworkRepository Repository;
@@ -41,38 +48,41 @@ namespace NameSearch.App.Helpers
         /// The serializer settings
         /// </summary>
         private readonly JsonSerializerSettings SerializerSettings;
+
         #endregion Dependencies
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonSearchResultHelper" /> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        /// <param name="serializerSettings">The serializer settings.</param>
         /// <param name="mapper">The mapper.</param>
+        /// <param name="serializerSettings">The serializer settings.</param>
         public PersonSearchResultHelper(IEntityFrameworkRepository repository,
-            JsonSerializerSettings serializerSettings,
-            IMapper mapper)
+            IMapper mapper,
+            JsonSerializerSettings serializerSettings)
         {
             this.Repository = repository;
             this.SerializerSettings = serializerSettings;
             this.Mapper = mapper;
+            this.PersonEntitiesBuilder = new PersonEntitiesBuilder(mapper, serializerSettings);
+            this.PersonSearchResultBuilder = new PersonSearchResultBuilder(serializerSettings);
         }
 
         /// <summary>
         /// Imports the specified j object.
         /// </summary>
+        /// <param name="fileName">Name of the file.</param>
         /// <param name="jObject">The j object.</param>
         /// <returns></returns>
-        public PersonSearch Import(JObject jObject)
+        public PersonSearch Import(string fileName, JObject jObject)
         {
-            //todo map this
-            var search = new Search();
+            var log = logger.With("fileName", fileName);
 
             #region Create PersonSearchResult Entity
 
-            var personSearch = PersonSearchResultFactory.Create(search, null, jObject);
+            var personSearch = PersonSearchResultBuilder.Create(fileName, jObject);
 
-            var log = logger.With("PersonSearchResult", personSearch);
+            log.With("PersonSearchResult", personSearch);
 
             #endregion Create PersonSearchResult Entity
 
@@ -116,45 +126,39 @@ namespace NameSearch.App.Helpers
                 throw new ArgumentNullException(nameof(personSearch));
             }
 
+            var stopwatch = new Stopwatch();
+
             var log = logger.With("personSearch", personSearch);
 
-            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            #region Deserialize JSON into Model
+            var personEntities = PersonEntitiesBuilder.Get(personSearch);
 
-            IFindPersonResponse findPersonResponse;
+            log.DebugEvent("Process", "Converted PersonSearch to PersonEntities after {ms}ms", stopwatch.ElapsedMilliseconds);
 
-            try
+            SavePeople(personEntities);
+
+            stopwatch.Stop();
+
+            log.InformationEvent("Process", "Processing search result finished after {ms}ms", stopwatch.ElapsedMilliseconds);
+
+            return personEntities;
+        }
+
+        /// <summary>
+        /// Saves the people.
+        /// </summary>
+        /// <param name="personEntities">The person entities.</param>
+        /// <exception cref="ArgumentNullException">personEntities</exception>
+        private void SavePeople(IEnumerable<Models.Entities.Person> personEntities)
+        {
+            if (personEntities == null)
             {
-                findPersonResponse = JsonConvert.DeserializeObject<Models.Domain.Api.Response.FindPersonResponse>(personSearch.Data, SerializerSettings);
+                throw new ArgumentNullException(nameof(personEntities));
             }
-            catch (JsonException ex)
+
+            foreach (var personEntity in personEntities)
             {
-                //Log and throw
-                log.With("Data", personSearch.Data)
-                    .ErrorEvent(ex, "Run", "Json Data Deserialization failed after {ms}ms", stopwatch.ElapsedMilliseconds);
-                throw;
-            }
-
-            #endregion Deserialize JSON into Model
-
-            var people = new List<Models.Entities.Person>();
-
-            foreach (var person in findPersonResponse.Person)
-            {
-                #region Map Model into Entity
-
-                var personEntity = Mapper.Map<Models.Entities.Person>(person);
-                personEntity.PersonSearchId = personSearch.Id;
-                people.Add(personEntity);
-
-                log.With("Person", personEntity);
-
-                #endregion Map Model into Entity
-
-                #region Save Entity to Database
-
                 Repository.Create(personEntity);
 
                 foreach (var addressEntity in personEntity.Addresses)
@@ -175,17 +179,10 @@ namespace NameSearch.App.Helpers
                     Repository.Create(phoneEntity);
                 }
 
-                Repository.Save();
-
-                log.With("Data", personSearch.Data)
-                    .InformationEvent("Run", "Created Person record after {ms}ms", stopwatch.ElapsedMilliseconds);
-
-                #endregion Save Entity to Database
+                logger.DebugEvent("SavePeople", "Created Person record for {lastName}, {firstName} after {ms}ms", personEntity.LastName, personEntity.FirstName);
             }
 
-            log.InformationEvent("Run", "Processing search result finished after {ms}ms", stopwatch.ElapsedMilliseconds);
-
-            return people;
+            Repository.Save();
         }
     }
 }

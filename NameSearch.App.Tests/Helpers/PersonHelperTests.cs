@@ -1,10 +1,8 @@
 ﻿using Moq;
 using NameSearch.App.Factories;
 using NameSearch.App.Helpers;
-using NameSearch.App.Services;
 using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Domain;
-using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
 using System.Collections.Generic;
 using Xunit;
@@ -34,7 +32,7 @@ namespace NameSearch.App.Tests.Helpers
             MockRepository = MockRepositoryFactory.Get();
 
             var mapper = MapperFactory.Get();
-            PersonHelper = new PersonHelper(MockRepository.Object, mapper);
+            PersonHelper = new PersonHelper(MockRepository.Object);
         }
 
         /// <summary>

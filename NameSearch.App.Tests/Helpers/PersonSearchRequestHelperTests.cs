@@ -2,17 +2,12 @@
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.App.Helpers;
-using NameSearch.App.Services;
 using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
-using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -55,8 +50,8 @@ namespace NameSearch.App.Tests.Helpers
 
             var serializerSettings = JsonSerializerSettingsFactory.Get();
             var mapper = MapperFactory.Get();
-            var resultOutputPath = "";
-            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(MockRepository.Object, MockFindPersonController.Object, serializerSettings, mapper, MockExport.Object, resultOutputPath);
+
+            this.PersonSearchRequestHelper = new PersonSearchRequestHelper(MockRepository.Object, MockFindPersonController.Object, serializerSettings, mapper, MockExport.Object);
         }
 
         /// <summary>
@@ -67,12 +62,13 @@ namespace NameSearch.App.Tests.Helpers
         public async Task SearchAsync_ValidInput_CreatePersonSearchResult()
         {
             // Arrange
-            var maxRuns = 1;
+            var resultOutputPath = "";
+            var searchWaitMs = 6000;
 
             // Act
             var cancellationToken = new CancellationToken();
             var search = new Search();
-            var result = await PersonSearchRequestHelper.SearchAsync(search, maxRuns, cancellationToken);
+            var result = await PersonSearchRequestHelper.SearchAsync(search, resultOutputPath, searchWaitMs, cancellationToken);
 
             // Assert
             Assert.IsType<PersonSearch>(result);

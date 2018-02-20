@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
+using NameSearch.App.Builders;
 using NameSearch.App.Factories;
-using NameSearch.App.Services;
 using NameSearch.Extensions;
 using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -47,6 +46,11 @@ namespace NameSearch.App.Helpers
         private readonly IMapper Mapper;
 
         /// <summary>
+        /// The person search result builder
+        /// </summary>
+        private readonly PersonSearchResultBuilder PersonSearchResultBuilder;
+
+        /// <summary>
         /// The repository
         /// </summary>
         private readonly IEntityFrameworkRepository Repository;
@@ -55,8 +59,6 @@ namespace NameSearch.App.Helpers
         /// The serializer settings
         /// </summary>
         private readonly JsonSerializerSettings SerializerSettings;
-
-        private readonly string ResultOutputPath;
 
         #endregion Dependencies
 
@@ -70,30 +72,34 @@ namespace NameSearch.App.Helpers
             IFindPersonController findPersonController,
             JsonSerializerSettings serializerSettings,
             IMapper mapper,
-            IExport export,
-            string resultOutputPath)
+            IExport export)
         {
             this.Repository = repository;
             this.SerializerSettings = serializerSettings;
             this.FindPersonController = findPersonController;
             this.Mapper = mapper;
             this.Export = export;
-            this.ResultOutputPath = resultOutputPath;
+            this.PersonSearchResultBuilder = new PersonSearchResultBuilder(serializerSettings);
         }
 
         /// <summary>
         /// Searches the specified person.
         /// </summary>
-        /// <param name="serach">The search criteria.</param>
+        /// <param name="search">The search.</param>
+        /// <param name="resultOutputPath">The result output path.</param>
         /// <param name="searchWaitMs">The search wait in ms.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">person</exception>
-        public async Task<PersonSearch> SearchAsync(Search search, int searchWaitMs, CancellationToken cancellationToken)
+        public async Task<PersonSearch> SearchAsync(Search search, string resultOutputPath, int searchWaitMs, CancellationToken cancellationToken)
         {
             if (search == null)
             {
                 throw new ArgumentNullException(nameof(search));
+            }
+            if (string.IsNullOrWhiteSpace(search.Name))
+            {
+                throw new ArgumentNullException(nameof(search.Name));
             }
 
             var log = logger.With("search", search);
@@ -108,7 +114,7 @@ namespace NameSearch.App.Helpers
                 log.DebugEvent("Search", "Mapped PersonSearchRequest entity to Person domain model after {ms}ms", stopwatch.ElapsedMilliseconds);
 
                 #region Execute Find Person request
-                
+
                 var result = await FindPersonController.GetFindPerson(person);
 
                 await Task.Delay(searchWaitMs);
@@ -116,48 +122,55 @@ namespace NameSearch.App.Helpers
                 log.With("Person", person)
                     .InformationEvent("Search", "Executed Find Person request after {ms}ms", stopwatch.ElapsedMilliseconds);
 
-                var jObject = JObject.Parse(result.Content);
+                var jContent = JObject.Parse(result.Content);
 
-                log.ForContext("Content", jObject);
+                log.ForContext("Content", jContent);
 
                 #endregion Execute Find Person request
 
+                #region Get JObject for JSON Export
+
+                var jExport = SearchResponseJObjectFactory.Get(search, jContent);
+                log.DebugEvent("Search", "Mapped Search domain model and response JObject to new JObject for JSON Export after {ms}ms", stopwatch.ElapsedMilliseconds);
+
+                #endregion Get JObject for JSON Export
+
                 #region Save Response to JSON text file
 
-                var fullPath = Path.Combine(this.ResultOutputPath, $"SearchJob-{person.Name}");
-                await this.Export.ToJsonAsync(jObject, fullPath, cancellationToken);
+                var fileName = GetResponseFileName(search);
+                var fullPath = Path.Combine(resultOutputPath, fileName);
+                await this.Export.ToJsonAsync(jExport, fullPath, cancellationToken);
 
                 #endregion Save Response to JSON text file
 
                 #region Create PersonSearchResult Entity
 
-                var personSearch = PersonSearchResultFactory.Create(search, result.StatusCode, jObject);
+                var personSearchResult = PersonSearchResultBuilder.Create(search, result.StatusCode, jContent);
 
-                log.With("PersonSearchResult", personSearch);
+                log.With("PersonSearchResult", personSearchResult);
 
                 #endregion Create PersonSearchResult Entity
 
                 #region Log Data Problems
 
-                if (!string.IsNullOrWhiteSpace(personSearch.Warnings))
+                if (!string.IsNullOrWhiteSpace(personSearchResult.Warnings))
                 {
                     log.WarningEvent("Search", "FindPerson api result returned with warning messages");
                 }
-                if (!string.IsNullOrWhiteSpace(personSearch.Error))
+                if (!string.IsNullOrWhiteSpace(personSearchResult.Error))
                 {
                     log.ErrorEvent("Search", "FindPerson api result returned with error message");
                 }
-                if (string.IsNullOrWhiteSpace(personSearch.Data))
+                if (string.IsNullOrWhiteSpace(personSearchResult.Data))
                 {
                     log.ErrorEvent("Search", "FindPerson api result returned with no person data"); ;
                 }
 
                 #endregion Log Data Problems
 
-                //todo fix all of this
                 #region Save Entity to Database
 
-                Repository.Create(personSearch);
+                Repository.Create(personSearchResult);
                 Repository.Save();
 
                 #endregion Save Entity to Database
@@ -165,7 +178,7 @@ namespace NameSearch.App.Helpers
                 stopwatch.Stop();
                 log.DebugEvent("Search", "Finished processing person search result after {ms}ms", stopwatch.ElapsedMilliseconds);
 
-                return personSearch;
+                return personSearchResult;
             }
             catch (Exception ex)
             {
@@ -173,6 +186,39 @@ namespace NameSearch.App.Helpers
                 log.ErrorEvent(ex, "Search", "Processing person failed after {ms}ms", stopwatch.ElapsedMilliseconds);
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Gets the name of the response file.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <returns></returns>
+        private static string GetResponseFileName(Search search)
+        {
+            string fileName = string.Empty;
+            if (!string.IsNullOrWhiteSpace(search.Criteria.State))
+            {
+                fileName += $"State-{search.Criteria.State}_";
+            }
+            if (!string.IsNullOrWhiteSpace(search.Criteria.City))
+            {
+                fileName += $"City-{search.Criteria.City}_";
+            }
+            if (!string.IsNullOrWhiteSpace(search.Criteria.Zip))
+            {
+                fileName += $"Zip-{search.Criteria.Zip}_";
+            }
+            if (!string.IsNullOrWhiteSpace(search.Criteria.Address1))
+            {
+                fileName += $"Address1-{search.Criteria.Address1}_";
+            }
+            if (!string.IsNullOrWhiteSpace(search.Criteria.Address2))
+            {
+                fileName += $"Address2-{search.Criteria.Address2}_";
+            }
+            fileName += $"Name-{search.Name}.json";
+
+            return fileName;
         }
     }
 }

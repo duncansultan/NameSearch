@@ -3,7 +3,7 @@
 namespace NameSearch.App.Factories
 {
     /// <summary>
-    /// Mapper Factory
+    /// Factory for AutoMapper
     /// </summary>
     public static class MapperFactory
     {

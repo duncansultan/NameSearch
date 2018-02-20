@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using NameSearch.Api.Controllers;
+using NameSearch.App.Builders;
 using NameSearch.App.Commands.Interfaces;
 using NameSearch.App.Factories;
 using NameSearch.App.Services;
@@ -28,43 +30,9 @@ namespace NameSearch.App.Commands
         #region Dependencies
 
         /// <summary>
-        /// The export
-        /// </summary>
-        private readonly IExport Export;
-
-        /// <summary>
-        /// The import
-        /// </summary>
-        private readonly IImport Import;
-
-        /// <summary>
-        /// The mapper
-        /// </summary>
-        /// <value>
-        /// The mapper.
-        /// </value>
-        public IMapper Mapper { get; set; }
-
-        /// <summary>
-        /// The repository
-        /// </summary>
-        /// <value>
-        /// The repository.
-        /// </value>
-        public IEntityFrameworkRepository Repository { get; set; }
-
-        /// <summary>
-        /// The serializer settings
-        /// </summary>
-        /// <value>
-        /// The serializer settings.
-        /// </value>
-        public JsonSerializerSettings SerializerSettings { get; set; }
-
-        /// <summary>
         /// The import export
         /// </summary>
-        private readonly ImportExport ImportExport;
+        private readonly PeopleSearch PeopleSearch;
 
         #endregion
 
@@ -78,13 +46,7 @@ namespace NameSearch.App.Commands
             _path = path;
             _options = options;
 
-            this.Repository = Program.Repository;
-            this.Import = new Import();
-            this.Export = new Export();
-            this.Mapper = MapperFactory.Get();
-            this.SerializerSettings = JsonSerializerSettingsFactory.Get();
-
-            this.ImportExport = new ImportExport(Repository, SerializerSettings, Mapper, Import, Export);
+            this.PeopleSearch = new PeopleSearch(Program.Repository, Program.Configuration);
         }
 
         /// <summary>
@@ -93,7 +55,7 @@ namespace NameSearch.App.Commands
         /// <returns></returns>
         public int Run()
         {
-            this.ImportExport.ImportSearches(_path);
+            this.PeopleSearch.ImportSearches(_path);
 
             return 0;
         }

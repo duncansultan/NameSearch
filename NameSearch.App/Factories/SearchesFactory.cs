@@ -14,13 +14,15 @@ namespace NameSearch.App.Factories
         /// </summary>
         /// <param name="searchCriteria">The search criteria.</param>
         /// <param name="names">The names.</param>
+        /// <param name="maxRuns">The maximum runs.</param>
         /// <returns></returns>
-        public static IEnumerable<Search> Get(SearchCriteria searchCriteria, IEnumerable<string> names)
+        public static IEnumerable<Search> Get(SearchCriteria searchCriteria, IEnumerable<string> names, int maxRuns)
         {
             return names.Select(x => new Search
             {
                 Criteria = searchCriteria,
-                Name = x
+                Name = x,
+                MaxRuns = maxRuns
             }).ToList();
         }
     }

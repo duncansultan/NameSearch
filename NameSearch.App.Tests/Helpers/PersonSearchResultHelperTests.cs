@@ -1,15 +1,12 @@
 ﻿using Moq;
 using NameSearch.App.Factories;
 using NameSearch.App.Helpers;
-using NameSearch.App.Services;
 using NameSearch.App.Tests.Mocks;
 using NameSearch.Models.Entities;
-using NameSearch.Repository;
 using NameSearch.Repository.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace NameSearch.App.Tests.Helpers
@@ -38,7 +35,7 @@ namespace NameSearch.App.Tests.Helpers
 
             var serializerSettings = JsonSerializerSettingsFactory.Get();
             var mapper = MapperFactory.Get();
-            this.PersonSearchResultHelper = new PersonSearchResultHelper(MockRepository.Object, serializerSettings, mapper);
+            this.PersonSearchResultHelper = new PersonSearchResultHelper(MockRepository.Object, mapper, serializerSettings);
         }
 
         /// <summary>
@@ -48,10 +45,11 @@ namespace NameSearch.App.Tests.Helpers
         public void Import_ValidInput_CreatePersonSearchResult()
         {
             //Arrange
+            var fileName = "TestFileName.json";
             var jObject = MockDataFactory.GetExampleJObject();
 
             //Act
-            var result = PersonSearchResultHelper.Import(jObject);
+            var result = PersonSearchResultHelper.Import(fileName, jObject);
 
             //Assert
             Assert.IsType<PersonSearch>(result);

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using NameSearch.App.Factories;
-using NameSearch.Repository;
+﻿using NameSearch.App.Factories;
 using NameSearch.Repository.Interfaces;
 using Serilog;
 using System.Collections.Generic;
@@ -21,11 +19,6 @@ namespace NameSearch.App.Helpers
         private readonly ILogger logger = Log.Logger.ForContext<PersonHelper>();
 
         /// <summary>
-        /// The mapper
-        /// </summary>
-        private readonly IMapper Mapper;
-
-        /// <summary>
         /// The repository
         /// </summary>
         private readonly IEntityFrameworkRepository Repository;
@@ -35,12 +28,9 @@ namespace NameSearch.App.Helpers
         /// Initializes a new instance of the <see cref="PersonHelper"/> class.
         /// </summary>
         /// <param name="repository">The repository.</param>
-        /// <param name="mapper">The mapper.</param>
-        public PersonHelper(IEntityFrameworkRepository repository,
-            IMapper mapper)
+        public PersonHelper(IEntityFrameworkRepository repository)
         {
             this.Repository = repository;
-            this.Mapper = mapper;
         }
 
         /// <summary>

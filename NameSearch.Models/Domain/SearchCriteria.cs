@@ -6,13 +6,6 @@
     public class SearchCriteria
     {
         /// <summary>
-        /// Gets or sets the maximum runs.
-        /// </summary>
-        /// <value>
-        /// The maximum runs.
-        /// </value>
-        public int MaxRuns { get; set; }
-        /// <summary>
         /// Gets or sets the address1.
         /// </summary>
         /// <value>

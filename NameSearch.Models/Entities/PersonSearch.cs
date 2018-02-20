@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using NameSearch.Models.Entities.Abstracts;
 
@@ -18,6 +19,7 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The name.
         /// </value>
+        [Required]
         public string Name { get; set; }
         /// <summary>
         /// Gets or sets the address1.

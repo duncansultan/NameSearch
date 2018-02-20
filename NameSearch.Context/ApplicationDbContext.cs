@@ -89,26 +89,12 @@ namespace NameSearch.Context
         /// </value>
         public DbSet<Phone> Phones { get; set; }
         /// <summary>
-        /// Gets or sets the person search jobs.
-        /// </summary>
-        /// <value>
-        /// The person search jobs.
-        /// </value>
-        public DbSet<PersonSearchJob> PersonSearchJobs { get; set; }
-        /// <summary>
         /// Gets or sets the person search results.
         /// </summary>
         /// <value>
         /// The person search results.
         /// </value>
-        public DbSet<PersonSearchRequest> PersonSearchRequests { get; set; }
-        /// <summary>
-        /// Gets or sets the person search results.
-        /// </summary>
-        /// <value>
-        /// The person search results.
-        /// </value>
-        public DbSet<PersonSearchResult> PersonSearchResults { get; set; }
+        public DbSet<PersonSearch> PersonSearchResults { get; set; }
 
         /// <summary>
         /// Override this method to further configure the model that was discovered by convention from the entity types
@@ -128,9 +114,7 @@ namespace NameSearch.Context
             modelBuilder.Entity<Address>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Associate>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Person>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<PersonSearchRequest>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<PersonSearchResult>().HasQueryFilter(p => p.IsActive);
-            modelBuilder.Entity<PersonSearchJob>().HasQueryFilter(p => p.IsActive);
+            modelBuilder.Entity<PersonSearch>().HasQueryFilter(p => p.IsActive);
             modelBuilder.Entity<Phone>().HasQueryFilter(p => p.IsActive);
 
             //Cascading deletes will not work with soft deletes.  The cascade only happens as the delete command is issued to the database.

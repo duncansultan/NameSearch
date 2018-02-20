@@ -19,8 +19,8 @@ namespace NameSearch.Models.Entities
         /// <value>
         /// The person search result identifier.
         /// </value>
-        [ForeignKey("PersonSearchResultForeignKey")]
-        public long PersonSearchResultId { get; set; }
+        [ForeignKey("PersonSearchForeignKey")]
+        public long PersonSearchId { get; set; }
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
@@ -82,7 +82,7 @@ namespace NameSearch.Models.Entities
         public override bool Equals(Person other)
         {
             if (other == null) return false;
-            return PersonSearchResultId == other.PersonSearchResultId &&
+            return PersonSearchId == other.PersonSearchId &&
                 string.Equals(FirstName, other.FirstName, StringComparison.InvariantCultureIgnoreCase) &&
                 string.Equals(LastName, other.LastName, StringComparison.InvariantCultureIgnoreCase) &&
                 string.Equals(Alias, other.Alias, StringComparison.InvariantCultureIgnoreCase) &&

@@ -43,11 +43,6 @@ namespace NameSearch.App.Services
         private readonly PersonHelper PersonHelper;
 
         /// <summary>
-        /// The people search job helper
-        /// </summary>
-        private readonly PersonSearchJobHelper PersonSearchJobHelper;
-
-        /// <summary>
         /// The people search result helper
         /// </summary>
         private readonly PersonSearchResultHelper PersonSearchResultHelper;
@@ -85,7 +80,6 @@ namespace NameSearch.App.Services
             this.Export = export;
 
             this.PersonSearchResultHelper = new PersonSearchResultHelper(repository, serializerSettings, mapper);
-            this.PersonSearchJobHelper = new PersonSearchJobHelper(repository, mapper);
             this.PersonHelper = new PersonHelper(repository, mapper);
         }
 
@@ -111,10 +105,8 @@ namespace NameSearch.App.Services
             {
                 var jObject = Import.FromJson(fullPath);
 
-                var peopleSearchJobId = PersonSearchJobHelper.Create();
-                var personSearchResult = PersonSearchResultHelper.Import(jObject, peopleSearchJobId);
-                var people = PersonSearchResultHelper.Process(personSearchResult);
-                PersonSearchJobHelper.Complete(peopleSearchJobId);
+                var personSearch = PersonSearchResultHelper.Import(jObject);
+                var people = PersonSearchResultHelper.Process(personSearch);
             }
         }
     }

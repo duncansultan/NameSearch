@@ -17,7 +17,7 @@ namespace NameSearch.App.Factories
             {
                 cfg.CreateMap<Models.Domain.Api.Response.Person, Models.Entities.Person>()
                     .ForMember(x => x.Id, opt => opt.Ignore())
-                    .ForMember(x => x.PersonSearchResultId, opt => opt.Ignore())
+                    .ForMember(x => x.PersonSearchId, opt => opt.Ignore())
                     .ForMember(x => x.IsActive, opt => opt.Ignore())
                     .ForMember(x => x.CreatedDateTime, opt => opt.Ignore())
                     .ForMember(x => x.ModifiedDateTime, opt => opt.Ignore())

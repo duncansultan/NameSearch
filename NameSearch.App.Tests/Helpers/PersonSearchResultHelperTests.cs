@@ -49,17 +49,14 @@ namespace NameSearch.App.Tests.Helpers
         {
             //Arrange
             var jObject = MockDataFactory.GetExampleJObject();
-            var personSearchJobId = MockDataFactory.GetPersonSearchJob().Id;
 
             //Act
-            var result = PersonSearchResultHelper.Import(jObject, personSearchJobId);
+            var result = PersonSearchResultHelper.Import(jObject);
 
             //Assert
-            Assert.IsType<PersonSearchResult>(result);
+            Assert.IsType<PersonSearch>(result);
             Assert.NotNull(result);
-            MockRepository.Verify(c => c.Create(It.IsAny<PersonSearchRequest>()), Times.Once);
-            MockRepository.Verify(c => c.Create(It.IsAny<PersonSearchResult>()), Times.Once);
-            MockRepository.Verify(c => c.Update(It.IsAny<PersonSearchRequest>()), Times.Once);
+            MockRepository.Verify(c => c.Create(It.IsAny<PersonSearch>()), Times.Once);
             MockRepository.Verify(c => c.SaveAsync(), Times.Exactly(3));
         }
 
@@ -70,12 +67,12 @@ namespace NameSearch.App.Tests.Helpers
         public void Process_ValidInput_CreatePerson()
         {
             //Arrange
-            var personSearchResult = MockDataFactory.GetPersonSearchResult();
+            var personSearch = MockDataFactory.GetPersonSearchResult();
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
 
             //Act
-            var result = PersonSearchResultHelper.Process(personSearchResult);
+            var result = PersonSearchResultHelper.Process(personSearch);
 
             //Assert
             Assert.IsAssignableFrom<IEnumerable<Person>>(result);

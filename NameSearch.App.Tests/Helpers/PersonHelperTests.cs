@@ -41,10 +41,9 @@ namespace NameSearch.App.Tests.Helpers
         /// Gets the people valid input return people.
         /// </summary>
         [Fact]
-        public void GetPeople_ValidInput_ReturnPeople()
+        public void GetPeople_ReturnPeople()
         {
             // Arrange
-            var searchJobId = MockDataFactory.GetPersonSearchJob().Id;
             // Act
             var result = PersonHelper.GetPeople();
             // Assert

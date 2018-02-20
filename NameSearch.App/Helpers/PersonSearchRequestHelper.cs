@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using NameSearch.Api.Controllers.Interfaces;
 using NameSearch.App.Factories;
+using NameSearch.App.Services;
 using NameSearch.Extensions;
+using NameSearch.Models.Domain;
 using NameSearch.Models.Entities;
 using NameSearch.Repository.Interfaces;
 using NameSearch.Utility.Interfaces;
@@ -80,32 +82,21 @@ namespace NameSearch.App.Helpers
         }
 
         /// <summary>
-        /// Gets the person search requests.
-        /// </summary>
-        /// <param name="personSearchJobId">The person search job identifier.</param>
-        /// <returns></returns>
-        public IEnumerable<PersonSearchRequest> Get(long personSearchJobId)
-        {
-            var personSearchRequests = Repository.Get<PersonSearchRequest>(x => x.PersonSearchJobId == personSearchJobId && !x.IsProcessed);
-            return personSearchRequests;
-        }
-
-        /// <summary>
         /// Searches the specified person.
         /// </summary>
-        /// <param name="personSearchRequest">The person search request.</param>
+        /// <param name="serach">The search criteria.</param>
         /// <param name="searchWaitMs">The search wait in ms.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">person</exception>
-        public async Task<PersonSearchResult> SearchAsync(PersonSearchRequest personSearchRequest, int searchWaitMs, CancellationToken cancellationToken)
+        public async Task<PersonSearch> SearchAsync(Search search, int searchWaitMs, CancellationToken cancellationToken)
         {
-            if (personSearchRequest == null)
+            if (search == null)
             {
-                throw new ArgumentNullException(nameof(personSearchRequest));
+                throw new ArgumentNullException(nameof(search));
             }
 
-            var log = logger.With("person", personSearchRequest);
+            var log = logger.With("search", search);
 
             var stopwatch = new Stopwatch();
 
@@ -113,7 +104,7 @@ namespace NameSearch.App.Helpers
             {
                 stopwatch.Start();
 
-                var person = Mapper.Map<Models.Domain.Api.Request.Person>(personSearchRequest);
+                var person = Mapper.Map<Models.Domain.Api.Request.Person>(search);
                 log.DebugEvent("Search", "Mapped PersonSearchRequest entity to Person domain model after {ms}ms", stopwatch.ElapsedMilliseconds);
 
                 #region Execute Find Person request
@@ -133,55 +124,48 @@ namespace NameSearch.App.Helpers
 
                 #region Save Response to JSON text file
 
-                var fullPath = Path.Combine(this.ResultOutputPath, $"SearchJob-{personSearchRequest.Id}-{person.Name}");
+                var fullPath = Path.Combine(this.ResultOutputPath, $"SearchJob-{person.Name}");
                 await this.Export.ToJsonAsync(jObject, fullPath, cancellationToken);
 
                 #endregion Save Response to JSON text file
 
                 #region Create PersonSearchResult Entity
 
-                var personSearchResult = PersonSearchResultFactory.Create(personSearchRequest.Id, result.StatusCode, jObject);
+                var personSearch = PersonSearchResultFactory.Create(search, result.StatusCode, jObject);
 
-                log.With("PersonSearchResult", personSearchResult);
+                log.With("PersonSearchResult", personSearch);
 
                 #endregion Create PersonSearchResult Entity
 
                 #region Log Data Problems
 
-                if (!string.IsNullOrWhiteSpace(personSearchResult.Warnings))
+                if (!string.IsNullOrWhiteSpace(personSearch.Warnings))
                 {
                     log.WarningEvent("Search", "FindPerson api result returned with warning messages");
                 }
-                if (!string.IsNullOrWhiteSpace(personSearchResult.Error))
+                if (!string.IsNullOrWhiteSpace(personSearch.Error))
                 {
                     log.ErrorEvent("Search", "FindPerson api result returned with error message");
                 }
-                if (string.IsNullOrWhiteSpace(personSearchResult.Data))
+                if (string.IsNullOrWhiteSpace(personSearch.Data))
                 {
                     log.ErrorEvent("Search", "FindPerson api result returned with no person data"); ;
                 }
 
                 #endregion Log Data Problems
 
+                //todo fix all of this
                 #region Save Entity to Database
 
-                Repository.Create(personSearchResult);
+                Repository.Create(personSearch);
                 Repository.Save();
 
                 #endregion Save Entity to Database
 
-                #region Update PersonSearchRequest
-
-                personSearchRequest.IsProcessed = true;
-                Repository.Update(personSearchRequest);
-                Repository.Save();
-
-                #endregion Update PersonSearchRequest
-
                 stopwatch.Stop();
                 log.DebugEvent("Search", "Finished processing person search result after {ms}ms", stopwatch.ElapsedMilliseconds);
 
-                return personSearchResult;
+                return personSearch;
             }
             catch (Exception ex)
             {

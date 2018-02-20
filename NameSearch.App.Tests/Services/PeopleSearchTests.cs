@@ -76,12 +76,11 @@ namespace NameSearch.App.Tests.Services
         public async Task SearchAsync_ValidInput_ReturnSuccess()
         {
             // Arrange
-            var searchCriteria = MockDataFactory.GetTestSearchCriteria();
-            var names = MockDataFactory.GetNames();
+            var searches = MockDataFactory.GetSearches();
             var cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
             // Act
-            var result = await PeopleSearch.SearchAsync(searchCriteria, names, cancellationToken);
+            var result = await PeopleSearch.SearchAsync(searches, cancellationToken);
             // Assert
             Assert.IsType<bool>(result);
             Assert.True(result);
